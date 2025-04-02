@@ -30,17 +30,19 @@ client.onreadystatechange = function() {
         var formattedTime = formatTime(startTime); // Get the time
         var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue;
         var title = items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
-        var soundValue = items[i].getElementsByTagName("sound")[0]?.textContent || "0";
-
-        // Convert "1" into sound icon, leave blank otherwise
-        var soundDisplay = soundValue === "1" ? "🔊" : "";
+        
+        // Get and clean <sound> value
+        var soundValue = items[i].getElementsByTagName("sound")[0]?.textContent.trim() || "0";
+        
+        // Use image if sound is 1
+        var soundDisplay = soundValue === "1" ? "<img src='volume.png' alt='Sound' width='16'>" : "";
 
         tableString += "<tr>";
-        tableString += "<td>" + dayOfWeek + "</td>"; // Day
-        tableString += "<td>" + title + "</td>";     // Event title
-        tableString += "<td>" + description + "</td>"; // Description
-        tableString += "<td>" + soundDisplay + "</td>"; // Sound icon or blank
-        tableString += "<td>" + formattedTime + "</td>"; // Time
+        tableString += "<td>" + dayOfWeek + "</td>";        // Day
+        tableString += "<td>" + title + "</td>";            // Event title
+        tableString += "<td>" + description + "</td>";      // Description
+        tableString += "<td>" + soundDisplay + "</td>";     // Sound icon or blank
+        tableString += "<td>" + formattedTime + "</td>";    // Time
         tableString += "</tr>";
       }
     }
