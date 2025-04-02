@@ -17,8 +17,8 @@ client.onreadystatechange = function() {
     var container = document.getElementById("container");
     var tableString = "<table class='my-table'>"; // Added class for styling
 
-    // Add table headers (no title for the sound column)
-    tableString += "<tr><th>Day</th><th>Event</th><th></th><th></th><th>Time</th></tr>";
+    // Add table headers
+    tableString += "<tr><th>Day</th><th>Event</th><th>Description</th><th>Sound</th><th>Time</th></tr>";
 
     for (var i = 0; i < items.length; i++) {
       var startTimeStr = items[i].getElementsByTagName("startTimeLocal")[0].childNodes[0].nodeValue;
@@ -28,21 +28,15 @@ client.onreadystatechange = function() {
       if (startTime >= currentDate && startTime <= nextSixDays) {
         var dayOfWeek = formatDay(startTime); // Get the day of the week
         var formattedTime = formatTime(startTime); // Get the time
-        var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue; // Get the description
-        var title = items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue; // Get event title
+        var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue;
+        var title = items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
+        var sound = items[i].getElementsByTagName("sound")[0]?.textContent || "0"; // Default to "0" if missing
 
-        // Get the <sound> value
-        var soundValue = items[i].getElementsByTagName("sound")[0]?.textContent || "0";
-
-        // Build the row
         tableString += "<tr>";
         tableString += "<td>" + dayOfWeek + "</td>"; // Day
-        tableString += "<td>" + title + "</td>";     // Event
+        tableString += "<td>" + title + "</td>";     // Event title
         tableString += "<td>" + description + "</td>"; // Description
-
-        // Conditionally display sound icon
-        tableString += "<td>" + (soundValue === "1" ? "🔊" : "") + "</td>";
-
+        tableString += "<td>" + sound + "</td>";     // Sound value (1 or 0)
         tableString += "<td>" + formattedTime + "</td>"; // Time
         tableString += "</tr>";
       }
