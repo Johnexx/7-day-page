@@ -18,7 +18,7 @@ client.onreadystatechange = function() {
     var tableString = "<table class='my-table'>"; // Added class for styling
 
     // Add table headers
-    tableString += "<tr><th>Day</th><th>Event</th><th></th><th>Sound</th></tr>";
+    tableString += "<tr><th>Day</th><th>Event</th><th></th><th></th></tr>";
 
     for (var i = 0; i < items.length; i++) {
       var startTimeStr = items[i].getElementsByTagName("startTimeLocal")[0].childNodes[0].nodeValue;
