@@ -30,13 +30,16 @@ client.onreadystatechange = function() {
         var formattedTime = formatTime(startTime); // Get the time
         var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue;
         var title = items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
-        var sound = items[i].getElementsByTagName("sound")[0]?.textContent || "0"; // Default to "0" if missing
+        var soundValue = items[i].getElementsByTagName("sound")[0]?.textContent || "0";
+
+        // Convert "1" into sound icon, leave blank otherwise
+        var soundDisplay = soundValue === "1" ? "🔊" : "";
 
         tableString += "<tr>";
         tableString += "<td>" + dayOfWeek + "</td>"; // Day
         tableString += "<td>" + title + "</td>";     // Event title
         tableString += "<td>" + description + "</td>"; // Description
-        tableString += "<td>" + sound + "</td>";     // Sound value (1 or 0)
+        tableString += "<td>" + soundDisplay + "</td>"; // Sound icon or blank
         tableString += "<td>" + formattedTime + "</td>"; // Time
         tableString += "</tr>";
       }
