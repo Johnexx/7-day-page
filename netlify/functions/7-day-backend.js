@@ -17,8 +17,8 @@ client.onreadystatechange = function() {
     var container = document.getElementById("container");
     var tableString = "<table class='my-table'>"; // Added class for styling
 
-    // Add table headers
-    tableString += "<tr><th>Day</th><th>Event</th><th></th><th>🔊</th><th>Time</th></tr>";
+    // Add table headers (no title for the sound column)
+    tableString += "<tr><th>Day</th><th>Event</th><th></th><th></th><th>Time</th></tr>";
 
     for (var i = 0; i < items.length; i++) {
       var startTimeStr = items[i].getElementsByTagName("startTimeLocal")[0].childNodes[0].nodeValue;
@@ -29,23 +29,21 @@ client.onreadystatechange = function() {
         var dayOfWeek = formatDay(startTime); // Get the day of the week
         var formattedTime = formatTime(startTime); // Get the time
         var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue; // Get the description
+        var title = items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue; // Get event title
 
         // Get the <sound> value
         var soundValue = items[i].getElementsByTagName("sound")[0]?.textContent || "0";
 
+        // Build the row
         tableString += "<tr>";
-        tableString += "<td>" + dayOfWeek + "</td>"; // Display day of the week
-        tableString += "<td>" + items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue + "</td>";
-        tableString += "<td>" + description + "</td>"; // Display the description
+        tableString += "<td>" + dayOfWeek + "</td>"; // Day
+        tableString += "<td>" + title + "</td>";     // Event
+        tableString += "<td>" + description + "</td>"; // Description
 
-        // Add sound icon or empty cell
-        if (soundValue === "1") {
-          tableString += "<td>🔊</td>";
-        } else {
-          tableString += "<td></td>";
-        }
+        // Conditionally display sound icon
+        tableString += "<td>" + (soundValue === "1" ? "🔊" : "") + "</td>";
 
-        tableString += "<td>" + formattedTime + "</td>"; // Display formatted time
+        tableString += "<td>" + formattedTime + "</td>"; // Time
         tableString += "</tr>";
       }
     }
