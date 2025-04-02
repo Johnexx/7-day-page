@@ -41,8 +41,8 @@ client.onreadystatechange = function() {
         tableString += "<td>" + dayOfWeek + "</td>";        // Day
         tableString += "<td>" + title + "</td>";            // Event title
         tableString += "<td>" + description + "</td>";      // Description
-        tableString += "<td>" + soundDisplay + "</td>";     // Sound icon or blank
         tableString += "<td>" + formattedTime + "</td>";    // Time
+        tableString += "<td>" + soundDisplay + "</td>";     // Sound icon or blank        
         tableString += "</tr>";
       }
     }
