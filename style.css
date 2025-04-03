@@ -23,4 +23,5 @@ table {
 td {
   height: 70px;
   border-bottom: 1px solid;
+  font-weight: bold;
 }
