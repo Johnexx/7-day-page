@@ -34,9 +34,9 @@ client.onreadystatechange = function() {
         // League icon logic based on description
         var leagueIcon = "";
         if (description.toLowerCase().includes("afl")) {
-          leagueIcon = "<img src='images/afl_icon.png' alt='AFL Icon' width='20'>";
+          leagueIcon = "<img src='./images/afl_icon.png' alt='AFL Icon' width='20'>";
         } else if (description.toLowerCase().includes("nrl")) {
-          leagueIcon = "<img src='images/nrl_icon.png' alt='NRL Icon' width='20'>";
+          leagueIcon = "<img src='./images/nrl_icon.png' alt='NRL Icon' width='20'>";
         }
 
         tableString += "<tr>";
