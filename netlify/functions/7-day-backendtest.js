@@ -10,39 +10,42 @@ client.onreadystatechange = function() {
   if (client.readyState == 4 && client.status == 200) {
     var xmlfanzo = client.responseXML;
     var items = xmlfanzo.getElementsByTagName("item");
-    var currentDate = new Date(); // Get the current date and time
+    var currentDate = new Date();
     var nextSixDays = new Date(currentDate);
-    nextSixDays.setDate(currentDate.getDate() + 7); // Calculate date 7 days from now
+    nextSixDays.setDate(currentDate.getDate() + 7);
 
     var container = document.getElementById("container");
-    var tableString = "<table class='my-table'>"; // Added class for styling
-
-    // Add table headers
-    tableString += "<tr><th>Day</th><th>Event</th><th></th><th>Time</th></tr>";
+    var tableString = "<table class='my-table'>";
+    tableString += "<tr><th>Day</th><th>Event</th><th></th><th>Time</th><th></th><th></th></tr>";
 
     for (var i = 0; i < items.length; i++) {
       var startTimeStr = items[i].getElementsByTagName("startTimeLocal")[0].childNodes[0].nodeValue;
       var startTime = new Date(startTimeStr);
 
-      // Check if the event's start time is within the next 7 days
       if (startTime >= currentDate && startTime <= nextSixDays) {
-        var dayOfWeek = formatDay(startTime); // Get the day of the week
-        var formattedTime = formatTime(startTime); // Get the time
+        var dayOfWeek = formatDay(startTime);
+        var formattedTime = formatTime(startTime);
         var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue;
         var title = items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
         
-        // Get and clean <sound> value
         var soundValue = items[i].getElementsByTagName("sound")[0]?.textContent.trim() || "0";
-        
-        // Use image if sound is 1
         var soundDisplay = soundValue === "1" ? "<img src='volume.png' alt='Sound' width='16'>" : "";
 
+        // League icon logic based on description
+        var leagueIcon = "";
+        if (description.toLowerCase().includes("afl")) {
+          leagueIcon = "<img src='images/afl_icon.png' alt='AFL Icon' width='20'>";
+        } else if (description.toLowerCase().includes("nrl")) {
+          leagueIcon = "<img src='images/nrl_icon.png' alt='NRL Icon' width='20'>";
+        }
+
         tableString += "<tr>";
-        tableString += "<td>" + dayOfWeek + "</td>";        // Day
-        tableString += "<td>" + title + "</td>";            // Event title
-        tableString += "<td>" + description + "</td>";      // Description
-        tableString += "<td>" + formattedTime + "</td>";    // Time
-        tableString += "<td>" + soundDisplay + "</td>";     // Sound icon or blank        
+        tableString += "<td>" + dayOfWeek + "</td>";
+        tableString += "<td>" + title + "</td>";
+        tableString += "<td>" + description + "</td>";
+        tableString += "<td>" + formattedTime + "</td>";
+        tableString += "<td>" + soundDisplay + "</td>";
+        tableString += "<td>" + leagueIcon + "</td>"; // Add icon here
         tableString += "</tr>";
       }
     }
@@ -54,19 +57,17 @@ client.onreadystatechange = function() {
 
 client.send();
 
-// Function to get the day of the week
 function formatDay(date) {
   var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   return daysOfWeek[date.getDay()];
 }
 
-// Function to format time as "HH:MM AM/PM"
 function formatTime(date) {
   var hours = date.getHours();
   var minutes = date.getMinutes();
   var ampm = hours >= 12 ? 'PM' : 'AM';
   hours = hours % 12;
-  hours = hours ? hours : 12; // Handle midnight
+  hours = hours ? hours : 12;
   minutes = minutes < 10 ? '0' + minutes : minutes;
   return hours + ':' + minutes + ' ' + ampm;
 }
