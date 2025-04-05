@@ -6,7 +6,7 @@ if (window.XMLHttpRequest) {
 }
 client.open('GET', 'https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1');
 
-client.onreadystatechange = function() {
+client.onreadystatechange = function () {
   if (client.readyState == 4 && client.status == 200) {
     var xmlfanzo = client.responseXML;
     var items = xmlfanzo.getElementsByTagName("item");
@@ -16,7 +16,7 @@ client.onreadystatechange = function() {
 
     var container = document.getElementById("container");
     var tableString = "<table class='my-table'>";
-    tableString += "<tr><th>Day</th><th>Event</th><th></th><th>Time</th><th></th><th></th></tr>";
+    tableString += "<tr><th>Day</th><th>Event</th><th>League</th><th>Time</th><th>Sound</th></tr>";
 
     for (var i = 0; i < items.length; i++) {
       var startTimeStr = items[i].getElementsByTagName("startTimeLocal")[0].childNodes[0].nodeValue;
@@ -27,25 +27,26 @@ client.onreadystatechange = function() {
         var formattedTime = formatTime(startTime);
         var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue;
         var title = items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
-        
+
         var soundValue = items[i].getElementsByTagName("sound")[0]?.textContent.trim() || "0";
         var soundDisplay = soundValue === "1" ? "<img src='volume.png' alt='Sound' width='16'>" : "";
 
-        // League icon logic based on description
+        // Determine league icon to replace description
         var leagueIcon = "";
         if (description.toLowerCase().includes("afl")) {
-          leagueIcon = "<img src='./images/afl_icon.png' alt='AFL Icon' width='20'>";
+          leagueIcon = "<img src='images/afl_icon.png' alt='AFL Icon' width='20'>";
         } else if (description.toLowerCase().includes("nrl")) {
-          leagueIcon = "<img src='./images/nrl_icon.png' alt='NRL Icon' width='20'>";
+          leagueIcon = "<img src='images/nrl_icon.png' alt='NRL Icon' width='20'>";
+        } else {
+          leagueIcon = ""; // Or use a placeholder if desired
         }
 
         tableString += "<tr>";
         tableString += "<td>" + dayOfWeek + "</td>";
         tableString += "<td>" + title + "</td>";
-        tableString += "<td>" + description + "</td>";
+        tableString += "<td>" + leagueIcon + "</td>"; // Replacing description column
         tableString += "<td>" + formattedTime + "</td>";
         tableString += "<td>" + soundDisplay + "</td>";
-        tableString += "<td>" + leagueIcon + "</td>"; // Add icon here
         tableString += "</tr>";
       }
     }
