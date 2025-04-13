@@ -57,7 +57,7 @@ client.onreadystatechange = function () {
           nextUpTable += "</td></tr>";
 
           // Title row
-          nextUpTable += "<tr><td colspan='3' style='text-align:center; font-weight:bold; font-size:1.2em;'>" + title + "</td></tr>";
+          nextUpTable += "<tr><td colspan='3' style='text-align:center; font-weight:bold; font-size:45px;'>" + title + "</td></tr>";
 
           // Day, Time, Sound row
           nextUpTable += "<tr>";
