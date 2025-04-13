@@ -40,6 +40,10 @@ h1 {
     font-size: 125px;
   }
 
+.next-up-table td {
+  border-bottom: 0px solid;
+}
+
 table {
   width: 80%;
   margin-left: auto;
