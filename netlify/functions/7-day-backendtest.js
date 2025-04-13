@@ -70,9 +70,9 @@ client.onreadystatechange = function () {
         } else {
           // REMAINING GAMES → Upcoming table
           var rowHTML = "<tr>";
-          rowHTML += "<td>" + dayOfWeek + "</td>";
-          rowHTML += "<td>" + title + "</td>";
           rowHTML += "<td>" + leagueIcon + "</td>";
+          rowHTML += "<td>" + title + "</td>";
+          rowHTML += "<td>" + dayOfWeek + "</td>"
           rowHTML += "<td>" + formattedTime + "</td>";
           rowHTML += "<td>" + soundDisplay + "</td>";
           rowHTML += "</tr>";
