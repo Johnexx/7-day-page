@@ -1,66 +1,70 @@
-var client;
+window.onload = function () {
+  const container = document.getElementById("container");
 
-if (window.XMLHttpRequest) {
-  client = new XMLHttpRequest();
-} else {
-  client = new ActiveXObject("Microsoft.XMLHTTP");
-}
-
-client.open('GET', 'https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1');
-
-client.onreadystatechange = function () {
-  if (client.readyState == 4 && client.status == 200) {
-    var xmlfanzo = client.responseXML;
-    var items = xmlfanzo.getElementsByTagName("item");
-    var currentDate = new Date();
-    var nextSevenDays = new Date(currentDate);
-    nextSevenDays.setDate(currentDate.getDate() + 7);
-    var container = document.getElementById("container");
-
-    // Separate the first game
-    if (items.length > 0) {
-      var firstItem = items[0];
-      var startTimeStr = firstItem.getElementsByTagName("start_time")[0].textContent;
-      var startTime = new Date(startTimeStr);
-      if (startTime >= currentDate && startTime <= nextSevenDays) {
-        var day = startTime.toLocaleDateString(undefined, { weekday: 'short' });
-        var time = startTime.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-        var event = firstItem.getElementsByTagName("event")[0].textContent;
-        var league = firstItem.getElementsByTagName("league")[0].textContent;
-        var sound = firstItem.getElementsByTagName("sound")[0].textContent;
-
-        var nextUpHTML = "<h2>Next Up</h2>";
-        nextUpHTML += "<table class='my-table'>";
-        nextUpHTML += "<tr><th>Day</th><th>Event</th><th>League</th><th>Time</th><th>Sound</th></tr>";
-        nextUpHTML += "<tr><td>" + day + "</td><td>" + event + "</td><td>" + league + "</td><td>" + time + "</td><td>" + sound + "</td></tr>";
-        nextUpHTML += "</table>";
-
-        container.innerHTML += nextUpHTML;
+  fetch('https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
       }
-    }
-
-    // Remaining games
-    var tableString = "<h2>Upcoming Games</h2>";
-    tableString += "<table class='my-table'>";
-    tableString += "<tr><th>Day</th><th>Event</th><th>League</th><th>Time</th><th>Sound</th></tr>";
-
-    for (var i = 1; i < items.length; i++) {
-      var startTimeStr = items[i].getElementsByTagName("start_time")[0].textContent;
-      var startTime = new Date(startTimeStr);
-      if (startTime >= currentDate && startTime <= nextSevenDays) {
-        var day = startTime.toLocaleDateString(undefined, { weekday: 'short' });
-        var time = startTime.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-        var event = items[i].getElementsByTagName("event")[0].textContent;
-        var league = items[i].getElementsByTagName("league")[0].textContent;
-        var sound = items[i].getElementsByTagName("sound")[0].textContent;
-
-        tableString += "<tr><td>" + day + "</td><td>" + event + "</td><td>" + league + "</td><td>" + time + "</td><td>" + sound + "</td></tr>";
+      return response.text();
+    })
+    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+    .then(data => {
+      const items = data.getElementsByTagName("item");
+      if (items.length === 0) {
+        container.innerHTML = "<p>No games found.</p>";
+        return;
       }
-    }
 
-    tableString += "</table>";
-    container.innerHTML += tableString;
-  }
+      const now = new Date();
+      const weekAhead = new Date();
+      weekAhead.setDate(now.getDate() + 7);
+
+      // Build Next Up (First valid game)
+      let firstGameHTML = '';
+      let remainingGamesHTML = '';
+      let foundFirst = false;
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const startTime = new Date(item.getElementsByTagName("start_time")[0].textContent);
+        if (startTime < now || startTime > weekAhead) continue;
+
+        const day = startTime.toLocaleDateString(undefined, { weekday: 'short' });
+        const time = startTime.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        const event = item.getElementsByTagName("event")[0].textContent;
+        const league = item.getElementsByTagName("league")[0].textContent;
+        const sound = item.getElementsByTagName("sound")[0].textContent;
+
+        const row = `<tr><td>${day}</td><td>${event}</td><td>${league}</td><td>${time}</td><td>${sound}</td></tr>`;
+
+        if (!foundFirst) {
+          firstGameHTML += `
+            <h2>Next Up</h2>
+            <table class="my-table">
+              <tr><th>Day</th><th>Event</th><th>League</th><th>Time</th><th>Sound</th></tr>
+              ${row}
+            </table>`;
+          foundFirst = true;
+        } else {
+          remainingGamesHTML += row;
+        }
+      }
+
+      // Add remaining games
+      if (remainingGamesHTML) {
+        remainingGamesHTML = `
+          <h2>Upcoming Games</h2>
+          <table class="my-table">
+            <tr><th>Day</th><th>Event</th><th>League</th><th>Time</th><th>Sound</th></tr>
+            ${remainingGamesHTML}
+          </table>`;
+      }
+
+      container.innerHTML = firstGameHTML + remainingGamesHTML;
+    })
+    .catch(err => {
+      console.error("Error fetching or parsing data:", err);
+      container.innerHTML = "<p>Error loading sports fixtures. Check console.</p>";
+    });
 };
-
-client.send();
