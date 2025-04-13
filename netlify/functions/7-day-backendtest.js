@@ -52,8 +52,8 @@ client.onreadystatechange = function () {
 
           // Team logos row
           nextUpTable += "<tr><td colspan='3' style='text-align:center;'>";
-          if (team1) nextUpTable += "<img src='" + team1 + "' alt='Team 1' style='max-height:40px; margin-right:20px;'>";
-          if (team2) nextUpTable += "<img src='" + team2 + "' alt='Team 2' style='max-height:40px; margin-left:20px;'>";
+          if (team1) nextUpTable += "<img src='" + team1 + "' alt='Team 1' style='max-height:80px; margin-right:80px;'>";
+          if (team2) nextUpTable += "<img src='" + team2 + "' alt='Team 2' style='max-height:80px; margin-left:80px;'>";
           nextUpTable += "</td></tr>";
 
           // Title row
