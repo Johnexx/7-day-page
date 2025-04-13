@@ -33,26 +33,6 @@ body {
     font-family: anton;
   }
   
-h1 {
-    font-family: anton;
-    font-weight: bold;
-    color: #1a3b8d;
-    font-size: 125px;
-  }
-
-table {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  border-collapse: collapse;
-  text-align: left;
- }
-
-td {
-  height: 70px;
-  border-bottom: 1px solid;
-  font-size: 25px;
-}
 
 .my-table {
   width: 100%;
