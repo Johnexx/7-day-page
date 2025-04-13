@@ -53,12 +53,12 @@ client.onreadystatechange = function () {
 
           // Team logos row
           nextUpTable += "<tr><td colspan='3' style='text-align:center;'>";
-          if (team1) nextUpTable += "<img src='" + team1 + "' alt='Team 1' style='max-height:200px; margin-right:200px;'>";
-          if (team2) nextUpTable += "<img src='" + team2 + "' alt='Team 2' style='max-height:200px; margin-left:200px;'>";
+          if (team1) nextUpTable += "<img src='" + team1 + "' alt='Team 1' style='max-height:200px; margin-right:150px;'>";
+          if (team2) nextUpTable += "<img src='" + team2 + "' alt='Team 2' style='max-height:200px; margin-left:150px;'>";
           nextUpTable += "</td></tr>";
 
           // Title row
-          nextUpTable += "<tr><td colspan='3' style='text-align:center; font-weight:bold; font-size:45px;'>" + title + "</td></tr>";
+          nextUpTable += "<tr><td colspan='3' style='text-align:center; font-weight:bold; font-size:35px;'>" + title + "</td></tr>";
 
           // Day, Time, Sound row
           nextUpTable += "<tr>";
