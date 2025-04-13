@@ -43,33 +43,40 @@ client.onreadystatechange = function () {
           leagueIcon = "<img src='images/nrl_icon.png' alt='NRL Icon' width='20'>";
         }
 
-        var rowHTML = "<tr>";
-        rowHTML += "<td>" + dayOfWeek + "</td>";
-        rowHTML += "<td>" + title + "</td>";
-        rowHTML += "<td>" + leagueIcon + "</td>";
-        rowHTML += "<td>" + formattedTime + "</td>";
-        rowHTML += "<td>" + soundDisplay + "</td>";
-        rowHTML += "</tr>";
-
         if (gameCount === 0) {
-          // Get team logos for first game
+          // FIRST GAME → "Next Up" table
           var team1 = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
           var team2 = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
-          var teamRow = "";
-
-          if (team1 || team2) {
-            teamRow += "<tr><td colspan='5' style='text-align:center;'>";
-            if (team1) teamRow += "<img src='" + team1 + "' alt='Team 1' style='max-height:40px; margin: 0 10px;'>";
-            if (team2) teamRow += "<img src='" + team2 + "' alt='Team 2' style='max-height:40px; margin: 0 10px;'>";
-            teamRow += "</td></tr>";
-          }
 
           nextUpTable = "<h2>Next Up</h2><table class='my-table'>";
-          nextUpTable += "<tr><th>Day</th><th>Event</th><th>League</th><th>Time</th><th>Sound</th></tr>";
-          nextUpTable += teamRow;
-          nextUpTable += rowHTML;
+
+          // Team logos row
+          nextUpTable += "<tr><td colspan='3' style='text-align:center;'>";
+          if (team1) nextUpTable += "<img src='" + team1 + "' alt='Team 1' style='max-height:40px; margin-right:20px;'>";
+          if (team2) nextUpTable += "<img src='" + team2 + "' alt='Team 2' style='max-height:40px; margin-left:20px;'>";
+          nextUpTable += "</td></tr>";
+
+          // Title row
+          nextUpTable += "<tr><td colspan='3' style='text-align:center; font-weight:bold; font-size:1.2em;'>" + title + "</td></tr>";
+
+          // Day, Time, Sound row
+          nextUpTable += "<tr>";
+          nextUpTable += "<td style='text-align:center;'>" + dayOfWeek + "</td>";
+          nextUpTable += "<td style='text-align:center;'>" + formattedTime + "</td>";
+          nextUpTable += "<td style='text-align:center;'>" + soundDisplay + "</td>";
+          nextUpTable += "</tr>";
+
           nextUpTable += "</table>";
         } else {
+          // REMAINING GAMES → Upcoming table
+          var rowHTML = "<tr>";
+          rowHTML += "<td>" + dayOfWeek + "</td>";
+          rowHTML += "<td>" + title + "</td>";
+          rowHTML += "<td>" + leagueIcon + "</td>";
+          rowHTML += "<td>" + formattedTime + "</td>";
+          rowHTML += "<td>" + soundDisplay + "</td>";
+          rowHTML += "</tr>";
+
           upcomingTable += rowHTML;
         }
 
@@ -89,6 +96,7 @@ client.onreadystatechange = function () {
 
 client.send();
 
+// ✅ Abbreviated Day Names
 function formatDay(date) {
   var daysAbbr = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return daysAbbr[date.getDay()];
