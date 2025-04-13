@@ -52,7 +52,6 @@ client.onreadystatechange = function () {
         rowHTML += "</tr>";
 
         if (gameCount === 0) {
-          // First game becomes "Next Up"
           nextUpTable = "<h2>Next Up</h2><table class='my-table'>";
           nextUpTable += "<tr><th>Day</th><th>Event</th><th>League</th><th>Time</th><th>Sound</th></tr>";
           nextUpTable += rowHTML;
@@ -77,9 +76,10 @@ client.onreadystatechange = function () {
 
 client.send();
 
+// ✅ Abbreviated Day Names
 function formatDay(date) {
-  var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  return daysOfWeek[date.getDay()];
+  var daysAbbr = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  return daysAbbr[date.getDay()];
 }
 
 function formatTime(date) {
