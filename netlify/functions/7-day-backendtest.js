@@ -61,7 +61,7 @@ client.onreadystatechange = function () {
 
           // Day, Time, Sound row
           nextUpTable += "<tr>";
-          nextUpTable += "<td style='text-align:center;'>" + dayOfWeek + "</td>";
+          nextUpTable += "<td style='text-align:right;'>" + dayOfWeek + "</td>";
           nextUpTable += "<td style='text-align:center;'>" + formattedTime + "</td>";
           nextUpTable += "<td style='text-align:center;'>" + soundDisplay + "</td>";
           nextUpTable += "</tr>";
