@@ -17,7 +17,7 @@ client.onreadystatechange = function () {
     var container = document.getElementById("container");
     var nextUpTable = "";
     var upcomingTable = "<h2>Upcoming Games</h2><table class='my-table'>";
-    upcomingTable += "<tr><th></th><th></th><th></th><th></th><th></th></tr>";
+    upcomingTable += "<tr><th>Day</th><th>Event</th><th>League</th><th>Time</th><th>Sound</th></tr>";
 
     var gameCount = 0;
 
@@ -52,8 +52,21 @@ client.onreadystatechange = function () {
         rowHTML += "</tr>";
 
         if (gameCount === 0) {
+          // Get team logos for first game
+          var team1 = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
+          var team2 = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
+          var teamRow = "";
+
+          if (team1 || team2) {
+            teamRow += "<tr><td colspan='5' style='text-align:center;'>";
+            if (team1) teamRow += "<img src='" + team1 + "' alt='Team 1' style='max-height:40px; margin: 0 10px;'>";
+            if (team2) teamRow += "<img src='" + team2 + "' alt='Team 2' style='max-height:40px; margin: 0 10px;'>";
+            teamRow += "</td></tr>";
+          }
+
           nextUpTable = "<h2>Next Up</h2><table class='my-table'>";
-          nextUpTable += "<tr><th></th><th></th><th></th><th></th><th></th></tr>";
+          nextUpTable += "<tr><th>Day</th><th>Event</th><th>League</th><th>Time</th><th>Sound</th></tr>";
+          nextUpTable += teamRow;
           nextUpTable += rowHTML;
           nextUpTable += "</table>";
         } else {
@@ -76,7 +89,6 @@ client.onreadystatechange = function () {
 
 client.send();
 
-// ✅ Abbreviated Day Names
 function formatDay(date) {
   var daysAbbr = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return daysAbbr[date.getDay()];
