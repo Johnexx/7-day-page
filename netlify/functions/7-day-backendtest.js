@@ -48,7 +48,8 @@ client.onreadystatechange = function () {
           var team1 = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
           var team2 = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
 
-          nextUpTable = "<h2>Next Up</h2><table class='my-table'>";
+          nextUpTable = "<h2>Next Up</h2><table class='my-table next-up-table'>";
+
 
           // Team logos row
           nextUpTable += "<tr><td colspan='3' style='text-align:center;'>";
