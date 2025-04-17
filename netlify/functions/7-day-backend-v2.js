@@ -54,6 +54,12 @@ client.onreadystatechange = function() {
 
 client.send();
 
+// Abbreviated Day Names
+function formatDay(date) {
+  var daysAbbr = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  return daysAbbr[date.getDay()];
+}
+
 // Function to get the day of the week
 function formatDay(date) {
   var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
