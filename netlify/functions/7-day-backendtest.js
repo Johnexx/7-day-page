@@ -72,7 +72,7 @@ client.onreadystatechange = function () {
           // REMAINING GAMES → Upcoming table
           var rowHTML = "<tr>";
           rowHTML += "<td>" + leagueIcon + "</td>";
-          rowHTML += "<td>" + title + "</td>";
+          rowHTML += "<td style='text-align:center;'>" + title + "</td>";
           rowHTML += "<td>" + dayOfWeek + "</td>"
           rowHTML += "<td>" + formattedTime + "</td>";
           rowHTML += "<td>" + soundDisplay + "</td>";
