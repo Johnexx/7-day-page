@@ -60,12 +60,6 @@ function formatDay(date) {
   return daysAbbr[date.getDay()];
 }
 
-// Function to get the day of the week
-function formatDay(date) {
-  var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  return daysOfWeek[date.getDay()];
-}
-
 // Function to format time as "HH:MM AM/PM"
 function formatTime(date) {
   var hours = date.getHours();
