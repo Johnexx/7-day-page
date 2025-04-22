@@ -40,7 +40,7 @@ client.onreadystatechange = function () {
         if (description.toLowerCase().includes("afl")) {
           leagueIcon = "<img src='images/Afl_logo.png' alt='AFL Icon' width='60'>";
         } else if (description.toLowerCase().includes("nrl")) {
-          leagueIcon = "<img src='images/NRL_logo.png' alt='NRL Icon' width='60'>";
+          leagueIcon = "<img src='images/NRL_logo.png' alt='NRL Icon' width='50'>";
         }
 
         if (gameCount === 0) {
