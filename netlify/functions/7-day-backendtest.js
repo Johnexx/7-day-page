@@ -16,7 +16,7 @@ client.onreadystatechange = function () {
 
     var container = document.getElementById("container");
     var nextUpTable = "";
-    var upcomingTable = "<h2>Upcoming Games</h2><table class='my-table'>";
+    var upcomingTable = "<h2></h2><table class='my-table'>";
     upcomingTable += "<tr><th></th><th></th><th></th><th></th><th></th></tr>";
 
     var gameCount = 0;
