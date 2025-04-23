@@ -71,12 +71,10 @@ client.onreadystatechange = function () {
           nextUpTable += "<td></td>";
           nextUpTable += "<td style='text-align:left; font-weight:bold; font-size:20px;'>" + team2Name + "</td></tr>";
 
-          // Time row
-          nextUpTable += "<tr>";
-          nextUpTable += "<td style='text-align:right;'>" + dayOfWeek + "</td>";
-          nextUpTable += "<td style='text-align:center;'>" + formattedTime + "</td>";
-          nextUpTable += "<td style='text-align:left;'>" + soundDisplay + "</td>";
-          nextUpTable += "</tr>";
+          // Centered time/sound under "vs"
+          nextUpTable += "<tr><td></td><td style='text-align:center; line-height:1.6; font-size:16px;'>";
+          nextUpTable += dayOfWeek + "<br>" + formattedTime + "<br>" + soundDisplay;
+          nextUpTable += "</td><td></td></tr>";
 
           nextUpTable += "</table>";
         } else {
