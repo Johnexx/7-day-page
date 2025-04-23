@@ -18,8 +18,8 @@ client.onreadystatechange = function() {
     var endOfNextWeek = new Date(currentDate);
     endOfNextWeek.setDate(currentDate.getDate() + 14); // 14 days from now
 
-    var thisWeekTable = "<h2>This Week</h2><table class='my-table'><tr><th>Title</th><th>Description</th><th>Day</th><th>Time</th><th></th></tr>";
-    var nextWeekTable = "<h2>Next Week</h2><table class='my-table'><tr><th>Title</th><th>Description</th><th>Day</th><th>Time</th><th></th></tr>";
+    var thisWeekTable = "<h2>This Week</h2><table class='my-table'><tr><th></th><th></th><th></th><th></th><th></th></tr>";
+    var nextWeekTable = "<h2>Next Week</h2><table class='my-table'><tr><th></th><th></th><th></th><th></th><th></th></tr>";
 
     for (var i = 0; i < items.length; i++) {
       var startTimeStr = items[i].getElementsByTagName("startTimeLocal")[0].childNodes[0].nodeValue;
