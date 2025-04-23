@@ -61,9 +61,9 @@ client.onreadystatechange = function () {
 
           // Logos row with "vs"
           nextUpTable += "<tr><td style='text-align:right; width:40%'>";
-          if (team1Img) nextUpTable += "<img src='" + team1Img + "' alt='Team 1' style='max-height:150px; text-align:left'>";
+          if (team1Img) nextUpTable += "<img src='" + team1Img + "' alt='Team 1' style='max-height:150px; margin: auto'>";
           nextUpTable += "</td><td style='text-align:center; width:20%'><span style='font-size:32px;'>vs</span></td><td style='text-align:left; width:40%'>";
-          if (team2Img) nextUpTable += "<img src='" + team2Img + "' alt='Team 2' style='max-height:150px; text-align:right'>";
+          if (team2Img) nextUpTable += "<img src='" + team2Img + "' alt='Team 2' style='max-height:150px; margin: auto'>";
           nextUpTable += "</td></tr>";
 
           // Team names row
