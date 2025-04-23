@@ -67,9 +67,9 @@ client.onreadystatechange = function () {
           nextUpTable += "</td></tr>";
 
           // Team names row
-          nextUpTable += "<tr><td style='text-align:right; font-weight:bold; font-size:40px;'>" + team1Name + "</td>";
+          nextUpTable += "<tr><td style='text-align:center; font-weight:bold; font-size:40px;'>" + team1Name + "</td>";
           nextUpTable += "<td></td>";
-          nextUpTable += "<td style='text-align:left; font-weight:bold; font-size:40px;'>" + team2Name + "</td></tr>";
+          nextUpTable += "<td style='text-align:center; font-weight:bold; font-size:40px;'>" + team2Name + "</td></tr>";
 
           // Centered time/sound under "vs"
           nextUpTable += "<tr><td></td><td style='text-align:center; line-height:1.6; font-size:16px;'>";
