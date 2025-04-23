@@ -57,7 +57,7 @@ client.onreadystatechange = function () {
             team1Name = title;
           }
 
-          nextUpTable = "<h2>Next Up</h2><table class='my-table next-up-table'>";
+          nextUpTable = "<h2></h2><table class='my-table next-up-table'>";
 
           // Logos row with "vs"
           nextUpTable += "<tr><td style='text-align:right; width:40%'>";
