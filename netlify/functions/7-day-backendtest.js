@@ -44,36 +44,47 @@ client.onreadystatechange = function () {
         }
 
         if (gameCount === 0) {
-          // FIRST GAME → "Next Up" table
-          var team1 = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
-          var team2 = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
+          // "Next Up" game
+          var team1Img = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
+          var team2Img = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
+
+          var team1Name = "", team2Name = "";
+          if (title.includes(" vs ")) {
+            [team1Name, team2Name] = title.split(" vs ");
+          } else if (title.includes(" v ")) {
+            [team1Name, team2Name] = title.split(" v ");
+          } else {
+            team1Name = title;
+          }
 
           nextUpTable = "<h2>Next Up</h2><table class='my-table next-up-table'>";
 
-
-          // Team logos row
-          nextUpTable += "<tr><td colspan='3' style='text-align:center;'>";
-          if (team1) nextUpTable += "<img src='" + team1 + "' alt='Team 1' style='max-height:200px; margin-right:150px;'>";
-          if (team2) nextUpTable += "<img src='" + team2 + "' alt='Team 2' style='max-height:200px; margin-left:150px;'>";
+          // Logos row with "vs"
+          nextUpTable += "<tr><td style='text-align:right; width:40%'>";
+          if (team1Img) nextUpTable += "<img src='" + team1Img + "' alt='Team 1' style='max-height:150px;'>";
+          nextUpTable += "</td><td style='text-align:center; width:20%'><span style='font-size:32px;'>vs</span></td><td style='text-align:left; width:40%'>";
+          if (team2Img) nextUpTable += "<img src='" + team2Img + "' alt='Team 2' style='max-height:150px;'>";
           nextUpTable += "</td></tr>";
 
-          // Title row
-          nextUpTable += "<tr><td colspan='3' style='text-align:center; font-weight:bold; font-size:35px;'>" + title + "</td></tr>";
+          // Team names row
+          nextUpTable += "<tr><td style='text-align:right; font-weight:bold; font-size:20px;'>" + team1Name + "</td>";
+          nextUpTable += "<td></td>";
+          nextUpTable += "<td style='text-align:left; font-weight:bold; font-size:20px;'>" + team2Name + "</td></tr>";
 
-          // Day, Time, Sound row
+          // Time row
           nextUpTable += "<tr>";
           nextUpTable += "<td style='text-align:right;'>" + dayOfWeek + "</td>";
           nextUpTable += "<td style='text-align:center;'>" + formattedTime + "</td>";
-          nextUpTable += "<td style='text-align:center;'>" + soundDisplay + "</td>";
+          nextUpTable += "<td style='text-align:left;'>" + soundDisplay + "</td>";
           nextUpTable += "</tr>";
 
           nextUpTable += "</table>";
         } else {
-          // REMAINING GAMES → Upcoming table
+          // Other games → Upcoming list
           var rowHTML = "<tr>";
           rowHTML += "<td>" + leagueIcon + "</td>";
           rowHTML += "<td style='text-align:center;'>" + title + "</td>";
-          rowHTML += "<td>" + dayOfWeek + "</td>"
+          rowHTML += "<td>" + dayOfWeek + "</td>";
           rowHTML += "<td>" + formattedTime + "</td>";
           rowHTML += "<td>" + soundDisplay + "</td>";
           rowHTML += "</tr>";
