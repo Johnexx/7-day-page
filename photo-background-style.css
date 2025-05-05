@@ -37,6 +37,6 @@ h1 {
 
 .next-up-table td span {
     display: inline-block;
-    margin: 0 30px; /* adds space around the 'vs' text */
+    margin: 0 50px; /* adds space around the 'vs' text */
 }
 
