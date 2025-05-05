@@ -3,7 +3,6 @@ body {
     padding: 0;
     background-image: url('/images/Venues_AFL_9x16_Image1.jpg');
     background-size: cover;
-    background-position: center;
     background-repeat: no-repeat;
     font-family: 'Anton', sans-serif;
     color: white; /* ensures text is visible over the image */
