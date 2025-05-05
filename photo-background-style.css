@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('/images/Venues_AFL_9x16_Image1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Anton', sans-serif;
+    color: white; /* ensures text is visible over the image */
+}
+
+h1 {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 3em;
+}
+
+#container {
+    /* Optional: Add a semi-transparent background if you need readability */
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+}
