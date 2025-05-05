@@ -26,3 +26,17 @@ h1 {
     font-size: 3em;
     margin-bottom: 20px;
 }
+
+.next-up-table td {
+    padding: 0 30px; /* adds horizontal space between table cells */
+}
+
+.next-up-table img {
+    max-height: 150px;
+}
+
+.next-up-table td span {
+    display: inline-block;
+    margin: 0 30px; /* adds space around the 'vs' text */
+}
+
