@@ -1,25 +1,28 @@
-body {
+html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
     background-image: url('/images/Venues_AFL_9x16_Image1.jpg');
     background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
     font-family: 'Anton', sans-serif;
-    color: white; /* ensures text is visible over the image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#container {
+    background-color: rgba(0, 0, 0, 0.6); /* semi-transparent black */
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 80%;
+    color: white;
 }
 
 h1 {
     text-align: center;
-    margin-top: 50px;
     font-size: 3em;
-}
-
-#container {
-    /* Optional: Add a semi-transparent background if you need readability */
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    margin: 20px;
-    border-radius: 10px;
-     margin-left: auto;
-      margin-right: auto;
+    margin-bottom: 20px;
 }
