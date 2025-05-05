@@ -44,13 +44,13 @@ client.onreadystatechange = function () {
         var nextUpTable = "<h2>Next Up</h2><table class='my-table next-up-table'>";
         nextUpTable += "<tr><td style='text-align:center; width:40%'>";
         if (team1Img) nextUpTable += "<img src='" + team1Img + "' alt='Team 1' style='max-height:150px;'>";
-        nextUpTable += "</td><td style='text-align:center; width:20%'><span style='font-size:32px;'>vs</span></td><td style='text-align:center; width:40%'>";
+        nextUpTable += "</td><td style='text-align:center; width:20%'><span style='font-size:50px;'>vs</span></td><td style='text-align:center; width:40%'>";
         if (team2Img) nextUpTable += "<img src='" + team2Img + "' alt='Team 2' style='max-height:150px;'>";
         nextUpTable += "</td></tr>";
 
-        nextUpTable += "<tr><td style='text-align:center; font-weight:bold; font-size:28px;'>" + team1Name + "</td>";
+        nextUpTable += "<tr><td style='text-align:center; font-weight:bold; font-size:35px;'>" + team1Name + "</td>";
         nextUpTable += "<td></td>";
-        nextUpTable += "<td style='text-align:center; font-weight:bold; font-size:28px;'>" + team2Name + "</td></tr>";
+        nextUpTable += "<td style='text-align:center; font-weight:bold; font-size:35px;'>" + team2Name + "</td></tr>";
 
         nextUpTable += "<tr><td></td><td style='text-align:center; line-height:1.6; font-size:16px;'>" +
           dayOfWeek + "<br>" + formattedTime + "<br>" + soundDisplay + "</td><td></td></tr>";
