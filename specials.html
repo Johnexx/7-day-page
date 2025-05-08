@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Today's Specials</title>
+  <title>Today's Specialss</title>
   <meta charset="utf-8" />
-  <script src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTpgJZJa1oJ5XnuR5t9IO42UZ-4z2GcZf1thfIkZ0ixggFI3uL_3oeAZ61AiKPNACJM6PFGLYf5k4PK/pub?output=csv"></script>
+  <!-- ✅ Load PapaParse properly before using it -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -35,8 +36,9 @@
   <h1>Today's Specials</h1>
   <div class="specials" id="specials"></div>
 
+  <!-- ✅ Your script that calls Papa starts here, *after* PapaParse is loaded -->
   <script>
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpgJZJa1oJ5XnuR5t9IO42UZ-4z2GcZf1thfIkZ0ixggFI3uL_3oeAZ61AiKPNACJM6PFGLYf5k4PK/pubhtml';
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/19YLXlYieGUya9bD5-bvDP453cd65ZwCb6couJjNb0Gw/export?format=csv';
 
     function fetchSpecials() {
       Papa.parse(CSV_URL, {
@@ -47,17 +49,18 @@
           const container = document.getElementById('specials');
           container.innerHTML = '';
           data.forEach(row => {
-            const div = document.createElement('div');
-            div.className = 'item';
-            div.innerHTML = `<span><strong>${row.Item}</strong></span><span>${row.Special}</span>`;
-            container.appendChild(div);
+            if (row.Item && row.Special) {
+              const div = document.createElement('div');
+              div.className = 'item';
+              div.innerHTML = `<span><strong>${row.Item}</strong></span><span>${row.Special}</span>`;
+              container.appendChild(div);
+            }
           });
         }
       });
     }
 
     window.onload = fetchSpecials;
-    setInterval(fetchSpecials, 5 * 60 * 1000); // Auto-refresh every 5 mins
   </script>
 </body>
 </html>
