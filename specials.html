@@ -3,7 +3,7 @@
 <head>
   <title>Today's Specials</title>
   <meta charset="utf-8" />
-  <script src="https://unpkg.com/tabletop@1.6.0/tabletop.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tabletop@1.6.0/tabletop.min.js"></script>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -36,12 +36,15 @@
   <div class="specials" id="specials"></div>
 
   <script>
-    window.onload = function () {
+    const SHEET_ID = '19YLXlYieGUya9bD5-bvDP453cd65ZwCb6couJjNb0Gw';
+
+    function fetchSpecials() {
       Tabletop.init({
-        key: '19YLXlYieGUya9bD5-bvDP453cd65ZwCb6couJjNb0Gw',
+        key: SHEET_ID,
         simpleSheet: true,
-        callback: function(data, tabletop) {
+        callback: function (data, tabletop) {
           const container = document.getElementById('specials');
+          container.innerHTML = ''; // Clear previous content
           data.forEach(row => {
             const div = document.createElement('div');
             div.className = 'item';
@@ -50,7 +53,13 @@
           });
         }
       });
-    };
+    }
+
+    // Load on page load
+    window.onload = fetchSpecials;
+
+    // Auto-refresh every 5 minutes
+    setInterval(fetchSpecials, 5 * 60 * 1000);
   </script>
 </body>
 </html>
