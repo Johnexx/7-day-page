@@ -3,35 +3,31 @@
 <head>
   <title>Today's Specials</title>
   <meta charset="utf-8" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
   <style>
     body {
-      font-family: 'Montserrat', sans-serif;
-      background-color: #f4f4f4;
-      color: #222;
-      padding: 40px;
+      font-family: 'Arial', sans-serif;
+      background: #111;
+      color: #fff;
       text-align: center;
+      padding: 40px;
     }
     h1 {
       font-size: 3em;
       margin-bottom: 20px;
     }
     .specials {
-      max-width: 700px;
-      margin: 0 auto;
-      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      font-size: 1.8em;
     }
     .item {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-bottom: 1px solid #444;
+      padding-bottom: 10px;
     }
-    .item strong {
+    .item span {
       display: block;
-      font-size: 1.5em;
-      margin-bottom: 5px;
     }
   </style>
 </head>
@@ -39,23 +35,21 @@
   <h1>Today's Specials</h1>
   <div class="specials" id="specials"></div>
 
-  <!-- ✅ Tabletop.js CDN loaded here FIRST -->
-  <script src="https://cdn.jsdelivr.net/npm/tabletop@1.6.0/tabletop.min.js"></script>
-
   <script>
-    const SHEET_ID = '19YLXlYieGUya9bD5-bvDP453cd65ZwCb6couJjNb0Gw';
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpgJZJa1oJ5XnuR5t9IO42UZ-4z2GcZf1thfIkZ0ixggFI3uL_3oeAZ61AiKPNACJM6PFGLYf5k4PK/pubhtml';
 
     function fetchSpecials() {
-      Tabletop.init({
-        key: SHEET_ID,
-        simpleSheet: true,
-        callback: function (data) {
+      Papa.parse(CSV_URL, {
+        download: true,
+        header: true,
+        complete: function(results) {
+          const data = results.data;
           const container = document.getElementById('specials');
           container.innerHTML = '';
           data.forEach(row => {
             const div = document.createElement('div');
             div.className = 'item';
-            div.innerHTML = `<strong>${row.Item}</strong>${row.Special}`;
+            div.innerHTML = `<span><strong>${row.Item}</strong></span><span>${row.Special}</span>`;
             container.appendChild(div);
           });
         }
@@ -63,6 +57,7 @@
     }
 
     window.onload = fetchSpecials;
+    setInterval(fetchSpecials, 5 * 60 * 1000); // Auto-refresh every 5 mins
   </script>
 </body>
 </html>
