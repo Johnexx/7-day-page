@@ -42,21 +42,21 @@
 
     .specials {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1000px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 50px;
+      gap: 60px;
       overflow-y: auto;
-      padding-bottom: 100px; /* space for footer */
+      padding-bottom: 100px;
     }
 
     .item {
       width: 100%;
       background: #ffffff;
       border-left: 12px solid #1a3b8d;
-      padding: 40px;
-      border-radius: 12px;
+      padding: 40px 60px;
+      border-radius: 10px;
       box-shadow: 4px 6px 30px rgba(0, 0, 0, 0.1);
       text-align: center;
       transition: transform 0.3s ease;
@@ -67,21 +67,28 @@
     }
 
     .item strong {
-      font-size: 3rem;
-      color: #1a3b8d;
       display: block;
-      margin-bottom: 10px;
+      font-size: 3.2rem;
+      color: #1a3b8d;
+      margin-bottom: 15px;
     }
 
     .item-description {
       font-size: 1.6rem;
-      margin-bottom: 20px;
       color: #333;
+      margin-bottom: 20px;
+      white-space: pre-line; /* to support multi-line formatting */
+    }
+
+    .item-addons {
+      font-size: 1.4rem;
+      color: #444;
+      margin-bottom: 20px;
     }
 
     .item-price {
-      font-size: 2.2rem;
-      color: #388e3c;
+      font-size: 2.5rem;
+      color: #1a3b8d;
       font-weight: bold;
     }
 
@@ -103,7 +110,6 @@
       text-align: center;
       padding: 10px 40px;
       font-family: 'Anton', sans-serif;
-      background-color: transparent;
     }
 
     .footer .notice {
@@ -149,15 +155,14 @@
               div.className = 'item';
 
               const isAvailable = row.Available?.trim().toUpperCase() !== 'N';
-              if (!isAvailable) {
-                div.classList.add('sold-out');
-              }
+              if (!isAvailable) div.classList.add('sold-out');
 
               div.innerHTML = `
                 <strong>${row.Name}</strong>
                 ${!isAvailable ? '<div class="sold-label">SOLD OUT</div>' : ''}
                 <div class="item-description">${row.Description}</div>
-                <div class="item-price">${row.Price}</div>
+                ${row.Addons ? `<div class="item-addons">${row.Addons}</div>` : ''}
+                <div class="item-price">- ${row.Price} -</div>
               `;
               container.appendChild(div);
             }
