@@ -80,6 +80,18 @@
       font-weight: bold;
     }
 
+    .sold-out {
+      opacity: 0.5;
+    }
+
+    .sold-label {
+      font-size: 1.2rem;
+      color: red;
+      margin-top: 8px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
     .footer {
       position: absolute;
       bottom: 20px;
@@ -131,8 +143,15 @@
             if (row.Name && row.Description && row.Price) {
               const div = document.createElement('div');
               div.className = 'item';
+
+              const isAvailable = row.Available?.trim().toUpperCase() !== 'N';
+              if (!isAvailable) {
+                div.classList.add('sold-out');
+              }
+
               div.innerHTML = `
                 <span><strong>${row.Name}</strong></span>
+                ${!isAvailable ? '<div class="sold-label">SOLD OUT</div>' : ''}
                 <span class="item-description">${row.Description}</span>
                 <span class="item-price">${row.Price}</span>
               `;
