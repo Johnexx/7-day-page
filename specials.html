@@ -49,7 +49,7 @@
           const container = document.getElementById('specials');
           container.innerHTML = '';
           data.forEach(row => {
-            if (row.Item && row.Special) {
+            if (row.Name && row.Descripton && row.Price) {
               const div = document.createElement('div');
               div.className = 'item';
               div.innerHTML = `<span><strong>${row.Name}</strong></span><span>${row.Description}</span><span>${row.Price}</span>`;
