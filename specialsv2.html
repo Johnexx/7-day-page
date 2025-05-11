@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Today's Specials</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+  <meta http-equiv="refresh" content="300"> <!-- Auto-refresh every 5 minutes -->
+
+  <!-- Load Anton Font Locally -->
+  <style>
+    @font-face {
+      font-family: 'Anton';
+      src: url('./fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px;
+      font-family: 'Anton', sans-serif;
+      background: #E8E7DC;
+      color: #1a3b8d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 5.5rem;
+      margin-bottom: 30px;
+      color: #1a3b8d;
+      text-shadow: 1px 1px 0px #fff;
+    }
+
+    .specials {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 50px;
+      overflow-y: auto;
+      padding-bottom: 100px; /* space for footer */
+    }
+
+    .item {
+      width: 100%;
+      background: #ffffff;
+      border-left: 12px solid #1a3b8d;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 4px 6px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .item:hover {
+      transform: scale(1.01);
+    }
+
+    .item strong {
+      font-size: 3rem;
+      color: #1a3b8d;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .item-description {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .item-price {
+      font-size: 2.2rem;
+      color: #388e3c;
+      font-weight: bold;
+    }
+
+    .sold-out {
+      opacity: 0.4;
+    }
+
+    .sold-label {
+      font-size: 1.4rem;
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      padding: 10px 40px;
+      font-family: 'Anton', sans-serif;
+      background-color: transparent;
+    }
+
+    .footer .notice {
+      font-size: 1.4rem;
+      color: #1a3b8d;
+      margin-bottom: 5px;
+    }
+
+    .footer .disclaimer {
+      font-size: 1rem;
+      color: rgba(26, 59, 141, 0.5);
+      max-width: 1000px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Today's Specials</h1>
+  <div class="specials" id="specials"></div>
+
+  <div class="footer">
+    <div class="notice">- PLEASE NOTE, SPECIALS CAN NOT BE MODIFIED -</div>
+    <div class="disclaimer">
+      The kitchen at 33 Degrees operates with nuts and gluten throughout. Please advise staff of any allergies. Gluten free (gf), Dairy free (df), Vegetarian (v), and Vegan (ve) options available.
+    </div>
+  </div>
+
+  <script>
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpgJZJa1oJ5XnuR5t9IO42UZ-4z2GcZf1thfIkZ0ixggFI3uL_3oeAZ61AiKPNACJM6PFGLYf5k4PK/pub?output=csv';
+
+    function fetchSpecials() {
+      Papa.parse(CSV_URL, {
+        download: true,
+        header: true,
+        complete: function(results) {
+          const data = results.data;
+          const container = document.getElementById('specials');
+          container.innerHTML = '';
+          data.forEach(row => {
+            if (row.Name && row.Description && row.Price) {
+              const div = document.createElement('div');
+              div.className = 'item';
+
+              const isAvailable = row.Available?.trim().toUpperCase() !== 'N';
+              if (!isAvailable) {
+                div.classList.add('sold-out');
+              }
+
+              div.innerHTML = `
+                <strong>${row.Name}</strong>
+                ${!isAvailable ? '<div class="sold-label">SOLD OUT</div>' : ''}
+                <div class="item-description">${row.Description}</div>
+                <div class="item-price">${row.Price}</div>
+              `;
+              container.appendChild(div);
+            }
+          });
+        }
+      });
+    }
+
+    window.onload = fetchSpecials;
+  </script>
+</body>
+</html>
