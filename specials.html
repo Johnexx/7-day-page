@@ -38,7 +38,7 @@
 
   <!-- ✅ Your script that calls Papa starts here, *after* PapaParse is loaded -->
   <script>
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/19YLXlYieGUya9bD5-bvDP453cd65ZwCb6couJjNb0Gw/export?format=csv';
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpgJZJa1oJ5XnuR5t9IO42UZ-4z2GcZf1thfIkZ0ixggFI3uL_3oeAZ61AiKPNACJM6PFGLYf5k4PK/pub?output=csv';
 
     function fetchSpecials() {
       Papa.parse(CSV_URL, {
@@ -52,7 +52,7 @@
             if (row.Item && row.Special) {
               const div = document.createElement('div');
               div.className = 'item';
-              div.innerHTML = `<span><strong>${row.Item}</strong></span><span>${row.Special}</span>`;
+              div.innerHTML = `<span><strong>${row.Name}</strong></span><span>${row.Description}</span><span>${row.Price}</span>`;
               container.appendChild(div);
             }
           });
