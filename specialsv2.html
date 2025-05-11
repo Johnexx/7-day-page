@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <title>Today's Specials</title>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
-  <meta http-equiv="refresh" content="300"> <!-- Auto-refresh every 5 minutes -->
+  <meta http-equiv="refresh" content="300">
 
-  <!-- Load Anton Font Locally -->
   <style>
     @font-face {
       font-family: 'Anton';
@@ -21,75 +20,65 @@
 
     body {
       margin: 0;
-      padding: 40px;
+      padding: 20px;
       font-family: 'Anton', sans-serif;
       background: #E8E7DC;
       color: #1a3b8d;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
       height: 100vh;
       overflow: hidden;
     }
 
     h1 {
-      font-size: 5.5rem;
-      margin-bottom: 30px;
-      color: #1a3b8d;
-      text-shadow: 1px 1px 0px #fff;
+      font-size: 4rem;
+      margin: 10px 0 20px 0;
     }
 
     .specials {
       width: 100%;
-      max-width: 1000px;
+      max-width: 1400px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 60px;
-      overflow-y: auto;
-      padding-bottom: 100px;
+      gap: 25px;
+      flex-grow: 1;
+      overflow: hidden;
     }
 
     .item {
       width: 100%;
       background: #ffffff;
-      border-left: 12px solid #1a3b8d;
-      padding: 40px 60px;
+      border-left: 8px solid #1a3b8d;
+      padding: 25px 30px;
       border-radius: 10px;
-      box-shadow: 4px 6px 30px rgba(0, 0, 0, 0.1);
+      box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.08);
       text-align: center;
-      transition: transform 0.3s ease;
-    }
-
-    .item:hover {
-      transform: scale(1.01);
     }
 
     .item strong {
       display: block;
-      font-size: 3.2rem;
-      color: #1a3b8d;
-      margin-bottom: 15px;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
     }
 
     .item-description {
-      font-size: 1.6rem;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
       color: #333;
-      margin-bottom: 20px;
-      white-space: pre-line; /* to support multi-line formatting */
+      white-space: pre-line;
     }
 
     .item-addons {
-      font-size: 1.4rem;
-      color: #444;
-      margin-bottom: 20px;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: #555;
     }
 
     .item-price {
-      font-size: 2.5rem;
+      font-size: 1.8rem;
       color: #1a3b8d;
-      font-weight: bold;
     }
 
     .sold-out {
@@ -97,33 +86,30 @@
     }
 
     .sold-label {
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       color: red;
+      margin-top: 5px;
       font-weight: bold;
-      margin-top: 10px;
     }
 
     .footer {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
+      margin-top: auto;
       text-align: center;
-      padding: 10px 40px;
+      padding-top: 10px;
       font-family: 'Anton', sans-serif;
     }
 
     .footer .notice {
-      font-size: 1.4rem;
-      color: #1a3b8d;
-      margin-bottom: 5px;
+      font-size: 1.1rem;
+      margin-bottom: 3px;
     }
 
     .footer .disclaimer {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: rgba(26, 59, 141, 0.5);
       max-width: 1000px;
       margin: 0 auto;
-      line-height: 1.5;
+      line-height: 1.4;
     }
   </style>
 </head>
