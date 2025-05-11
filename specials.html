@@ -5,7 +5,7 @@
   <title>Today's Specials</title>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
   <meta http-equiv="refresh" content="300"> <!-- Auto-refresh every 5 minutes -->
-  
+
   <!-- Load Anton Font Locally -->
   <style>
     @font-face {
@@ -47,7 +47,7 @@
       gap: 40px;
       overflow-y: auto;
       padding-right: 20px;
-      padding-bottom: 40px;
+      padding-bottom: 100px; /* space for footer */
     }
 
     .item {
@@ -79,11 +79,42 @@
       color: #388e3c;
       font-weight: bold;
     }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      padding: 10px 40px;
+      font-family: 'Anton', sans-serif;
+      background-color: transparent;
+    }
+
+    .footer .notice {
+      font-size: 1.4rem;
+      color: #1a3b8d;
+      margin-bottom: 5px;
+    }
+
+    .footer .disclaimer {
+      font-size: 1rem;
+      color: rgba(26, 59, 141, 0.5);
+      max-width: 1000px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
   <h1>Today's Specials</h1>
   <div class="specials" id="specials"></div>
+
+  <div class="footer">
+    <div class="notice">- PLEASE NOTE, SPECIALS CAN NOT BE MODIFIED -</div>
+    <div class="disclaimer">
+      The kitchen at 33 Degrees operates with nuts and gluten throughout. Please advise staff of any allergies. Gluten free (gf), Dairy free (df), Vegetarian (v), and Vegan (ve) options available.
+    </div>
+  </div>
 
   <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpgJZJa1oJ5XnuR5t9IO42UZ-4z2GcZf1thfIkZ0ixggFI3uL_3oeAZ61AiKPNACJM6PFGLYf5k4PK/pub?output=csv';
