@@ -129,4 +129,61 @@
 
           if (startTime >= currentDate && startTime <= nextSixDays) {
             var description = items[i].getElementsByTagName("description")[0]?.textContent || "";
-            if (!description.toLowerCase().includes("af
+            if (!description.toLowerCase().includes("afl")) continue;
+
+            var title = items[i].getElementsByTagName("title")[0]?.textContent || "";
+            var team1Logo = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
+            var team2Logo = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
+
+            var team1Name = "", team2Name = "";
+            if (title.includes(" vs ")) {
+              [team1Name, team2Name] = title.split(" vs ");
+            } else if (title.includes(" v ")) {
+              [team1Name, team2Name] = title.split(" v ");
+            } else {
+              team1Name = title;
+            }
+
+            var matchDay = startTime.toLocaleDateString(undefined, { weekday: 'long' });
+            var matchTime = formatTime(startTime);
+
+            var matchDiv = document.createElement("div");
+            matchDiv.className = "match";
+            matchDiv.innerHTML = `
+              <span>${matchDay}</span>
+              <div class="teams">
+                <div class="team">${team1Name}</div>
+                <div class="logo"><img src="${team1Logo}" alt="${team1Name} Logo"></div>
+                <div class="team">
+                  <div>vs</div>
+                  <div class="time">${matchTime}</div>
+                </div>
+                <div class="logo"><img src="${team2Logo}" alt="${team2Name} Logo"></div>
+                <div class="team">${team2Name}</div>
+              </div>
+            `;
+            schedule.appendChild(matchDiv);
+            gameCount++;
+          }
+        }
+
+        if (gameCount === 0) {
+          schedule.innerHTML = "<p>No AFL games found for this week.</p>";
+        }
+      }
+    };
+
+    client.send();
+
+    function formatTime(date) {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      return hours + ':' + minutes + ' ' + ampm;
+    }
+  </script>
+</body>
+</html>
