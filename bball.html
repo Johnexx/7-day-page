@@ -176,7 +176,12 @@
         if (Object.keys(dayMap).length === 0) {
           schedule.innerHTML = "<p>No AFL games found for this week.</p>";
         } else {
-          Object.keys(dayMap).forEach(day => {
+          const weekdayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+          const sortedDays = Object.keys(dayMap).sort((a, b) => {
+            return weekdayOrder.indexOf(a) - weekdayOrder.indexOf(b);
+          });
+
+          sortedDays.forEach(day => {
             const daySection = document.createElement("div");
             daySection.className = "day-group";
             daySection.innerHTML = `<div class="day-heading">${day}</div>${dayMap[day].join('')}`;
