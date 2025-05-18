@@ -28,23 +28,31 @@
       padding: 20px;
     }
 
+    .day-group {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    .day-heading {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 20px 0 10px;
+      text-align: center;
+      border-bottom: 2px solid #1a3b8d;
+      padding-bottom: 5px;
+    }
+
     .match {
       background: #E8E7DC;
       border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
+      width: 100%;
       margin: 10px 0;
       padding: 15px;
       display: flex;
       flex-direction: column;
       align-items: center;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .match span {
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 10px;
     }
 
     .teams {
@@ -100,75 +108,80 @@
   </section>
 
   <script>
-    var client;
-    if (window.XMLHttpRequest) {
-      client = new XMLHttpRequest();
-    } else {
-      client = new ActiveXObject("Microsoft.XMLHTTP");
-    }
+    const dayMap = {};
 
+    const client = new XMLHttpRequest();
     client.open('GET', 'https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1');
 
     client.onreadystatechange = function () {
-      if (client.readyState == 4 && client.status == 200) {
-        var xmlfanzo = client.responseXML;
-        var items = xmlfanzo.getElementsByTagName("item");
-        var currentDate = new Date();
-        var nextSixDays = new Date(currentDate);
-        nextSixDays.setDate(currentDate.getDate() + 7);
+      if (client.readyState === 4 && client.status === 200) {
+        const xmlfanzo = client.responseXML;
+        const items = xmlfanzo.getElementsByTagName("item");
+        const now = new Date();
+        const weekFromNow = new Date();
+        weekFromNow.setDate(now.getDate() + 7);
 
-        var schedule = document.getElementById("schedule");
-        var gameCount = 0;
-
-        for (var i = 0; i < items.length; i++) {
-          var startTimeNode = items[i].getElementsByTagName("startTimeLocal")[0];
+        for (let i = 0; i < items.length; i++) {
+          const startTimeNode = items[i].getElementsByTagName("startTimeLocal")[0];
           if (!startTimeNode || !startTimeNode.childNodes[0]) continue;
 
-          var startTimeStr = startTimeNode.childNodes[0].nodeValue;
-          var startTime = new Date(startTimeStr);
+          const startTimeStr = startTimeNode.childNodes[0].nodeValue;
+          const startTime = new Date(startTimeStr);
 
-          if (startTime >= currentDate && startTime <= nextSixDays) {
-            var description = items[i].getElementsByTagName("description")[0]?.textContent || "";
-            if (!description.toLowerCase().includes("afl")) continue;
+          if (startTime < now || startTime > weekFromNow) continue;
 
-            var title = items[i].getElementsByTagName("title")[0]?.textContent || "";
-            var team1Logo = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
-            var team2Logo = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
+          const description = items[i].getElementsByTagName("description")[0]?.textContent || "";
+          if (!description.toLowerCase().includes("afl")) continue;
 
-            var team1Name = "", team2Name = "";
-            if (title.includes(" vs ")) {
-              [team1Name, team2Name] = title.split(" vs ");
-            } else if (title.includes(" v ")) {
-              [team1Name, team2Name] = title.split(" v ");
-            } else {
-              team1Name = title;
-            }
+          const title = items[i].getElementsByTagName("title")[0]?.textContent || "";
+          const team1Logo = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
+          const team2Logo = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
 
-            var matchDay = startTime.toLocaleDateString(undefined, { weekday: 'long' });
-            var matchTime = formatTime(startTime);
+          let [team1Name, team2Name] = ["", ""];
+          if (title.includes(" vs ")) {
+            [team1Name, team2Name] = title.split(" vs ");
+          } else if (title.includes(" v ")) {
+            [team1Name, team2Name] = title.split(" v ");
+          } else {
+            team1Name = title;
+          }
 
-            var matchDiv = document.createElement("div");
-            matchDiv.className = "match";
-            matchDiv.innerHTML = `
-              <span>${matchDay}</span>
+          const day = startTime.toLocaleDateString(undefined, { weekday: 'long' });
+          const time = formatTime(startTime);
+
+          const matchHTML = `
+            <div class="match">
               <div class="teams">
                 <div class="team">${team1Name}</div>
                 <div class="logo"><img src="${team1Logo}" alt="${team1Name} Logo"></div>
                 <div class="team">
                   <div>vs</div>
-                  <div class="time">${matchTime}</div>
+                  <div class="time">${time}</div>
                 </div>
                 <div class="logo"><img src="${team2Logo}" alt="${team2Name} Logo"></div>
                 <div class="team">${team2Name}</div>
               </div>
-            `;
-            schedule.appendChild(matchDiv);
-            gameCount++;
+            </div>
+          `;
+
+          if (!dayMap[day]) {
+            dayMap[day] = [];
           }
+
+          dayMap[day].push(matchHTML);
         }
 
-        if (gameCount === 0) {
+        const schedule = document.getElementById("schedule");
+
+        if (Object.keys(dayMap).length === 0) {
           schedule.innerHTML = "<p>No AFL games found for this week.</p>";
+        } else {
+          Object.keys(dayMap).forEach(day => {
+            const daySection = document.createElement("div");
+            daySection.className = "day-group";
+            daySection.innerHTML = `<div class="day-heading">${day}</div>${dayMap[day].join('')}`;
+            schedule.appendChild(daySection);
+          });
         }
       }
     };
@@ -176,9 +189,9 @@
     client.send();
 
     function formatTime(date) {
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? 'PM' : 'AM';
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12;
       hours = hours ? hours : 12;
       minutes = minutes < 10 ? '0' + minutes : minutes;
