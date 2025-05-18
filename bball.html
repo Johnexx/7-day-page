@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AFL This Week</title>
   <style>
+    @font-face {
+      font-family: 'Anton';
+      src: url('/fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -18,7 +25,7 @@
       padding: 20px;
       text-align: center;
       font-size: 2.5rem;
-      font-weight: bold;
+      font-family: 'Anton', sans-serif;
     }
 
     .schedule {
@@ -36,7 +43,7 @@
 
     .day-heading {
       font-size: 1.8rem;
-      font-weight: bold;
+      font-family: 'Anton', sans-serif;
       margin: 20px 0 10px;
       text-align: center;
       border-bottom: 2px solid #1a3b8d;
@@ -71,6 +78,8 @@
       width: 120px;
       min-height: 100px;
       text-align: center;
+      font-family: 'Anton', sans-serif;
+      font-size: 1.1rem;
     }
 
     .logo {
@@ -183,7 +192,7 @@
 
         const schedule = document.getElementById("schedule");
 
-        const sortedDates = Object.keys(dateMap).sort(); // sorts by actual date string
+        const sortedDates = Object.keys(dateMap).sort(); // sort by ISO date
         if (sortedDates.length === 0) {
           schedule.innerHTML = "<p>No AFL games in the next 6 days.</p>";
         } else {
