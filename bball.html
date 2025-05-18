@@ -33,107 +33,122 @@
       margin: 10px 0;
       padding: 15px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-    }
-    .match span {
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .teams {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
       flex-wrap: wrap;
     }
-    .team {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 0 10px;
+    .match span {
+      flex: 1 1 100%;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 5px;
     }
-    .teams img {
-      width: 100px;
-      height: 100px;
-      margin: 0 10px;
-    }
-    .time {
-      font-size: 1.1rem;
-      color: #333;
-      margin-top: 5px;
+.teams {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.time {
+  font-size: 1.1rem;
+  color: #333;
+  margin-top: 5px;
+}
+    @media screen and (min-width: 600px) {
+      .match span {
+        flex: 1;
+        margin-bottom: 0;
+      }
     }
   </style>
 </head>
 <body>
   <header>AFL THIS WEEK</header>
-  <section class="schedule" id="schedule">
-    <!-- Matches will be inserted here -->
+  <section class="schedule">
+    <div class="match">
+  <span>Thursday</span>
+  <div class="teams">
+    <div class="team">Geelong Cats</div>
+    <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14178/logo_1581507389.png" alt="Team Logo" style="width: 100px; height: 100px;">
+    <div class="team">
+      <div>vs</div>
+      <div class="time">5:30 PM</div>
+    </div>
+        <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14140/logo_1581507281.png" alt="Team Logo" style="width: 100px; height: 100px;">    
+    <div class="team">Western Bulldogs</div>
+  </div>
+</div>
+    
+    <div class="match">
+      <span>Thursday</span>
+      <div class="teams">
+        <div class="team">Geelong Cats</div>
+        <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14178/logo_1581507389.png" alt="Team Logo" style="width: 100px; height: 100px;">
+        <div class="team">vs</div>
+        <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14140/logo_1581507281.png" alt="Team Logo" style="width: 100px; height: 100px;">
+        <div class="team">Western Bulldogs</div>
+      </div>
+      <div class="time">5:30 PM</div>
+    </div>
+    <div class="match">
+      <span>Friday</span>
+      <div class="teams">
+        <div class="team">Essendon Bombers</div>
+        <div class="team">vs</div>
+        <div class="team">Richmond Tigers</div>
+      </div>
+      <div class="time">5:40 PM</div>
+    </div>
+    <div class="match">
+      <span>Saturday</span>
+      <div class="teams">
+        <div class="team">Carlton Blues</div>
+        <div class="team">vs</div>
+        <div class="team">GWS Giants</div>
+      </div>
+      <div class="time">10:35 AM</div>
+    </div>
+    <div class="match">
+      <div class="teams">
+        <div class="team">Hawthorn Hawks</div>
+        <div class="team">vs</div>
+        <div class="team">Brisbane Lions</div>
+      </div>
+      <div class="time">2:15 PM</div>
+    </div>
+    <div class="match">
+      <div class="teams">
+        <div class="team">North Melbourne</div>
+        <div class="team">vs</div>
+        <div class="team">Collingwood Magpies</div>
+      </div>
+      <div class="time">5:35 PM</div>
+    </div>
+    <div class="match">
+      <div class="teams">
+        <div class="team">Fremantle Dockers</div>
+        <div class="team">vs</div>
+        <div class="team">Port Adelaide Power</div>
+      </div>
+      <div class="time">6:10 PM</div>
+    </div>
+    <div class="match">
+      <span>Sunday</span>
+      <div class="teams">
+        <div class="team">Adelaide Crows</div>
+        <div class="team">vs</div>
+        <div class="team">West Coast Eagles</div>
+      </div>
+      <div class="time">11:10 AM</div>
+    </div>
   </section>
-
-  <script>
-    async function loadAFLMatches() {
-      try {
-        const response = await fetch('https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1');
-        const text = await response.text();
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(text, "application/xml");
-
-        const now = new Date();
-        const weekFromNow = new Date();
-        weekFromNow.setDate(now.getDate() + 7);
-
-        const items = xml.querySelectorAll("item");
-        const schedule = document.getElementById("schedule");
-
-        items.forEach(item => {
-          const description = item.querySelector("description")?.textContent;
-          const title = item.querySelector("title")?.textContent;
-          const startTimeStr = item.querySelector("startTimeLocal")?.textContent;
-          const team1Logo = item.querySelector("team1 > logo")?.textContent;
-          const team2Logo = item.querySelector("team2 > logo")?.textContent;
-
-          if (!description || !title || !startTimeStr || !team1Logo || !team2Logo) return;
-          if (description.trim() !== "AFL" || !title.includes("vs")) return;
-
-          const startTime = new Date(startTimeStr);
-          if (startTime < now || startTime > weekFromNow) return;
-
-          const [team1, team2] = title.split("vs").map(t => t.trim());
-
-          const day = startTime.toLocaleDateString(undefined, { weekday: 'long' });
-          const timeFormatted = startTime.toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-          });
-
-          const matchDiv = document.createElement("div");
-          matchDiv.className = "match";
-
-          matchDiv.innerHTML = `
-            <span>${day}</span>
-            <div class="teams">
-              <div class="team">${team1}</div>
-              <img src="${team1Logo}" alt="${team1} Logo">
-              <div class="team">
-                <div>vs</div>
-                <div class="time">${timeFormatted}</div>
-              </div>
-              <img src="${team2Logo}" alt="${team2} Logo">
-              <div class="team">${team2}</div>
-            </div>
-          `;
-
-          schedule.appendChild(matchDiv);
-        });
-      } catch (error) {
-        console.error("Error loading AFL matches:", error);
-      }
-    }
-
-    loadAFLMatches();
-  </script>
 </body>
 </html>
