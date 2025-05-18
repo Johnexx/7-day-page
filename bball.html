@@ -24,8 +24,15 @@
       color: white;
       padding: 20px;
       text-align: center;
-      font-size: 5rem;
+      font-size: 5rem; /* Doubled font size */
       font-family: 'Anton', sans-serif;
+    }
+
+    .main-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .schedule {
@@ -107,14 +114,20 @@
       .team {
         width: 100px;
       }
+
+      header {
+        font-size: 3rem; /* responsive header scaling */
+      }
     }
   </style>
 </head>
 <body>
   <header>AFL THIS WEEK</header>
-  <section class="schedule" id="schedule">
-    <!-- Matches will be dynamically inserted here -->
-  </section>
+  <main class="main-wrapper">
+    <section class="schedule" id="schedule">
+      <!-- Matches will be dynamically inserted here -->
+    </section>
+  </main>
 
   <script>
     const dateMap = {};
