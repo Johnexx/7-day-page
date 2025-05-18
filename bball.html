@@ -108,7 +108,7 @@
   </section>
 
   <script>
-    const dayMap = {};
+    const dateMap = {};
 
     const client = new XMLHttpRequest();
     client.open('GET', 'https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1');
@@ -117,9 +117,10 @@
       if (client.readyState === 4 && client.status === 200) {
         const xmlfanzo = client.responseXML;
         const items = xmlfanzo.getElementsByTagName("item");
+
         const now = new Date();
-        const weekFromNow = new Date();
-        weekFromNow.setDate(now.getDate() + 7);
+        const endDate = new Date();
+        endDate.setDate(now.getDate() + 6); // today + next 5 days
 
         for (let i = 0; i < items.length; i++) {
           const startTimeNode = items[i].getElementsByTagName("startTimeLocal")[0];
@@ -128,7 +129,7 @@
           const startTimeStr = startTimeNode.childNodes[0].nodeValue;
           const startTime = new Date(startTimeStr);
 
-          if (startTime < now || startTime > weekFromNow) continue;
+          if (startTime < now || startTime > endDate) continue;
 
           const description = items[i].getElementsByTagName("description")[0]?.textContent || "";
           if (!description.toLowerCase().includes("afl")) continue;
@@ -146,7 +147,13 @@
             team1Name = title;
           }
 
-          const day = startTime.toLocaleDateString(undefined, { weekday: 'long' });
+          const day = startTime.toLocaleDateString(undefined, {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'short'
+          });
+
+          const dateKey = startTime.toISOString().split("T")[0]; // YYYY-MM-DD for sorting
           const time = formatTime(startTime);
 
           const matchHTML = `
@@ -164,27 +171,27 @@
             </div>
           `;
 
-          if (!dayMap[day]) {
-            dayMap[day] = [];
+          if (!dateMap[dateKey]) {
+            dateMap[dateKey] = {
+              heading: day,
+              matches: []
+            };
           }
 
-          dayMap[day].push(matchHTML);
+          dateMap[dateKey].matches.push(matchHTML);
         }
 
         const schedule = document.getElementById("schedule");
 
-        if (Object.keys(dayMap).length === 0) {
-          schedule.innerHTML = "<p>No AFL games found for this week.</p>";
+        const sortedDates = Object.keys(dateMap).sort(); // sorts by actual date string
+        if (sortedDates.length === 0) {
+          schedule.innerHTML = "<p>No AFL games in the next 6 days.</p>";
         } else {
-          const weekdayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-          const sortedDays = Object.keys(dayMap).sort((a, b) => {
-            return weekdayOrder.indexOf(a) - weekdayOrder.indexOf(b);
-          });
-
-          sortedDays.forEach(day => {
+          sortedDates.forEach(dateKey => {
+            const group = dateMap[dateKey];
             const daySection = document.createElement("div");
             daySection.className = "day-group";
-            daySection.innerHTML = `<div class="day-heading">${day}</div>${dayMap[day].join('')}`;
+            daySection.innerHTML = `<div class="day-heading">${group.heading}</div>${group.matches.join('')}`;
             schedule.appendChild(daySection);
           });
         }
