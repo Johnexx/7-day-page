@@ -43,22 +43,25 @@
       font-weight: bold;
       margin-bottom: 5px;
     }
-    .teams {
-      display: flex;
-      justify-content: space-around;
-      width: 100%;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .team {
-      flex: 1;
-      text-align: center;
-    }
-    .time {
-      font-size: 1.2rem;
-      color: #333;
-      text-align: center;
-    }
+.teams {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.time {
+  font-size: 1.1rem;
+  color: #333;
+  margin-top: 5px;
+}
     @media screen and (min-width: 600px) {
       .match span {
         flex: 1;
@@ -70,6 +73,20 @@
 <body>
   <header>AFL THIS WEEK</header>
   <section class="schedule">
+    <div class="match">
+  <span>Thursday</span>
+  <div class="teams">
+    <div class="team">Geelong Cats</div>
+    <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14178/logo_1581507389.png" alt="Team Logo" style="width: 100px; height: 100px;">
+    <div class="team">
+      <div>vs</div>
+      <div class="time">5:30 PM</div>
+    </div>
+        <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14140/logo_1581507281.png" alt="Team Logo" style="width: 100px; height: 100px;">    
+    <div class="team">Western Bulldogs</div>
+  </div>
+</div>
+    
     <div class="match">
       <span>Thursday</span>
       <div class="teams">
