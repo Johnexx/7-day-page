@@ -33,122 +33,130 @@
       margin: 10px 0;
       padding: 15px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      flex-wrap: wrap;
     }
     .match span {
-      flex: 1 1 100%;
       text-align: center;
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
     }
-.teams {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.team {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 10px;
-}
-
-.time {
-  font-size: 1.1rem;
-  color: #333;
-  margin-top: 5px;
-}
-    @media screen and (min-width: 600px) {
-      .match span {
-        flex: 1;
-        margin-bottom: 0;
-      }
+    .teams {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 10px;
+    }
+    .teams img {
+      width: 100px;
+      height: 100px;
+      margin: 0 10px;
+    }
+    .time {
+      font-size: 1.1rem;
+      color: #333;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
   <header>AFL THIS WEEK</header>
-  <section class="schedule">
-    <div class="match">
-  <span>Thursday</span>
-  <div class="teams">
-    <div class="team">Geelong Cats</div>
-    <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14178/logo_1581507389.png" alt="Team Logo" style="width: 100px; height: 100px;">
-    <div class="team">
-      <div>vs</div>
-      <div class="time">5:30 PM</div>
-    </div>
-        <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14140/logo_1581507281.png" alt="Team Logo" style="width: 100px; height: 100px;">    
-    <div class="team">Western Bulldogs</div>
-  </div>
-</div>
-    
-    <div class="match">
-      <span>Thursday</span>
-      <div class="teams">
-        <div class="team">Geelong Cats</div>
-        <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14178/logo_1581507389.png" alt="Team Logo" style="width: 100px; height: 100px;">
-        <div class="team">vs</div>
-        <img src="https://matchpint-cdn.matchpint.cloud/shared/imagenes/teams/14140/logo_1581507281.png" alt="Team Logo" style="width: 100px; height: 100px;">
-        <div class="team">Western Bulldogs</div>
-      </div>
-      <div class="time">5:30 PM</div>
-    </div>
-    <div class="match">
-      <span>Friday</span>
-      <div class="teams">
-        <div class="team">Essendon Bombers</div>
-        <div class="team">vs</div>
-        <div class="team">Richmond Tigers</div>
-      </div>
-      <div class="time">5:40 PM</div>
-    </div>
-    <div class="match">
-      <span>Saturday</span>
-      <div class="teams">
-        <div class="team">Carlton Blues</div>
-        <div class="team">vs</div>
-        <div class="team">GWS Giants</div>
-      </div>
-      <div class="time">10:35 AM</div>
-    </div>
-    <div class="match">
-      <div class="teams">
-        <div class="team">Hawthorn Hawks</div>
-        <div class="team">vs</div>
-        <div class="team">Brisbane Lions</div>
-      </div>
-      <div class="time">2:15 PM</div>
-    </div>
-    <div class="match">
-      <div class="teams">
-        <div class="team">North Melbourne</div>
-        <div class="team">vs</div>
-        <div class="team">Collingwood Magpies</div>
-      </div>
-      <div class="time">5:35 PM</div>
-    </div>
-    <div class="match">
-      <div class="teams">
-        <div class="team">Fremantle Dockers</div>
-        <div class="team">vs</div>
-        <div class="team">Port Adelaide Power</div>
-      </div>
-      <div class="time">6:10 PM</div>
-    </div>
-    <div class="match">
-      <span>Sunday</span>
-      <div class="teams">
-        <div class="team">Adelaide Crows</div>
-        <div class="team">vs</div>
-        <div class="team">West Coast Eagles</div>
-      </div>
-      <div class="time">11:10 AM</div>
-    </div>
+  <section class="schedule" id="schedule">
+    <!-- JS-generated matches will appear here -->
   </section>
+
+  <script>
+    var client;
+    if (window.XMLHttpRequest) {
+      client = new XMLHttpRequest();
+    } else {
+      client = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    client.open('GET', 'https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1');
+
+    client.onreadystatechange = function () {
+      if (client.readyState == 4 && client.status == 200) {
+        var xmlfanzo = client.responseXML;
+        var items = xmlfanzo.getElementsByTagName("item");
+        var currentDate = new Date();
+        var nextSixDays = new Date(currentDate);
+        nextSixDays.setDate(currentDate.getDate() + 7);
+
+        var schedule = document.getElementById("schedule");
+        var gameCount = 0;
+
+        for (var i = 0; i < items.length; i++) {
+          var startTimeNode = items[i].getElementsByTagName("startTimeLocal")[0];
+          if (!startTimeNode || !startTimeNode.childNodes[0]) continue;
+          var startTimeStr = startTimeNode.childNodes[0].nodeValue;
+          var startTime = new Date(startTimeStr);
+
+          if (startTime >= currentDate && startTime <= nextSixDays) {
+            var description = items[i].getElementsByTagName("description")[0]?.textContent || "";
+            if (!description.toLowerCase().includes("afl")) continue;
+
+            var title = items[i].getElementsByTagName("title")[0]?.textContent || "";
+            var team1Logo = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
+            var team2Logo = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
+
+            var team1Name = "", team2Name = "";
+            if (title.includes(" vs ")) {
+              [team1Name, team2Name] = title.split(" vs ");
+            } else if (title.includes(" v ")) {
+              [team1Name, team2Name] = title.split(" v ");
+            } else {
+              team1Name = title;
+            }
+
+            var matchDay = startTime.toLocaleDateString(undefined, { weekday: 'long' });
+            var matchTime = formatTime(startTime);
+
+            // Create match card
+            var matchDiv = document.createElement("div");
+            matchDiv.className = "match";
+            matchDiv.innerHTML = `
+              <span>${matchDay}</span>
+              <div class="teams">
+                <div class="team">${team1Name}</div>
+                <img src="${team1Logo}" alt="${team1Name} Logo">
+                <div class="team">
+                  <div>vs</div>
+                  <div class="time">${matchTime}</div>
+                </div>
+                <img src="${team2Logo}" alt="${team2Name} Logo">
+                <div class="team">${team2Name}</div>
+              </div>
+            `;
+            schedule.appendChild(matchDiv);
+            gameCount++;
+          }
+        }
+
+        if (gameCount === 0) {
+          schedule.innerHTML = "<p>No AFL games found for this week.</p>";
+        }
+      }
+    };
+
+    client.send();
+
+    function formatTime(date) {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      return hours + ':' + minutes + ' ' + ampm;
+    }
+  </script>
 </body>
 </html>
