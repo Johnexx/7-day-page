@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AFL This Week</title>
+  <style>
+    @font-face {
+      font-family: 'Anton';
+      src: url('/fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #E8E7DC;
+      color: #1a3b8d;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #E8E7DC;
+      color: #1a3b8d;
+      padding: 20px;
+      text-align: center;
+      font-size: 5rem;
+      font-family: 'Anton', sans-serif;
+    }
+
+    .main-wrapper {
+      flex: 1;
+      display: block; /* Removed vertical centering */
+    }
+
+    .schedule {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .day-group {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    .day-heading {
+      font-size: 1.8rem;
+      font-family: 'Anton', sans-serif;
+      margin: 20px 0 10px;
+      text-align: center;
+      border-bottom: 2px solid #1a3b8d;
+      padding-bottom: 5px;
+    }
+
+    .match {
+      background: #E8E7DC;
+      border-radius: 10px;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .teams {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      min-height: 100px;
+      text-align: center;
+      font-family: 'Anton', sans-serif;
+      font-size: 1.1rem;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 10px;
+    }
+
+    .logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .time {
+      font-size: 1.1rem;
+      color: #333;
+      margin-top: 5px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px 20px;
+      background-color: #1a3b8d;
+      color: white;
+      font-family: 'Anton', sans-serif;
+      font-size: 1.3rem;
+    }
+
+    .footer img {
+      margin-top: 10px;
+      max-width: 200px;
+      height: auto;
+    }
+
+    @media screen and (max-width: 500px) {
+      .team {
+        width: 100px;
+      }
+
+      header {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>AFL THIS WEEK</header>
+  <main class="main-wrapper">
+    <section class="schedule" id="schedule">
+      <!-- Matches will be dynamically inserted here -->
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>All AFL games shown live and loud in the sports bar at</p>
+    <img src="https://www.33degreesesp.com.au/wp-content/uploads/2022/05/33Degrees-clear-BG.png" alt="33 Degrees Logo">
+  </footer>
+
+  <script>
+    const dateMap = {};
+
+    const client = new XMLHttpRequest();
+    client.open('GET', 'https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1');
+
+    client.onreadystatechange = function () {
+      if (client.readyState === 4 && client.status === 200) {
+        const xmlfanzo = client.responseXML;
+        const items = xmlfanzo.getElementsByTagName("item");
+
+        const now = new Date();
+        const endDate = new Date();
+        endDate.setDate(now.getDate() + 6); // today + next 5 days
+
+        for (let i = 0; i < items.length; i++) {
+          const startTimeNode = items[i].getElementsByTagName("startTimeLocal")[0];
+          if (!startTimeNode || !startTimeNode.childNodes[0]) continue;
+
+          const startTimeStr = startTimeNode.childNodes[0].nodeValue;
+          const startTime = new Date(startTimeStr);
+
+          if (startTime < now || startTime > endDate) continue;
+
+          const description = items[i].getElementsByTagName("description")[0]?.textContent || "";
+          if (!description.toLowerCase().includes("afl")) continue;
+
+          const title = items[i].getElementsByTagName("title")[0]?.textContent || "";
+          const team1Logo = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
+          const team2Logo = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
+
+          let [team1Name, team2Name] = ["", ""];
+          if (title.includes(" vs ")) {
+            [team1Name, team2Name] = title.split(" vs ");
+          } else if (title.includes(" v ")) {
+            [team1Name, team2Name] = title.split(" v ");
+          } else {
+            team1Name = title;
+          }
+
+          const day = startTime.toLocaleDateString(undefined, {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'short'
+          });
+
+          const dateKey = startTime.toISOString().split("T")[0]; // YYYY-MM-DD for sorting
+          const time = formatTime(startTime);
+
+          const matchHTML = `
+            <div class="match">
+              <div class="teams">
+                <div class="team">${team1Name}</div>
+                <div class="logo"><img src="${team1Logo}" alt="${team1Name} Logo"></div>
+                <div class="team">
+                  <div>vs</div>
+                  <div class="time">${time}</div>
+                </div>
+                <div class="logo"><img src="${team2Logo}" alt="${team2Name} Logo"></div>
+                <div class="team">${team2Name}</div>
+              </div>
+            </div>
+          `;
+
+          if (!dateMap[dateKey]) {
+            dateMap[dateKey] = {
+              heading: day,
+              matches: []
+            };
+          }
+
+          dateMap[dateKey].matches.push(matchHTML);
+        }
+
+        const schedule = document.getElementById("schedule");
+
+        const sortedDates = Object.keys(dateMap).sort(); // sort by ISO date
+        if (sortedDates.length === 0) {
+          schedule.innerHTML = "<p>No AFL games in the next 6 days.</p>";
+        } else {
+          sortedDates.forEach(dateKey => {
+            const group = dateMap[dateKey];
+            const daySection = document.createElement("div");
+            daySection.className = "day-group";
+            daySection.innerHTML = `<div class="day-heading">${group.heading}</div>${group.matches.join('')}`;
+            schedule.appendChild(daySection);
+          });
+        }
+      }
+    };
+
+    client.send();
+
+    function formatTime(date) {
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      return hours + ':' + minutes + ' ' + ampm;
+    }
+  </script>
+</body>
+</html>
