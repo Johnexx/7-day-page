@@ -16,7 +16,6 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden; /* Prevent scrollbars */
     }
 
     body {
@@ -32,47 +31,50 @@
     }
 
     header {
-      padding: 10px;
+      color: #1a3b8d;
+      padding: 20px;
       text-align: center;
-      font-size: 4rem;
+      font-size: 5rem;
       font-family: 'Anton', sans-serif;
     }
 
     .main-wrapper {
       flex: 1;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      display: block;
     }
 
     .schedule {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px 10px 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      padding: 20px;
     }
 
     .day-group {
       width: 100%;
       max-width: 600px;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
     }
 
     .day-heading {
-      font-size: 1.4rem;
-      margin: 10px 0;
-      padding-bottom: 3px;
+      font-size: 1.8rem;
+      font-family: 'Anton', sans-serif;
+      margin: 20px 0 10px;
+      text-align: center;
+      border-bottom: 2px solid #1a3b8d;
+      padding-bottom: 5px;
     }
 
     .match {
       background: #E8E7DC;
-      border-radius: 8px;
-      padding: 10px;
-      margin: 5px 0;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .teams {
@@ -88,19 +90,20 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 100px;
-      min-height: 80px;
+      width: 120px;
+      min-height: 100px;
+      text-align: center;
       font-family: 'Anton', sans-serif;
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
 
     .logo {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 8px;
+      margin: 0 10px;
     }
 
     .logo img {
@@ -110,39 +113,32 @@
     }
 
     .time {
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #333;
-      margin-top: 3px;
+      margin-top: 5px;
     }
 
     .footer {
       text-align: center;
-      padding: 15px 10px;
+      padding: 30px 20px;
       color: #1a3b8d;
       font-family: 'Anton', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.3rem;
     }
 
     .footer img {
-      margin-top: 8px;
-      max-width: 180px;
+      margin-top: 10px;
+      max-width: 200px;
       height: auto;
     }
 
     @media screen and (max-width: 500px) {
       .team {
-        width: 80px;
+        width: 100px;
       }
 
       header {
         font-size: 3rem;
-      }
-    }
-
-    /* Hide footer on smaller height screens */
-    @media screen and (max-height: 850px) {
-      .footer {
-        display: none;
       }
     }
   </style>
