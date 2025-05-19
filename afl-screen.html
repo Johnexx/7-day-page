@@ -5,13 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AFL This Week</title>
   <style>
-@font-face {
-  font-family: 'Anton';
-  src: url('/fonts/Anton-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 html, body {
   margin: 0;
   padding: 0;
@@ -22,8 +15,6 @@ html, body {
 body {
   font-family: Arial, sans-serif;
   color: #1a3b8d;
-  display: flex;
-  flex-direction: column;
   background-image: url('aflbg.png');
   background-size: cover;
   background-position: center;
@@ -31,52 +22,38 @@ body {
 }
 
 header {
+  height: 120px;
   color: #1a3b8d;
   padding: 10px;
   text-align: center;
   font-size: 4rem;
   font-family: 'Anton', sans-serif;
+  box-sizing: border-box;
 }
 
 .main-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  height: calc(100vh - 120px); /* Subtract header height */
+  overflow: hidden;
+  display: block;
 }
 
 .schedule {
-  flex: 1;
+  height: 100%;
+  display: grid;
+  grid-template-rows: repeat(9, 1fr);
+  gap: 6px;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  box-sizing: border-box;
   overflow: hidden;
-}
-
-.day-group {
-  width: 100%;
-  max-width: 600px;
-  margin-bottom: 20px;
-}
-
-.day-heading {
-  font-size: 1.4rem;
-  font-family: 'Anton', sans-serif;
-  margin: 10px 0 5px;
-  text-align: center;
-  border-bottom: 2px solid #1a3b8d;
-  padding-bottom: 3px;
 }
 
 .match {
   background: rgba(232, 231, 220, 0.5);
   border-radius: 10px;
-  width: 100%;
-  margin: 8px 0;
   padding: 10px;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -94,8 +71,6 @@ header {
   align-items: center;
   justify-content: center;
   width: 100px;
-  min-height: 80px;
-  text-align: center;
   font-family: 'Anton', sans-serif;
   font-size: 1rem;
 }
@@ -121,15 +96,6 @@ header {
   margin-top: 3px;
 }
 
-@media screen and (max-width: 500px) {
-  .team {
-    width: 80px;
-  }
-
-  header {
-    font-size: 3rem;
-  }
-}
   </style>
 </head>
 <body>
