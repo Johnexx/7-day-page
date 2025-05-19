@@ -16,7 +16,7 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden; /* NO scrollbars */
+      overflow: hidden; /* absolutely prevent scrolling */
     }
 
     body {
@@ -40,18 +40,17 @@
 
     .main-wrapper {
       flex: 1;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
     .schedule {
       flex: 1;
-      overflow-y: auto;
       padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      overflow: hidden;
     }
 
     .day-group {
@@ -128,7 +127,7 @@
       color: #1a3b8d;
       font-family: 'Anton', sans-serif;
       font-size: 1.3rem;
-      transition: all 0.3s ease;
+      transition: opacity 0.3s ease;
     }
 
     .footer img {
@@ -139,6 +138,16 @@
 
     .footer.hidden {
       display: none;
+    }
+
+    @media screen and (max-width: 500px) {
+      .team {
+        width: 100px;
+      }
+
+      header {
+        font-size: 3rem;
+      }
     }
   </style>
 </head>
@@ -244,15 +253,15 @@
           });
         }
 
-        // After content is loaded, hide footer if total page height > 1920
+        // Final check to remove footer if full content overflows 1920
         setTimeout(() => {
-          const fullHeight = document.documentElement.scrollHeight;
+          const pageHeight = document.documentElement.scrollHeight;
           const footer = document.getElementById("page-footer");
 
-          if (fullHeight > 1920 && footer) {
+          if (pageHeight > 1920 && footer) {
             footer.classList.add("hidden");
           }
-        }, 100);
+        }, 250); // wait for layout and images to fully render
       }
     };
 
