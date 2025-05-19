@@ -68,18 +68,17 @@
       padding-bottom: 5px;
     }
 
-.match {
-  background: rgba(232, 231, 220, 0.5); /* 50% opacity version of #E8E7DC */
-  border-radius: 10px;
-  width: 100%;
-  margin: 10px 0;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
+    .match {
+      background: rgba(232, 231, 220, 0.5); /* 50% transparent */
+      border-radius: 10px;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
     .teams {
       display: flex;
@@ -254,15 +253,17 @@
           });
         }
 
-        // Final check to remove footer if full content overflows 1920
+        // Hide footer if more than 8 matches
         setTimeout(() => {
-          const pageHeight = document.documentElement.scrollHeight;
           const footer = document.getElementById("page-footer");
+          const matches = document.querySelectorAll(".match");
 
-          if (pageHeight > 1920 && footer) {
-            footer.classList.add("hidden");
+          if (matches.length > 8) {
+            footer?.classList.add("hidden");
+          } else {
+            footer?.classList.remove("hidden");
           }
-        }, 250); // wait for layout and images to fully render
+        }, 250);
       }
     };
 
