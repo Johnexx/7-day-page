@@ -121,25 +121,6 @@
       margin-top: 5px;
     }
 
-    .footer {
-      text-align: center;
-      padding: 30px 20px;
-      color: #1a3b8d;
-      font-family: 'Anton', sans-serif;
-      font-size: 1.3rem;
-      transition: opacity 0.3s ease;
-    }
-
-    .footer img {
-      margin-top: 10px;
-      max-width: 200px;
-      height: auto;
-    }
-
-    .footer.hidden {
-      display: none;
-    }
-
     @media screen and (max-width: 500px) {
       .team {
         width: 100px;
@@ -158,11 +139,6 @@
       <!-- Matches will be dynamically inserted here -->
     </section>
   </main>
-
-  <footer class="footer" id="page-footer">
-    <p>CATCH ALL THE AFL GAMES LIVE AND LOUD IN THE SPORTS BAR!</p>
-    <img src="https://www.33degreesesp.com.au/wp-content/uploads/2022/05/33Degrees-clear-BG.png" alt="33 Degrees Logo">
-  </footer>
 
   <script>
     const dateMap = {};
@@ -252,18 +228,6 @@
             schedule.appendChild(daySection);
           });
         }
-
-        // Hide footer if more than 8 matches
-        setTimeout(() => {
-          const footer = document.getElementById("page-footer");
-          const matches = document.querySelectorAll(".match");
-
-          if (matches.length > 8) {
-            footer?.classList.add("hidden");
-          } else {
-            footer?.classList.remove("hidden");
-          }
-        }, 250);
       }
     };
 
