@@ -5,97 +5,131 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AFL This Week</title>
   <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-}
+    @font-face {
+      font-family: 'Anton';
+      src: url('/fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
 
-body {
-  font-family: Arial, sans-serif;
-  color: #1a3b8d;
-  background-image: url('aflbg.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden; /* absolutely prevent scrolling */
+    }
 
-header {
-  height: 120px;
-  color: #1a3b8d;
-  padding: 10px;
-  text-align: center;
-  font-size: 4rem;
-  font-family: 'Anton', sans-serif;
-  box-sizing: border-box;
-}
+    body {
+      font-family: Arial, sans-serif;
+      color: #1a3b8d;
+      display: flex;
+      flex-direction: column;
+      background-image: url('aflbg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
 
-.main-wrapper {
-  height: calc(100vh - 120px); /* Subtract header height */
-  overflow: hidden;
-  display: block;
-}
+    header {
+      color: #1a3b8d;
+      padding: 20px;
+      text-align: center;
+      font-size: 5rem;
+      font-family: 'Anton', sans-serif;
+    }
 
-.schedule {
-  height: 100%;
-  display: grid;
-  grid-template-rows: repeat(9, 1fr);
-  gap: 6px;
-  padding: 10px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
 
-.match {
-  background: rgba(232, 231, 220, 0.5);
-  border-radius: 10px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+    .schedule {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
 
-.teams {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  flex-wrap: wrap;
-}
+    .day-group {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
 
-.team {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  font-family: 'Anton', sans-serif;
-  font-size: 1rem;
-}
+    .day-heading {
+      font-size: 1.8rem;
+      font-family: 'Anton', sans-serif;
+      margin: 20px 0 10px;
+      text-align: center;
+      border-bottom: 2px solid #1a3b8d;
+      padding-bottom: 5px;
+    }
 
-.logo {
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 8px;
-}
+    .match {
+      background: rgba(232, 231, 220, 0.5); /* 50% transparent */
+      border-radius: 10px;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-.logo img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
+    .teams {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-wrap: wrap;
+    }
 
-.time {
-  font-size: 1rem;
-  color: #333;
-  margin-top: 3px;
-}
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      min-height: 100px;
+      text-align: center;
+      font-family: 'Anton', sans-serif;
+      font-size: 1.1rem;
+    }
 
+    .logo {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 10px;
+    }
+
+    .logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .time {
+      font-size: 1.1rem;
+      color: #333;
+      margin-top: 5px;
+    }
+
+    @media screen and (max-width: 500px) {
+      .team {
+        width: 100px;
+      }
+
+      header {
+        font-size: 3rem;
+      }
+    }
   </style>
 </head>
 <body>
