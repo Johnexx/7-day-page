@@ -2,265 +2,152 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AFL This Week</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sports Fixtures</title>
   <style>
-    @font-face {
-      font-family: 'Anton';
-      src: url('/fonts/Anton-Regular.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-
     body {
       font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 1rem;
       color: #1a3b8d;
-      display: flex;
-      flex-direction: column;
-      background-image: url('aflbg.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
     }
 
-    header {
-      color: #1a3b8d;
-      padding: 20px;
-      text-align: center;
-      font-size: 5rem;
-      font-family: 'Anton', sans-serif;
+    #container {
+      padding: 1rem;
+      overflow-x: auto;
     }
 
-    .main-wrapper {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .schedule {
-      flex: 1;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .day-group {
+    table.my-table {
       width: 100%;
-      max-width: 600px;
-      margin-bottom: 40px;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .day-heading {
-      font-size: 1.8rem;
-      font-family: 'Anton', sans-serif;
-      margin: 20px 0 10px;
-      text-align: center;
-      border-bottom: 2px solid #1a3b8d;
-      padding-bottom: 5px;
+    table.my-table th,
+    table.my-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      font-size: 1rem;
     }
 
-    .match {
-      background: rgba(232, 231, 220, 0.5);
-      border-radius: 10px;
-      width: 100%;
-      margin: 10px 0;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    table.my-table tr:hover {
+      background-color: #f1f1f1;
     }
 
-    .teams {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
+    img {
+      vertical-align: middle;
     }
 
-    .team {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 120px;
-      min-height: 100px;
-      font-family: 'Anton', sans-serif;
-      font-size: 1.1rem;
-    }
-
-    .logo {
-      width: 100px;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 10px;
-    }
-
-    .logo img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .time {
-      font-size: 1.1rem;
-      color: #333;
-      margin-top: 5px;
-    }
-
-    /* MOBILE RESPONSIVE */
-    @media screen and (max-width: 600px) {
-      header {
-        font-size: 3rem;
-        padding: 10px;
+    /* Responsive styling */
+    @media (max-width: 600px) {
+      table.my-table thead {
+        display: none;
       }
 
-      .day-heading {
-        font-size: 1.4rem;
-        margin-top: 15px;
+      table.my-table, table.my-table tbody, table.my-table tr, table.my-table td {
+        display: block;
+        width: 100%;
       }
 
-      .match {
-        padding: 10px;
+      table.my-table tr {
+        margin-bottom: 1rem;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 0.5rem;
       }
 
-      .team {
-        width: 100px;
-        font-size: 1rem;
+      table.my-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
       }
 
-      .logo {
-        width: 80px;
-        height: 80px;
-        margin: 5px;
-      }
-
-      .time {
-        font-size: 1rem;
-      }
-
-      .teams {
-        flex-direction: column;
+      table.my-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 1rem;
+        width: 45%;
+        padding-left: 1rem;
+        font-weight: bold;
+        text-align: left;
       }
     }
   </style>
 </head>
 <body>
-  <header>AFL THIS WEEK</header>
-  <main class="main-wrapper">
-    <section class="schedule" id="schedule">
-      <!-- Matches dynamically inserted here -->
-    </section>
-  </main>
+  <h1>Sports Fixtures</h1>
+  <div id="container">Loading...</div>
 
   <script>
-    const dateMap = {};
-
-    const client = new XMLHttpRequest();
+    var client;
+    if (window.XMLHttpRequest) {
+      client = new XMLHttpRequest();
+    } else {
+      client = new ActiveXObject("Microsoft.XMLHTTP");
+    }
     client.open('GET', 'https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1');
 
     client.onreadystatechange = function () {
-      if (client.readyState === 4 && client.status === 200) {
-        const xmlfanzo = client.responseXML;
-        const items = xmlfanzo.getElementsByTagName("item");
+      if (client.readyState == 4 && client.status == 200) {
+        var xmlfanzo = client.responseXML;
+        var items = xmlfanzo.getElementsByTagName("item");
+        var currentDate = new Date();
+        var nextSixDays = new Date(currentDate);
+        nextSixDays.setDate(currentDate.getDate() + 7);
 
-        const now = new Date();
-        const endDate = new Date();
-        endDate.setDate(now.getDate() + 6);
+        var container = document.getElementById("container");
+        var tableString = "<table class='my-table'>";
+        tableString += "<thead><tr><th>Day</th><th>Event</th><th>Description</th><th>Time</th><th></th></tr></thead><tbody>";
 
-        for (let i = 0; i < items.length; i++) {
-          const startTimeNode = items[i].getElementsByTagName("startTimeLocal")[0];
-          if (!startTimeNode || !startTimeNode.childNodes[0]) continue;
+        for (var i = 0; i < items.length; i++) {
+          var startTimeStr = items[i].getElementsByTagName("startTimeLocal")[0].childNodes[0].nodeValue;
+          var startTime = new Date(startTimeStr);
 
-          const startTimeStr = startTimeNode.childNodes[0].nodeValue;
-          const startTime = new Date(startTimeStr);
+          if (startTime >= currentDate && startTime <= nextSixDays) {
+            var dayOfWeek = formatDay(startTime);
+            var formattedTime = formatTime(startTime);
+            var description = items[i].getElementsByTagName("description")[0].childNodes[0].nodeValue;
+            var title = items[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
+            var soundValue = items[i].getElementsByTagName("sound")[0]?.textContent.trim() || "0";
+            var soundDisplay = soundValue === "1" ? "<img src='volume.png' alt='Sound' width='16'>" : "";
 
-          if (startTime < now || startTime > endDate) continue;
-
-          const description = items[i].getElementsByTagName("description")[0]?.textContent || "";
-          if (!description.toLowerCase().includes("afl")) continue;
-
-          const title = items[i].getElementsByTagName("title")[0]?.textContent || "";
-          const team1Logo = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
-          const team2Logo = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
-
-          let [team1Name, team2Name] = ["", ""];
-          if (title.includes(" vs ")) {
-            [team1Name, team2Name] = title.split(" vs ");
-          } else if (title.includes(" v ")) {
-            [team1Name, team2Name] = title.split(" v ");
-          } else {
-            team1Name = title;
+            tableString += "<tr>";
+            tableString += "<td data-label='Day'>" + dayOfWeek + "</td>";
+            tableString += "<td data-label='Event'>" + title + "</td>";
+            tableString += "<td data-label='Description'>" + description + "</td>";
+            tableString += "<td data-label='Time'>" + formattedTime + "</td>";
+            tableString += "<td data-label=''>" + soundDisplay + "</td>";
+            tableString += "</tr>";
           }
-
-          const day = startTime.toLocaleDateString(undefined, {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'short'
-          });
-
-          const dateKey = startTime.toISOString().split("T")[0];
-          const time = formatTime(startTime);
-
-          const matchHTML = `
-            <div class="match">
-              <div class="teams">
-                <div class="team">${team1Name}</div>
-                <div class="logo"><img src="${team1Logo}" alt="${team1Name} Logo"></div>
-                <div class="team">
-                  <div>vs</div>
-                  <div class="time">${time}</div>
-                </div>
-                <div class="logo"><img src="${team2Logo}" alt="${team2Name} Logo"></div>
-                <div class="team">${team2Name}</div>
-              </div>
-            </div>
-          `;
-
-          if (!dateMap[dateKey]) {
-            dateMap[dateKey] = {
-              heading: day,
-              matches: []
-            };
-          }
-
-          dateMap[dateKey].matches.push(matchHTML);
         }
 
-        const schedule = document.getElementById("schedule");
-        const sortedDates = Object.keys(dateMap).sort();
-
-        if (sortedDates.length === 0) {
-          schedule.innerHTML = "<p>No AFL games in the next 6 days.</p>";
-        } else {
-          sortedDates.forEach(dateKey => {
-            const group = dateMap[dateKey];
-            const daySection = document.createElement("div");
-            daySection.className = "day-group";
-            daySection.innerHTML = `<div class="day-heading">${group.heading}</div>${group.matches.join('')}`;
-            schedule.appendChild(daySection);
-          });
-        }
+        tableString += "</tbody></table>";
+        container.innerHTML = tableString;
       }
     };
 
     client.send();
 
+    function formatDay(date) {
+      var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      return daysOfWeek[date.getDay()];
+    }
+
     function formatTime(date) {
-      let hours = date.getHours();
-      let minutes = date.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
       minutes = minutes < 10 ? '0' + minutes : minutes;
       return hours + ':' + minutes + ' ' + ampm;
     }
