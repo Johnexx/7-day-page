@@ -168,6 +168,23 @@
 
         let currentRound = 0;
 
+        // STEP 1: Detect round from any item
+        for (let i = 0; i < items.length; i++) {
+          const description = items[i].getElementsByTagName("description")[0]?.textContent || "";
+          const title = items[i].getElementsByTagName("title")[0]?.textContent || "";
+          const roundMatch = (description + title).match(/Round\s+(\d+)/i);
+          if (roundMatch) {
+            currentRound = parseInt(roundMatch[1], 10);
+            break;
+          }
+        }
+
+        if (currentRound > 0) {
+          document.title = `AFL ROUND ${currentRound}`;
+          document.getElementById("page-title").textContent = `AFL ROUND ${currentRound}`;
+        }
+
+        // STEP 2: Process matches
         for (let i = 0; i < items.length; i++) {
           const startTimeNode = items[i].getElementsByTagName("startTimeLocal")[0];
           if (!startTimeNode || !startTimeNode.childNodes[0]) continue;
@@ -177,18 +194,7 @@
 
           if (startTime > endDate) continue;
 
-          const description = items[i].getElementsByTagName("description")[0]?.textContent || "";
           const title = items[i].getElementsByTagName("title")[0]?.textContent || "";
-
-          // Extract round number
-          if (currentRound === 0) {
-            const roundMatch = (description + title).match(/Round\s+(\d+)/i);
-            if (roundMatch) {
-              currentRound = parseInt(roundMatch[1], 10);
-              document.getElementById("page-title").textContent = `AFL ROUND ${currentRound}`;
-            }
-          }
-
           const team1Logo = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
           const team2Logo = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
 
@@ -222,6 +228,7 @@
           });
         }
 
+        // STEP 3: Fetch scores from Squiggle
         if (currentRound > 0) {
           fetch(`https://api.squiggle.com.au/?q=games;year=2025;round=${currentRound};format=xml`)
             .then(res => res.text())
