@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Today's Specials</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+  <meta http-equiv="refresh" content="300">
+
+  <!-- Chalk-style font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Gloria Hallelujah', cursive;
+      background: #2c2c2c; /* Blackboard background */
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin: 10px 0 20px 0;
+      color: #fff;
+      text-shadow: 1px 1px 0 #000;
+    }
+
+    .specials {
+      width: 100%;
+      max-width: 1400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+
+    .item {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05); /* Chalk dust effect */
+      border: 2px dashed #fff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    .item strong {
+      display: block;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .item-description,
+    .item-addons,
+    .item-price {
+      font-size: 1.3rem;
+      color: #fff;
+      text-shadow: 0 0 2px rgba(255,255,255,0.3);
+    }
+
+    .item-price {
+      font-size: 1.6rem;
+      margin-top: 10px;
+    }
+
+    .sold-out {
+      opacity: 0.4;
+    }
+
+    .sold-label {
+      font-size: 1.1rem;
+      color: #ff4444;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: auto;
+      text-align: center;
+      padding-top: 10px;
+      font-family: 'Gloria Hallelujah', cursive;
+      color: #bbb;
+    }
+
+    .footer .notice {
+      font-size: 1.1rem;
+      margin-bottom: 3px;
+    }
+
+    .footer .disclaimer {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.4);
+      max-width: 1000px;
+      margin: 0 auto;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <h1>Today's Specials</h1>
+  <div class="specials" id="specials"></div>
+
+  <div class="footer">
+    <div class="notice">- PLEASE NOTE, SPECIALS CAN NOT BE MODIFIED -</div>
+    <div class="disclaimer">
+      The kitchen at 33 Degrees operates with nuts and gluten throughout. Please advise staff of any allergies. Gluten free (gf), Dairy free (df), Vegetarian (v), and Vegan (ve) options available.
+    </div>
+  </div>
+
+  <script>
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpgJZJa1oJ5XnuR5t9IO42UZ-4z2GcZf1thfIkZ0ixggFI3uL_3oeAZ61AiKPNACJM6PFGLYf5k4PK/pub?output=csv';
+
+    function fetchSpecials() {
+      Papa.parse(CSV_URL, {
+        download: true,
+        header: true,
+        complete: function(results) {
+          const data = results.data;
+          const container = document.getElementById('specials');
+          container.innerHTML = '';
+          data.forEach(row => {
+            if (row.Name && row.Description && row.Price) {
+              const div = document.createElement('div');
+              div.className = 'item';
+
+              const isAvailable = row.Available?.trim().toUpperCase() !== 'N';
+              if (!isAvailable) div.classList.add('sold-out');
+
+              div.innerHTML = `
+                <strong>${row.Name}</strong>
+                ${!isAvailable ? '<div class="sold-label">SOLD OUT</div>' : ''}
+                <div class="item-description">${row.Description}</div>
+                ${row.Addons ? `<div class="item-addons">${row.Addons}</div>` : ''}
+                <div class="item-price">- ${row.Price} -</div>
+              `;
+              container.appendChild(div);
+            }
+          });
+        }
+      });
+    }
+
+    window.onload = fetchSpecials;
+  </script>
+</body>
+</html>
