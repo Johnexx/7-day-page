@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AFL Round</title>
+  <title>AFL THIS WEEK</title>
   <style>
     @font-face {
       font-family: 'Anton';
@@ -80,11 +80,6 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .completed {
-      opacity: 0.8;
-      border: 2px solid #1a3b8d;
-    }
-
     .teams {
       display: flex;
       justify-content: center;
@@ -98,23 +93,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      width: 120px;
+      min-height: 100px;
+      text-align: center;
       font-family: 'Anton', sans-serif;
       font-size: 1.1rem;
-    }
-
-    .logo {
-      width: 100px;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 10px;
-    }
-
-    .logo img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
     }
 
     .time {
@@ -123,17 +106,9 @@
       margin-top: 5px;
     }
 
-    .score {
-      font-size: 1.1rem;
-      color: #1a3b8d;
-      font-weight: bold;
-      margin-top: 5px;
-    }
-
     @media screen and (max-width: 500px) {
-      .logo {
-        width: 80px;
-        height: 80px;
+      .team {
+        width: 100px;
       }
 
       header {
@@ -143,179 +118,90 @@
   </style>
 </head>
 <body>
-  <header id="page-title">AFL ROUND</header>
+  <header>AFL THIS WEEK</header>
   <main class="main-wrapper">
     <section class="schedule" id="schedule">
-      <!-- Matches will be dynamically inserted here -->
+      <!-- Matches will be inserted here -->
     </section>
   </main>
 
   <script>
     const dateMap = {};
-    const fixtures = [];
 
-    const fanzoRequest = new XMLHttpRequest();
-    fanzoRequest.open('GET', 'https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1');
+    const client = new XMLHttpRequest();
+    client.open('GET', 'https://api.squiggle.com.au/?q=games;year=2025;round=11;format=xml');
 
-    fanzoRequest.onreadystatechange = function () {
-      if (fanzoRequest.readyState === 4 && fanzoRequest.status === 200) {
-        const xmlfanzo = fanzoRequest.responseXML;
-        const items = xmlfanzo.getElementsByTagName("item");
+    client.onreadystatechange = function () {
+      if (client.readyState === 4 && client.status === 200) {
+        const xml = client.responseXML;
+        const games = xml.getElementsByTagName("game");
 
         const now = new Date();
         const endDate = new Date();
         endDate.setDate(now.getDate() + 6);
 
-        let currentRound = 0;
+        for (let i = 0; i < games.length; i++) {
+          const hteam = games[i].getElementsByTagName("hteam")[0]?.textContent || "";
+          const ateam = games[i].getElementsByTagName("ateam")[0]?.textContent || "";
+          const localtimeStr = games[i].getElementsByTagName("localtime")[0]?.textContent || "";
 
-        // STEP 1: Detect round from any item
-        for (let i = 0; i < items.length; i++) {
-          const description = items[i].getElementsByTagName("description")[0]?.textContent || "";
-          const title = items[i].getElementsByTagName("title")[0]?.textContent || "";
-          const roundMatch = (description + title).match(/Round\s+(\d+)/i);
-          if (roundMatch) {
-            currentRound = parseInt(roundMatch[1], 10);
-            break;
-          }
-        }
+          if (!localtimeStr) continue;
 
-        if (currentRound > 0) {
-          document.title = `AFL ROUND ${currentRound}`;
-          document.getElementById("page-title").textContent = `AFL ROUND ${currentRound}`;
-        }
+          const gameTime = new Date(localtimeStr);
+          gameTime.setHours(gameTime.getHours() - 2); // subtract 2 hours
 
-        // STEP 2: Process matches
-        for (let i = 0; i < items.length; i++) {
-          const startTimeNode = items[i].getElementsByTagName("startTimeLocal")[0];
-          if (!startTimeNode || !startTimeNode.childNodes[0]) continue;
+          if (gameTime < now || gameTime > endDate) continue;
 
-          const startTimeStr = startTimeNode.childNodes[0].nodeValue;
-          const startTime = new Date(startTimeStr);
-
-          if (startTime > endDate) continue;
-
-          const title = items[i].getElementsByTagName("title")[0]?.textContent || "";
-          const team1Logo = items[i].getElementsByTagName("team1")[0]?.textContent.trim() || "";
-          const team2Logo = items[i].getElementsByTagName("team2")[0]?.textContent.trim() || "";
-
-          let [team1Name, team2Name] = ["", ""];
-          if (title.includes(" vs ")) {
-            [team1Name, team2Name] = title.split(" vs ");
-          } else if (title.includes(" v ")) {
-            [team1Name, team2Name] = title.split(" v ");
-          } else {
-            team1Name = title;
-          }
-
-          const day = startTime.toLocaleDateString(undefined, {
+          const day = gameTime.toLocaleDateString(undefined, {
             weekday: 'long',
             day: 'numeric',
             month: 'short'
           });
 
-          const dateKey = startTime.toISOString().split("T")[0];
-          const time = formatTime(startTime);
+          const dateKey = gameTime.toISOString().split("T")[0];
+          const timeStr = formatTime(gameTime);
 
-          fixtures.push({
-            dateKey,
-            day,
-            team1Name,
-            team2Name,
-            team1Logo,
-            team2Logo,
-            time,
-            startTime
-          });
+          const matchHTML = `
+            <div class="match">
+              <div class="teams">
+                <div class="team">${hteam}</div>
+                <div class="team">
+                  <div>vs</div>
+                  <div class="time">${timeStr}</div>
+                </div>
+                <div class="team">${ateam}</div>
+              </div>
+            </div>
+          `;
+
+          if (!dateMap[dateKey]) {
+            dateMap[dateKey] = {
+              heading: day,
+              matches: []
+            };
+          }
+
+          dateMap[dateKey].matches.push(matchHTML);
         }
 
-        // STEP 3: Fetch scores from Squiggle
-        if (currentRound > 0) {
-          fetch(`https://api.squiggle.com.au/?q=games;year=2025;round=${currentRound};format=xml`)
-            .then(res => res.text())
-            .then(xmlStr => {
-              const parser = new DOMParser();
-              const squiggleXML = parser.parseFromString(xmlStr, "application/xml");
-              const gameNodes = squiggleXML.getElementsByTagName("game");
+        const schedule = document.getElementById("schedule");
+        const sortedDates = Object.keys(dateMap).sort();
 
-              const resultsMap = {};
-              for (let i = 0; i < gameNodes.length; i++) {
-                const game = gameNodes[i];
-                const hteam = game.getElementsByTagName("hteam")[0]?.textContent.trim();
-                const ateam = game.getElementsByTagName("ateam")[0]?.textContent.trim();
-                const hscore = game.getElementsByTagName("hscore")[0]?.textContent.trim();
-                const ascore = game.getElementsByTagName("ascore")[0]?.textContent.trim();
-                const complete = game.getElementsByTagName("complete")[0]?.textContent.trim() === "1";
-
-                if (hteam && ateam && hscore && ascore) {
-                  const key1 = `${hteam} vs ${ateam}`;
-                  const key2 = `${ateam} vs ${hteam}`;
-                  resultsMap[key1] = { score: `${hscore} - ${ascore}`, complete };
-                  resultsMap[key2] = { score: `${ascore} - ${hscore}`, complete };
-                }
-              }
-
-              renderScheduleWithScores(resultsMap);
-            });
+        if (sortedDates.length === 0) {
+          schedule.innerHTML = "<p>No AFL games in the next 6 days.</p>";
         } else {
-          renderScheduleWithScores({});
+          sortedDates.forEach(dateKey => {
+            const group = dateMap[dateKey];
+            const daySection = document.createElement("div");
+            daySection.className = "day-group";
+            daySection.innerHTML = `<div class="day-heading">${group.heading}</div>${group.matches.join('')}`;
+            schedule.appendChild(daySection);
+          });
         }
       }
     };
 
-    fanzoRequest.send();
-
-    function renderScheduleWithScores(resultsMap) {
-      fixtures.forEach(match => {
-        const matchupKey = `${match.team1Name} vs ${match.team2Name}`;
-        let scoreDisplay = '';
-        let completedClass = '';
-
-        if (resultsMap[matchupKey]) {
-          scoreDisplay = `<div class="score">${resultsMap[matchupKey].score}</div>`;
-          if (resultsMap[matchupKey].complete) {
-            completedClass = 'completed';
-          }
-        }
-
-        const matchHTML = `
-          <div class="match ${completedClass}">
-            <div class="teams">
-              <div class="logo"><img src="${match.team1Logo}" alt="Team 1 Logo"></div>
-              <div class="team">
-                <div>vs</div>
-                <div class="time">${match.time}</div>
-                ${scoreDisplay}
-              </div>
-              <div class="logo"><img src="${match.team2Logo}" alt="Team 2 Logo"></div>
-            </div>
-          </div>
-        `;
-
-        if (!dateMap[match.dateKey]) {
-          dateMap[match.dateKey] = {
-            heading: match.day,
-            matches: []
-          };
-        }
-
-        dateMap[match.dateKey].matches.push(matchHTML);
-      });
-
-      const schedule = document.getElementById("schedule");
-      const sortedDates = Object.keys(dateMap).sort();
-
-      if (sortedDates.length === 0) {
-        schedule.innerHTML = "<p>No AFL games in the next 6 days.</p>";
-      } else {
-        sortedDates.forEach(dateKey => {
-          const group = dateMap[dateKey];
-          const daySection = document.createElement("div");
-          daySection.className = "day-group";
-          daySection.innerHTML = `<div class="day-heading">${group.heading}</div>${group.matches.join('')}`;
-          schedule.appendChild(daySection);
-        });
-      }
-    }
+    client.send();
 
     function formatTime(date) {
       let hours = date.getHours();
