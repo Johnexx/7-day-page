@@ -116,6 +116,8 @@
       }
     }
   </style>
+  <!-- Luxon for accurate timezone parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
 </head>
 <body>
   <header>AFL THIS WEEK</header>
@@ -126,6 +128,7 @@
   </main>
 
   <script>
+    const { DateTime } = luxon;
     const dateMap = {};
 
     const client = new XMLHttpRequest();
@@ -136,9 +139,8 @@
         const xml = client.responseXML;
         const games = xml.getElementsByTagName("game");
 
-        const now = new Date();
-        const endDate = new Date();
-        endDate.setDate(now.getDate() + 6);
+        const now = DateTime.now().setZone("Australia/Melbourne");
+        const endDate = now.plus({ days: 6 });
 
         for (let i = 0; i < games.length; i++) {
           const hteam = games[i].getElementsByTagName("hteam")[0]?.textContent || "";
@@ -147,17 +149,13 @@
 
           if (!localtimeStr) continue;
 
-          const gameTime = new Date(localtimeStr); // no adjustment
+          const gameTime = DateTime.fromISO(localtimeStr, { zone: "Australia/Melbourne" });
+
           if (gameTime < now || gameTime > endDate) continue;
 
-          const day = gameTime.toLocaleDateString(undefined, {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'short'
-          });
-
-          const dateKey = gameTime.toISOString().split("T")[0];
-          const timeStr = formatTime(gameTime);
+          const day = gameTime.toFormat("cccc d LLL");
+          const dateKey = gameTime.toISODate();
+          const timeStr = gameTime.toFormat("h:mm a");
 
           const matchHTML = `
             <div class="match">
@@ -199,16 +197,11 @@
       }
     };
 
-    client.send();
+    client.onerror = function () {
+      console.error("An error occurred while fetching the XML.");
+    };
 
-    function formatTime(date) {
-      let hours = date.getHours();
-      let minutes = date.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      minutes = minutes < 10 ? '0' + minutes : minutes;
-      return hours + ':' + minutes + ' ' + ampm;
-    }
+    client.send();
   </script>
 </body>
 </html>
