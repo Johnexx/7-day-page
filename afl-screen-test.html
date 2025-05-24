@@ -50,7 +50,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow: hidden;
+      overflow: auto;
     }
 
     .day-group {
@@ -116,7 +116,8 @@
       }
     }
   </style>
-  <!-- Luxon for accurate timezone parsing -->
+
+  <!-- Luxon for timezone-safe parsing -->
   <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
 </head>
 <body>
@@ -139,9 +140,6 @@
         const xml = client.responseXML;
         const games = xml.getElementsByTagName("game");
 
-        const now = DateTime.now().setZone("Australia/Melbourne");
-        const endDate = now.plus({ days: 6 });
-
         for (let i = 0; i < games.length; i++) {
           const hteam = games[i].getElementsByTagName("hteam")[0]?.textContent || "";
           const ateam = games[i].getElementsByTagName("ateam")[0]?.textContent || "";
@@ -150,9 +148,6 @@
           if (!localtimeStr) continue;
 
           const gameTime = DateTime.fromISO(localtimeStr, { zone: "Australia/Melbourne" });
-
-          if (gameTime < now || gameTime > endDate) continue;
-
           const day = gameTime.toFormat("cccc d LLL");
           const dateKey = gameTime.toISODate();
           const timeStr = gameTime.toFormat("h:mm a");
@@ -183,17 +178,13 @@
         const schedule = document.getElementById("schedule");
         const sortedDates = Object.keys(dateMap).sort();
 
-        if (sortedDates.length === 0) {
-          schedule.innerHTML = "<p>No AFL games in the next 6 days.</p>";
-        } else {
-          sortedDates.forEach(dateKey => {
-            const group = dateMap[dateKey];
-            const daySection = document.createElement("div");
-            daySection.className = "day-group";
-            daySection.innerHTML = `<div class="day-heading">${group.heading}</div>${group.matches.join('')}`;
-            schedule.appendChild(daySection);
-          });
-        }
+        sortedDates.forEach(dateKey => {
+          const group = dateMap[dateKey];
+          const daySection = document.createElement("div");
+          daySection.className = "day-group";
+          daySection.innerHTML = `<div class="day-heading">${group.heading}</div>${group.matches.join('')}`;
+          schedule.appendChild(daySection);
+        });
       }
     };
 
