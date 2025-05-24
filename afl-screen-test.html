@@ -147,9 +147,7 @@
 
           if (!localtimeStr) continue;
 
-          const gameTime = new Date(localtimeStr);
-          gameTime.setHours(gameTime.getHours() - 2); // subtract 2 hours
-
+          const gameTime = new Date(localtimeStr); // no adjustment
           if (gameTime < now || gameTime > endDate) continue;
 
           const day = gameTime.toLocaleDateString(undefined, {
