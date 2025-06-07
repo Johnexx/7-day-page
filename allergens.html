@@ -24,13 +24,17 @@
       margin-bottom: 30px;
       text-align: center;
     }
+    .menu-category {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
     .menu-item {
       border: 1px solid #ccc;
       border-left: 8px solid transparent;
       background: white;
       padding: 15px;
-      margin: 10px auto;
-      max-width: 700px;
       transition: background 0.3s;
       cursor: pointer;
     }
@@ -120,7 +124,9 @@
 
       for (const category in menuData) {
         const section = document.createElement('div');
-        section.innerHTML = `<h2>${category}</h2>`;
+        section.innerHTML = `<h2>${category}</h2><div class="menu-category"></div>`;
+        const grid = section.querySelector('.menu-category');
+
         menuData[category].forEach(item => {
           const lowerIngredients = item.ingredients.map(i => i.toLowerCase());
           const isSafe = !lowerIngredients.some(i => allergens.has(i));
@@ -140,8 +146,9 @@
             });
           }
 
-          section.appendChild(itemDiv);
+          grid.appendChild(itemDiv);
         });
+
         container.appendChild(section);
       }
     }
