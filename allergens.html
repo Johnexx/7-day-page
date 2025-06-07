@@ -8,6 +8,8 @@
     @font-face {
       font-family: 'Anton';
       src: url('/fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
     }
 
     body {
@@ -128,26 +130,47 @@
       "Entree": [
         {
           name: "Garlic Bread",
-          description: "roasted garlic butter on a toasted baguette",
+          description: "roasted garlic butter on a toasted baguette (v)",
           price: 12,
           ingredients: ["gluten", "garlic", "butter"],
           dietary: "V, GFO",
           removables: { GFO: ["bread"] }
         },
         {
+          name: "Bowl of Chips",
+          description: "side of tomato sauce (v, ve, df)",
+          price: 12,
+          ingredients: ["gluten"],
+          dietary: "V, Ve, DF"
+        },
+        {
+          name: "Sweet Potato Fries",
+          description: "side of sweet chilli sauce (v, ve, df)",
+          price: 15,
+          ingredients: ["gluten"],
+          dietary: "V, Ve, DF"
+        },
+        {
           name: "Salt and Pepper Calamari",
-          description: "lightly fried in a salt and pepper mix, house salad, tartare sauce",
+          description: "lightly fried in a salt and pepper mix, house salad, tartare sauce (dfo)",
           price: 18,
           ingredients: ["seafood", "garlic", "gluten"],
           dietary: "DFO",
           removables: { DFO: ["tartare sauce"] }
         },
         {
-          name: "Sweet Potato Fries",
-          description: "side of sweet chilli sauce",
-          price: 15,
-          ingredients: ["gluten"],
-          dietary: "V, Ve"
+          name: "Loaded Chips",
+          description: "loaded with cheesy sauce, bacon, spring onion, gravy",
+          price: 18,
+          ingredients: ["garlic", "gluten"]
+        },
+        {
+          name: "Mango and Avo Bruschetta",
+          description: "mango and red chilli salsa, and avocado, served on toasted vienna (gfo, v, ve)",
+          price: 16,
+          ingredients: ["gluten", "garlic", "gluten"],
+          dietary: "GFO, V, Ve",
+          removables: { GFO: ["bread"] }
         }
       ],
       "Mains": [
@@ -170,8 +193,8 @@
 
     function highlightAllergens(ingredients) {
       return ingredients.map(ing => {
-        return allergens.has(ing.toLowerCase())
-          ? `<span class="allergen">${ing}</span>` : ing;
+        return allergens.has(ing.toLowerCase()) ?
+          `<span class="allergen">${ing}</span>` : ing;
       }).join(", ");
     }
 
