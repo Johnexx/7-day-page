@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Allergen Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    .allergen-filters {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .menu-item {
+      border: 1px solid #ccc;
+      border-left: 8px solid transparent;
+      background: white;
+      padding: 15px;
+      margin: 10px auto;
+      max-width: 600px;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+    .safe {
+      border-left-color: green;
+      background: #e5ffe5;
+    }
+    .unsafe {
+      border-left-color: red;
+      background: #ffe5e5;
+    }
+    .ingredients {
+      display: none;
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+    .ingredients span.allergen {
+      font-weight: bold;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Menu - Allergen Friendly</h1>
+
+  <div class="allergen-filters">
+    <label><input type="checkbox" value="seafood"> Seafood</label>
+    <label><input type="checkbox" value="peanuts"> Peanuts</label>
+    <label><input type="checkbox" value="garlic"> Garlic</label>
+    <label><input type="checkbox" value="dairy"> Dairy</label>
+    <label><input type="checkbox" value="gluten"> Gluten</label>
+  </div>
+
+  <div id="menu"></div>
+
+  <script>
+    const allergens = new Set();
+
+    const menuData = [
+      {
+        name: "Garlic Prawns",
+        ingredients: ["prawns", "garlic", "butter", "lemon"],
+      },
+      {
+        name: "Peanut Satay Chicken",
+        ingredients: ["chicken", "peanuts", "soy sauce", "garlic"],
+      },
+      {
+        name: "Margherita Pizza",
+        ingredients: ["tomato", "cheese", "gluten", "basil"],
+      },
+      {
+        name: "Grilled Fish Salad",
+        ingredients: ["fish", "lettuce", "tomato", "lemon"],
+      },
+      {
+        name: "Beef Burger",
+        ingredients: ["beef", "bun", "cheese", "onion"],
+      }
+    ];
+
+    function highlightAllergens(ingredients) {
+      return ingredients.map(ing => {
+        return allergens.has(ing.toLowerCase()) ?
+          `<span class="allergen">${ing}</span>` : ing;
+      }).join(", ");
+    }
+
+    function renderMenu() {
+      const container = document.getElementById('menu');
+      container.innerHTML = "";
+
+      menuData.forEach((item, index) => {
+        const lowerIngredients = item.ingredients.map(i => i.toLowerCase());
+        const isSafe = !lowerIngredients.some(i => allergens.has(i));
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `menu-item ${isSafe ? "safe" : "unsafe"}`;
+        itemDiv.innerHTML = `
+          <strong>${item.name}</strong>
+          <div class="ingredients">${highlightAllergens(item.ingredients)}</div>
+        `;
+
+        if (!isSafe) {
+          itemDiv.addEventListener('click', function () {
+            const ingredients = this.querySelector('.ingredients');
+            ingredients.style.display = ingredients.style.display === 'block' ? 'none' : 'block';
+          });
+        }
+
+        container.appendChild(itemDiv);
+      });
+    }
+
+    document.querySelectorAll('.allergen-filters input').forEach(cb => {
+      cb.addEventListener('change', () => {
+        if (cb.checked) allergens.add(cb.value);
+        else allergens.delete(cb.value);
+        renderMenu();
+      });
+    });
+
+    renderMenu();
+  </script>
+
+</body>
+</html>
