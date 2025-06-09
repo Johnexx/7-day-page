@@ -138,7 +138,7 @@
           "name": "Garlic Bread",
           "description": "roasted garlic butter on a toasted baguette (v)",
           "price": 12,
-          "ingredients": ["gluten (flour)", "garlic", "dairy(butter)"],
+          "ingredients": ["gluten (flour)", "garlic", "dairy (butter)"],
           "dietary": "V, GFO",
           "removables": {
             "GFO": ["bread"]
@@ -180,8 +180,8 @@
           "price": 16,
           "ingredients": ["gluten", "garlic", "gluten"],
           "dietary": "GFO, V, Ve",
-          "removables": {
-            "GFO": ["bread"]
+          "substitutions": {
+            "GFO": ["Swap to Gluten-free bread"]
           }
         }
       ],
@@ -323,15 +323,15 @@
           itemDiv.className = `menu-item ${isSafe ? "safe" : "unsafe"}`;
 
           let dietaryHTML = "";
-          if (item.dietary) {
-            const tags = item.dietary.split(",").map(tag => tag.trim());
-            tags.forEach(tag => {
-              dietaryHTML += `<span class="dietary-tag">${tag}</span>`;
-              if (tag.endsWith("O") && item.removables && item.removables[tag]) {
-                dietaryHTML += `<div class="removal-note">Remove: ${item.removables[tag].join(", ")}</div>`;
-              }
-            });
-          }
+if (tag.endsWith("O")) {
+  if (item.removables && item.removables[tag]) {
+    dietaryHTML += `<div class="removal-note">Remove: ${item.removables[tag].join(", ")}</div>`;
+  }
+  if (item.substitutions && item.substitutions[tag]) {
+    dietaryHTML += `<div class="removal-note">Substitute: ${item.substitutions[tag].join(", ")}</div>`;
+  }
+}
+
 
           itemDiv.innerHTML = `
             <div><strong>${item.name}</strong><span class="price">${item.price !== null ? "$" + item.price : "Market Price"}</span></div>
