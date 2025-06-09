@@ -323,14 +323,21 @@
           itemDiv.className = `menu-item ${isSafe ? "safe" : "unsafe"}`;
 
           let dietaryHTML = "";
-if (tag.endsWith("O")) {
-  if (item.removables && item.removables[tag]) {
-    dietaryHTML += `<div class="removal-note">Remove: ${item.removables[tag].join(", ")}</div>`;
-  }
-  if (item.substitutions && item.substitutions[tag]) {
-    dietaryHTML += `<div class="removal-note">Substitute: ${item.substitutions[tag].join(", ")}</div>`;
-  }
+if (item.dietary) {
+  const tags = item.dietary.split(",").map(tag => tag.trim());
+  tags.forEach(tag => {
+    dietaryHTML += `<span class="dietary-tag">${tag}</span>`;
+    if (tag.endsWith("O")) {
+      if (item.removables && item.removables[tag]) {
+        dietaryHTML += `<div class="removal-note">Remove: ${item.removables[tag].join(", ")}</div>`;
+      }
+      if (item.substitutions && item.substitutions[tag]) {
+        dietaryHTML += `<div class="removal-note">Substitute: ${item.substitutions[tag].join(", ")}</div>`;
+      }
+    }
+  });
 }
+
 
 
           itemDiv.innerHTML = `
