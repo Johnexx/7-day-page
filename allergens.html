@@ -122,21 +122,189 @@
     <label><input type="checkbox" value="soy"> Soy</label>
     <label><input type="checkbox" value="fish"> Fish</label>
     <label><input type="checkbox" value="shellfish"> Shellfish</label>
-    <label><input type="checkbox" value="sesame"> Sesame seeds</label>
+    <label><input type="checkbox" value="sesame"> Sesame Seeds</label>
     <label><input type="checkbox" value="pescetarian"> Pescetarian</label>
     <label><input type="checkbox" value="vegetarian"> Vegetarian</label>
     <label><input type="checkbox" value="vegan"> Vegan</label>
   </div>
 
   <div id="menu"></div>
-
   <script>
     const allergens = new Set();
 
+    const menuData = {
+      "Entree": [
+        {
+          "name": "Garlic Bread",
+          "description": "roasted garlic butter on a toasted baguette (v)",
+          "price": 12,
+          "ingredients": ["gluten (flour)", "garlic", "dairy(butter)"],
+          "dietary": "V, GFO",
+          "removables": {
+            "GFO": ["bread"]
+          }
+        },
+        {
+          "name": "Bowl of Chips",
+          "description": "side of tomato sauce (v, ve, df)",
+          "price": 12,
+          "ingredients": ["gluten"],
+          "dietary": "V, Ve, DF"
+        },
+        {
+          "name": "Sweet Potato Fries",
+          "description": "side of sweet chilli sauce (v, ve, df)",
+          "price": 15,
+          "ingredients": ["gluten"],
+          "dietary": "V, Ve, DF"
+        },
+        {
+          "name": "Salt and Pepper Calamari",
+          "description": "lightly fried in a salt and pepper mix, house salad, tartare sauce (dfo)",
+          "price": 18,
+          "ingredients": ["seafood", "garlic", "gluten"],
+          "dietary": "DFO",
+          "removables": {
+            "DFO": ["tartare sauce"]
+          }
+        },
+        {
+          "name": "Loaded Chips",
+          "description": "loaded with cheesy sauce, bacon, spring onion, gravy",
+          "price": 18,
+          "ingredients": ["garlic", "gluten"]
+        },
+        {
+          "name": "Mango and Avo Bruschetta",
+          "description": "mango and red chilli salsa, and avocado, served on toasted vienna (gfo, v, ve)",
+          "price": 16,
+          "ingredients": ["gluten", "garlic", "gluten"],
+          "dietary": "GFO, V, Ve",
+          "removables": {
+            "GFO": ["bread"]
+          }
+        }
+      ],
+      "Mains": [
+        {
+          "name": "Brisket Loaded Nachos",
+          "description": "corn chips, smoked bbq brisket, black beans, cheesy sauce, guacamole, sour cream, jalapenos, mango salsa, crispy onion (gfo)",
+          "price": 29,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Crumbed Pink Snapper",
+          "description": "polenta and black olive chips, roasted cauliflower, cauliflower puree, dill and smoked paprika hollandaise",
+          "price": 36,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Chicken Schnitzel",
+          "description": "house salad, chips, choice of sauce",
+          "price": 34,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Beef Schnitzel",
+          "description": "house salad, chips, choice of sauce",
+          "price": 35,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Chicken Parmi",
+          "description": "house salad, chips",
+          "price": 38,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Beef Parmi",
+          "description": "house salad, chips",
+          "price": 39,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Jack Daniels BBQ Glazed Pork Ribs",
+          "description": "house salad, chips (gfo, df)",
+          "price": 45,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "300g Scotch Fillet",
+          "description": "house salad, chips, choice of sauce (gfo, dfo)",
+          "price": 47,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Pistachio Crusted Salmon",
+          "description": "atlantic salmon, pistachio crust, moroccan spiced couscous, asparagus, hollandaise, sweet potato puree (dfo)",
+          "price": 36,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Creamy Prawn Fettuccine",
+          "description": "lemon and dill cream sauce, pan fried prawns, crispy capers, toasted pine nuts, tossed in fettuccine",
+          "price": 32,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Salt and Pepper Calamari (Main)",
+          "description": "lightly fried in salt and pepper mix, chips, house salad, tartare sauce (dfo)",
+          "price": 29,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Fish and Chips",
+          "description": "crispy battered fish, chips, tartare sauce",
+          "price": 35,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        },
+        {
+          "name": "Smoked Lamb Backstrap",
+          "description": "cherry wood smoked lamb, mash potato, green beans, crispy leeks and shallots, fig jus (gfo)",
+          "price": null,
+          "ingredients": [],
+          "dietary": "",
+          "removables": {}
+        }
+      ],
+      // Additional categories (Burgers, Salads, Kids, Desserts) can be added here the same way
+    };
+
+    function extractBaseIngredient(ingredient) {
+      const match = ingredient.match(/^([a-zA-Z\s]+)(\s*\(.*\))?$/);
+      return match ? match[1].trim().toLowerCase() : ingredient.toLowerCase();
+    }
+
     function highlightAllergens(ingredients) {
       return ingredients.map(ing => {
-        const base = ing.toLowerCase().split('(')[0].trim();
-        return allergens.has(base) ? `<span class="allergen">${ing}</span>` : ing;
+        const base = extractBaseIngredient(ing);
+        return allergens.has(base)
+          ? `<span class="allergen">${ing}</span>`
+          : ing;
       }).join(", ");
     }
 
@@ -150,8 +318,7 @@
         const grid = section.querySelector('.menu-category');
 
         menuData[category].forEach(item => {
-          const lowerIngredients = item.ingredients.map(i => i.toLowerCase().split('(')[0].trim());
-          const isSafe = !lowerIngredients.some(i => allergens.has(i));
+          const isSafe = !item.ingredients.some(ing => allergens.has(extractBaseIngredient(ing)));
           const itemDiv = document.createElement('div');
           itemDiv.className = `menu-item ${isSafe ? "safe" : "unsafe"}`;
 
@@ -189,199 +356,15 @@
 
     document.querySelectorAll('.allergen-filters input').forEach(cb => {
       cb.addEventListener('change', () => {
-        if (cb.checked) allergens.add(cb.value.toLowerCase());
-        else allergens.delete(cb.value.toLowerCase());
+        const value = cb.value.toLowerCase();
+        if (cb.checked) allergens.add(value);
+        else allergens.delete(value);
         renderMenu();
       });
     });
 
-    const menuData = const menuData = {
-  "Entree": [
-    {
-      "name": "Garlic Bread",
-      "description": "roasted garlic butter on a toasted baguette (v)",
-      "price": 12,
-      "ingredients": [
-        "gluten (flour)",
-        "garlic",
-        "dairy(butter)"
-      ],
-      "dietary": "V, GFO",
-      "removables": {
-        "GFO": [
-          "bread"
-        ]
-      }
-    },
-    {
-      "name": "Bowl of Chips",
-      "description": "side of tomato sauce (v, ve, df)",
-      "price": 12,
-      "ingredients": [
-        "gluten"
-      ],
-      "dietary": "V, Ve, DF"
-    },
-    {
-      "name": "Sweet Potato Fries",
-      "description": "side of sweet chilli sauce (v, ve, df)",
-      "price": 15,
-      "ingredients": [
-        "gluten"
-      ],
-      "dietary": "V, Ve, DF"
-    },
-    {
-      "name": "Salt and Pepper Calamari",
-      "description": "lightly fried in a salt and pepper mix, house salad, tartare sauce (dfo)",
-      "price": 18,
-      "ingredients": [
-        "seafood",
-        "garlic",
-        "gluten"
-      ],
-      "dietary": "DFO",
-      "removables": {
-        "DFO": [
-          "tartare sauce"
-        ]
-      }
-    },
-    {
-      "name": "Loaded Chips",
-      "description": "loaded with cheesy sauce, bacon, spring onion, gravy",
-      "price": 18,
-      "ingredients": [
-        "garlic",
-        "gluten"
-      ]
-    },
-    {
-      "name": "Mango and Avo Bruschetta",
-      "description": "mango and red chilli salsa, and avocado, served on toasted vienna (gfo, v, ve)",
-      "price": 16,
-      "ingredients": [
-        "gluten",
-        "garlic",
-        "gluten"
-      ],
-      "dietary": "GFO, V, Ve",
-      "removables": {
-        "GFO": [
-          "bread"
-        ]
-      }
-    }
-  ],
-  "Mains": [
-    {
-      "name": "Brisket Loaded Nachos",
-      "description": "corn chips, smoked bbq brisket, black beans, cheesy sauce, guacamole, sour cream, jalapenos, mango salsa, crispy onion (gfo)",
-      "price": 29,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Crumbed Pink Snapper",
-      "description": "polenta and black olive chips, roasted cauliflower, cauliflower puree, dill and smoked paprika hollandaise",
-      "price": 36,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Chicken Schnitzel",
-      "description": "house salad, chips, choice of sauce",
-      "price": 34,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Beef Schnitzel",
-      "description": "house salad, chips, choice of sauce",
-      "price": 35,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Chicken Parmi",
-      "description": "house salad, chips",
-      "price": 38,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Beef Parmi",
-      "description": "house salad, chips",
-      "price": 39,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Jack Daniels BBQ Glazed Pork Ribs",
-      "description": "house salad, chips (gfo, df)",
-      "price": 45,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "300g Scotch Fillet",
-      "description": "house salad, chips, choice of sauce (gfo, dfo)",
-      "price": 47,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Pistachio Crusted Salmon",
-      "description": "atlantic salmon, pistachio crust, moroccan spiced couscous, asparagus, hollandaise, sweet potato puree (dfo)",
-      "price": 36,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Creamy Prawn Fettuccine",
-      "description": "lemon and dill cream sauce, pan fried prawns, crispy capers, toasted pine nuts, tossed in fettuccine",
-      "price": 32,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Salt and Pepper Calamari (Main)",
-      "description": "lightly fried in salt and pepper mix, chips, house salad, tartare sauce (dfo)",
-      "price": 29,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Fish and Chips",
-      "description": "crispy battered fish, chips, tartare sauce",
-      "price": 35,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    },
-    {
-      "name": "Smoked Lamb Backstrap",
-      "description": "cherry wood smoked lamb, mash potato, green beans, crispy leeks and shallots, fig jus (gfo)",
-      "price": null,
-      "ingredients": [],
-      "dietary": "",
-      "removables": {}
-    }
-  ]
-};;
-
     renderMenu();
   </script>
+
 </body>
 </html>
