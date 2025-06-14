@@ -16,7 +16,7 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden; /* absolutely prevent scrolling */
+      overflow: hidden;
     }
 
     body {
@@ -69,7 +69,7 @@
     }
 
     .match {
-      background: rgba(232, 231, 220, 0.5); /* 50% transparent */
+      background: rgba(232, 231, 220, 0.5);
       border-radius: 10px;
       width: 100%;
       margin: 10px 0;
@@ -93,9 +93,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 120px;
-      min-height: 100px;
-      text-align: center;
       font-family: 'Anton', sans-serif;
       font-size: 1.1rem;
     }
@@ -123,7 +120,7 @@
 
     @media screen and (max-width: 500px) {
       .team {
-        width: 100px;
+        width: auto;
       }
 
       header {
@@ -192,14 +189,12 @@
           const matchHTML = `
             <div class="match">
               <div class="teams">
-                <div class="team">${team1Name}</div>
                 <div class="logo"><img src="${team1Logo}" alt="${team1Name} Logo"></div>
                 <div class="team">
                   <div>vs</div>
                   <div class="time">${time}</div>
                 </div>
                 <div class="logo"><img src="${team2Logo}" alt="${team2Name} Logo"></div>
-                <div class="team">${team2Name}</div>
               </div>
             </div>
           `;
