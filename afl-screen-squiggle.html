@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AFL Round 15 Scores</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      padding: 20px;
+    }
+    h1 {
+      color: #1a3b8d;
+    }
+    .game {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #ffffff;
+      border-left: 4px solid #1a3b8d;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>AFL Round 15, 2025</h1>
+  <div id="games"></div>
+
+  <script>
+    fetch('https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml')
+      .then(response => response.text())
+      .then(data => {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data, "application/xml");
+        const games = xml.getElementsByTagName("game");
+        const output = document.getElementById("games");
+
+        for (let game of games) {
+          const ateam = game.getElementsByTagName("ateam")[0]?.textContent;
+          const hteam = game.getElementsByTagName("hteam")[0]?.textContent;
+          const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
+          const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
+          const localtime = game.getElementsByTagName("localtime")[0]?.textContent;
+
+          let gameText = "";
+
+          if (ascore > 0 || hscore > 0) {
+            gameText = `${hteam} ${hscore} Vs ${ateam} ${ascore} ${localtime}`;
+          } else {
+            gameText = `${hteam} Vs ${ateam} ${localtime}`;
+          }
+
+          const div = document.createElement("div");
+          div.className = "game";
+          div.textContent = gameText;
+          output.appendChild(div);
+        }
+      })
+      .catch(error => {
+        console.error("Failed to load game data:", error);
+      });
+  </script>
+</body>
+</html>
