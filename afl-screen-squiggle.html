@@ -24,16 +24,20 @@
 </head>
 <body>
   <h1>AFL Round 15, 2025</h1>
-  <div id="games"></div>
+  <div id="games">Loading games...</div>
 
   <script>
-    fetch('https://corsproxy.io/?https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml')
+    const proxyUrl = "https://api.allorigins.win/raw?url=";
+    const targetUrl = encodeURIComponent("https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml");
+
+    fetch(proxyUrl + targetUrl)
       .then(response => response.text())
-      .then(data => {
+      .then(xmlString => {
         const parser = new DOMParser();
-        const xml = parser.parseFromString(data, "application/xml");
+        const xml = parser.parseFromString(xmlString, "application/xml");
         const games = xml.getElementsByTagName("game");
         const output = document.getElementById("games");
+        output.innerHTML = ""; // clear loading text
 
         for (let game of games) {
           const ateam = game.getElementsByTagName("ateam")[0]?.textContent;
@@ -56,8 +60,9 @@
           output.appendChild(div);
         }
       })
-      .catch(error => {
-        console.error("Failed to load game data:", error);
+      .catch(err => {
+        document.getElementById("games").textContent = "Failed to load games.";
+        console.error("Error fetching or parsing data:", err);
       });
   </script>
 </body>
