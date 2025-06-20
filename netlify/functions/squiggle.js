@@ -1,8 +1,8 @@
 export async function handler(event, context) {
-  const url = "https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml";
-
   try {
-    const response = await fetch(url);
+    const response = await fetch(
+      "https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml"
+    );
     const xml = await response.text();
 
     return {
@@ -13,10 +13,10 @@ export async function handler(event, context) {
       },
       body: xml
     };
-  } catch (error) {
+  } catch (err) {
     return {
       statusCode: 500,
-      body: "Failed to fetch Squiggle XML: " + error.message
+      body: `Error fetching data: ${err.message}`
     };
   }
 }
