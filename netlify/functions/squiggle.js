@@ -5,14 +5,7 @@
       const parser = new DOMParser();
       const xml = parser.parseFromString(xmlString, "application/xml");
 
-      const anonBlock = xml.getElementsByTagName("anon")[0];
-      if (!anonBlock) {
-        console.error("No <anon> wrapper found. Check API response.");
-        document.getElementById("games").textContent = "No game data available.";
-        return;
-      }
-
-      const games = anonBlock.getElementsByTagName("game");
+      const games = xml.getElementsByTagName("anon");
       const output = document.getElementById("games");
       output.innerHTML = "";
 
@@ -23,8 +16,8 @@
         const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
         const localtime = game.getElementsByTagName("localtime")[0]?.textContent || "";
 
-        const showScore = ascore > 0 || hscore > 0;
-        const displayText = showScore
+        const hasScore = ascore > 0 || hscore > 0;
+        const displayText = hasScore
           ? `${hteam} ${hscore} Vs ${ateam} ${ascore} ${localtime}`
           : `${hteam} Vs ${ateam} ${localtime}`;
 
