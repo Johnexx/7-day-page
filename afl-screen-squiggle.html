@@ -4,8 +4,17 @@
   <meta charset="UTF-8" />
   <title>AFL Round 15 Scores</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
-    .game { background: #fff; padding: 10px; margin-bottom: 10px; border-left: 4px solid #1a3b8d; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .game {
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-left: 4px solid #1a3b8d;
+    }
   </style>
 </head>
 <body>
@@ -14,34 +23,36 @@
 
   <script>
     fetch('/.netlify/functions/squiggle')
-      .then(res => res.text())
-      .then(str => {
+      .then(response => response.text())
+      .then(xmlString => {
         const parser = new DOMParser();
-        const xml = parser.parseFromString(str, "application/xml");
-        const games = xml.getElementsByTagName("game");
-        const container = document.getElementById("games");
-        container.innerHTML = "";
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
 
-        for (let game of games) {
+        const gameNodes = xmlDoc.getElementsByTagName("game");
+        const container = document.getElementById("games");
+        container.innerHTML = ""; // Clear "Loading..."
+
+        for (let game of gameNodes) {
           const ateam = game.getElementsByTagName("ateam")[0]?.textContent;
           const hteam = game.getElementsByTagName("hteam")[0]?.textContent;
           const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
           const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
           const localtime = game.getElementsByTagName("localtime")[0]?.textContent;
 
-          let text = (ascore > 0 || hscore > 0)
+          // Format the display text
+          const displayText = (ascore > 0 || hscore > 0)
             ? `${hteam} ${hscore} Vs ${ateam} ${ascore} ${localtime}`
             : `${hteam} Vs ${ateam} ${localtime}`;
 
           const div = document.createElement("div");
           div.className = "game";
-          div.textContent = text;
+          div.textContent = displayText;
           container.appendChild(div);
         }
       })
       .catch(err => {
-        document.getElementById("games").textContent = "Failed to load data.";
-        console.error("Fetch error:", err);
+        document.getElementById("games").textContent = "Failed to load games.";
+        console.error("Error:", err);
       });
   </script>
 </body>
