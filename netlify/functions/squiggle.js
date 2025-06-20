@@ -1,8 +1,14 @@
 export async function handler(event, context) {
   try {
     const response = await fetch(
-      "https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml"
+      "https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml",
+      {
+        headers: {
+          "User-Agent": "John - johnrk95@gmail.com"
+        }
+      }
     );
+
     const xml = await response.text();
 
     return {
