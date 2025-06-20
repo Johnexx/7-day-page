@@ -22,7 +22,7 @@
   <div id="games">Loading...</div>
 
   <script>
-    fetch('/.netlify/functions/squiggle')
+    fetch('/.netlify/functions/squiggle.js')
       .then(response => response.text())
       .then(xmlString => {
         const parser = new DOMParser();
