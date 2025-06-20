@@ -4,7 +4,7 @@ export async function handler(event, context) {
       "https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml",
       {
         headers: {
-          "User-Agent": "John - Johnrk95@gmail.com"
+          "User-Agent": "john - johnrk95@gmail.com"
         }
       }
     );
@@ -22,7 +22,7 @@ export async function handler(event, context) {
   } catch (err) {
     return {
       statusCode: 500,
-      body: `Error fetching data: ${err.message}`
+      body: `Fetch failed: ${err.message}`
     };
   }
 }
