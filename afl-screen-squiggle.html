@@ -111,9 +111,19 @@
   <div id="games">Loading games...</div>
 
 <script>
-  function getTeamLogoUrl(teamName) {
-    return `/logos/${teamName.replace(/\s+/g, '').toLowerCase()}.png`;
-  }
+function getTeamLogoUrl(teamName) {
+  const logoMap = {
+    "Richmond": "richmond.png",
+    "Western Bulldogs": "western_bulldogs.png",
+    "Gold Coast": "suns.png",
+    "Collingwood": "collingwood.png",
+    "St Kilda": "st_kilda.png"
+  };
+
+  const fileName = logoMap[teamName] || `${teamName.replace(/\s+/g, '').toLowerCase()}.png`;
+  return `/afl-logos/${fileName}`;
+}
+
 
   function groupGamesByDay(games) {
     const grouped = {};
