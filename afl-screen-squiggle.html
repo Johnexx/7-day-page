@@ -12,25 +12,69 @@
     }
 
     body {
+      margin: 0;
+      padding: 0;
+      background-image: url('/aflbg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
+      color: #1a3b8d;
     }
 
     h1 {
       font-family: 'Anton', sans-serif;
       font-size: 5rem;
-      color: #1a3b8d;
       text-align: center;
-      margin-bottom: 30px;
+      margin: 40px 0;
+      color: #1a3b8d;
     }
 
-    .game {
+    #games {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .game-card {
+      background: rgba(232, 231, 220, 0.5);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 800px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .vs-block {
+      flex: 0 0 auto;
+      font-size: 1.2rem;
+      color: #1a3b8d;
+      text-align: center;
+    }
+
+    .team-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      border-radius: 50%;
       background: #fff;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-left: 4px solid #1a3b8d;
-      font-size: 1.2em;
+      padding: 5px;
     }
   </style>
 </head>
@@ -39,6 +83,11 @@
   <div id="games">Loading games...</div>
 
   <script>
+    function getTeamLogoUrl(teamName) {
+      // Replace with actual logo paths if you have them
+      return `/logos/${teamName.replace(/\s+/g, '').toLowerCase()}.png`;
+    }
+
     fetch('/.netlify/functions/squiggle')
       .then(res => res.text())
       .then(xmlString => {
@@ -56,7 +105,8 @@
           const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
           const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent || "";
 
-          let formattedTime = localtimeRaw;
+          // Format localtime
+          let formattedTime = "";
           if (localtimeRaw) {
             const date = new Date(localtimeRaw);
             const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -68,14 +118,27 @@
           }
 
           const hasScore = ascore > 0 || hscore > 0;
-          const displayText = hasScore
-            ? `${hteam} ${hscore} Vs ${ateam} ${ascore} ${formattedTime}`
-            : `${hteam} Vs ${ateam} ${formattedTime}`;
+          const vsText = hasScore
+            ? `${hscore} Vs ${ascore} — ${formattedTime}`
+            : `Vs — ${formattedTime}`;
 
-          const div = document.createElement("div");
-          div.className = "game";
-          div.textContent = displayText;
-          output.appendChild(div);
+          // Create the flex card
+          const card = document.createElement("div");
+          card.className = "game-card";
+
+          card.innerHTML = `
+            <div class="team">
+              <img class="team-logo" src="${getTeamLogoUrl(hteam)}" alt="${hteam}" />
+              ${hteam}
+            </div>
+            <div class="vs-block">${vsText}</div>
+            <div class="team">
+              <img class="team-logo" src="${getTeamLogoUrl(ateam)}" alt="${ateam}" />
+              ${ateam}
+            </div>
+          `;
+
+          output.appendChild(card);
         }
       })
       .catch(err => {
