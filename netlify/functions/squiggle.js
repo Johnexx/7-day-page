@@ -1,34 +1,28 @@
-<script>
-  fetch('/.netlify/functions/squiggle')
-    .then(res => res.text())
-    .then(xmlString => {
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(xmlString, "application/xml");
-
-      const games = xml.getElementsByTagName("anon");
-      const output = document.getElementById("games");
-      output.innerHTML = "";
-
-      for (let game of games) {
-        const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
-        const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
-        const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
-        const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
-        const localtime = game.getElementsByTagName("localtime")[0]?.textContent || "";
-
-        const hasScore = ascore > 0 || hscore > 0;
-        const displayText = hasScore
-          ? `${hteam} ${hscore} Vs ${ateam} ${ascore} ${localtime}`
-          : `${hteam} Vs ${ateam} ${localtime}`;
-
-        const div = document.createElement("div");
-        div.className = "game";
-        div.textContent = displayText;
-        output.appendChild(div);
+export async function handler(event, context) {
+  try {
+    const response = await fetch(
+      "https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml",
+      {
+        headers: {
+          "User-Agent": "33 Degrees AFL Display - contact@33degrees.com.au"
+        }
       }
-    })
-    .catch(err => {
-      console.error("Failed to load or parse XML:", err);
-      document.getElementById("games").textContent = "Failed to load games.";
-    });
-</script>
+    );
+
+    const xml = await response.text();
+
+    return {
+      statusCode: 200,
+      headers: {
+        "Content-Type": "application/xml",
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: xml
+    };
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: `Fetch failed: ${err.message}`
+    };
+  }
+}
