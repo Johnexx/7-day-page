@@ -38,6 +38,15 @@
     padding: 20px;
   }
 
+  .day-heading {
+  font-family: 'Anton', sans-serif;
+  font-size: 3rem;
+  text-align: center;
+  margin: 60px 0 20px;
+  text-transform: uppercase;
+  color: #1a3b8d;
+}
+
   .game-card {
     background: rgba(232, 231, 220, 0.5);
     padding: 20px;
@@ -106,56 +115,75 @@
     return `/logos/${teamName.replace(/\s+/g, '').toLowerCase()}.png`;
   }
 
+  function groupGamesByDay(games) {
+    const grouped = {};
+    for (let game of games) {
+      const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent;
+      const date = new Date(localtimeRaw);
+      const dayName = date.toLocaleDateString("en-AU", { weekday: "long" }).toUpperCase();
+      if (!grouped[dayName]) {
+        grouped[dayName] = [];
+      }
+      grouped[dayName].push({ game, date });
+    }
+    return grouped;
+  }
+
   fetch('/.netlify/functions/squiggle')
     .then(res => res.text())
     .then(xmlString => {
       const parser = new DOMParser();
       const xml = parser.parseFromString(xmlString, "application/xml");
 
-      const games = xml.getElementsByTagName("anon");
+      const gameNodes = Array.from(xml.getElementsByTagName("anon"));
+      const grouped = groupGamesByDay(gameNodes);
+
       const output = document.getElementById("games");
       output.innerHTML = "";
 
-      for (let game of games) {
-        const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
-        const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
-        const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
-        const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
-        const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent || "";
+      for (const [dayName, games] of Object.entries(grouped)) {
+        // Add day heading
+        const heading = document.createElement("h2");
+        heading.className = "day-heading";
+        heading.textContent = dayName;
+        output.appendChild(heading);
 
-        let formattedTime = "";
-        if (localtimeRaw) {
-          const date = new Date(localtimeRaw);
-          const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-          const day = days[date.getDay()];
+        for (let { game, date } of games) {
+          const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
+          const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
+          const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
+          const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
+
+          // Format time only (e.g. 7PM)
+          let timeOnly = "";
           let hours = date.getHours();
           const ampm = hours >= 12 ? "PM" : "AM";
           hours = hours % 12 || 12;
-          formattedTime = `${day} ${hours}${ampm}`;
+          timeOnly = `${hours}${ampm}`;
+
+          const hasScore = ascore > 0 || hscore > 0;
+          const vsLabel = hasScore ? `${hscore} VS ${ascore}` : "VS";
+
+          const card = document.createElement("div");
+          card.className = "game-card";
+
+          card.innerHTML = `
+            <div class="team-block">
+              <div class="team-name">${hteam}</div>
+              <img class="team-logo" src="${getTeamLogoUrl(hteam)}" alt="${hteam}" />
+            </div>
+            <div class="vs-block">
+              <div class="vs-label">${vsLabel}</div>
+              <div class="vs-time">${timeOnly}</div>
+            </div>
+            <div class="team-block">
+              <img class="team-logo" src="${getTeamLogoUrl(ateam)}" alt="${ateam}" />
+              <div class="team-name">${ateam}</div>
+            </div>
+          `;
+
+          output.appendChild(card);
         }
-
-        const hasScore = ascore > 0 || hscore > 0;
-        const vsLabel = hasScore ? `${hscore} VS ${ascore}` : "VS";
-
-        const card = document.createElement("div");
-        card.className = "game-card";
-
-        card.innerHTML = `
-          <div class="team-block">
-            <div class="team-name">${hteam}</div>
-            <img class="team-logo" src="${getTeamLogoUrl(hteam)}" alt="${hteam}" />
-          </div>
-          <div class="vs-block">
-            <div class="vs-label">${vsLabel}</div>
-            <div class="vs-time">${formattedTime}</div>
-          </div>
-          <div class="team-block">
-            <img class="team-logo" src="${getTeamLogoUrl(ateam)}" alt="${ateam}" />
-            <div class="team-name">${ateam}</div>
-          </div>
-        `;
-
-        output.appendChild(card);
       }
     })
     .catch(err => {
@@ -163,5 +191,6 @@
       document.getElementById("games").textContent = "Failed to load games.";
     });
 </script>
+
 </body>
 </html>
