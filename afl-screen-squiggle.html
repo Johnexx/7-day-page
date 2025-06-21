@@ -4,14 +4,27 @@
   <meta charset="UTF-8" />
   <title>AFL Round 15 Scores</title>
   <style>
+    @font-face {
+      font-family: 'Anton';
+      src: url('/fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     body {
       font-family: Arial, sans-serif;
       background: #f4f4f4;
       padding: 20px;
     }
+
     h1 {
+      font-family: 'Anton', sans-serif;
+      font-size: 5rem;
       color: #1a3b8d;
+      text-align: center;
+      margin-bottom: 30px;
     }
+
     .game {
       background: #fff;
       padding: 10px;
@@ -22,56 +35,53 @@
   </style>
 </head>
 <body>
-  <h1>AFL Round 15, 2025</h1>
+  <h1>AFL Round 15</h1>
   <div id="games">Loading games...</div>
 
-<script>
-  fetch('/.netlify/functions/squiggle')
-    .then(res => res.text())
-    .then(xmlString => {
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(xmlString, "application/xml");
+  <script>
+    fetch('/.netlify/functions/squiggle')
+      .then(res => res.text())
+      .then(xmlString => {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlString, "application/xml");
 
-      const games = xml.getElementsByTagName("anon");
-      const output = document.getElementById("games");
-      output.innerHTML = "";
+        const games = xml.getElementsByTagName("anon");
+        const output = document.getElementById("games");
+        output.innerHTML = "";
 
-      for (let game of games) {
-        const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
-        const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
-        const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
-        const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
-        const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent || "";
+        for (let game of games) {
+          const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
+          const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
+          const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
+          const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
+          const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent || "";
 
-        // Format localtime (e.g. Thu 7PM)
-        let formattedTime = localtimeRaw;
-        if (localtimeRaw) {
-          const date = new Date(localtimeRaw);
-          const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-          const day = days[date.getDay()];
-          let hours = date.getHours();
-          const ampm = hours >= 12 ? "PM" : "AM";
-          hours = hours % 12;
-          hours = hours ? hours : 12; // convert 0 to 12
-          formattedTime = `${day} ${hours}${ampm}`;
+          let formattedTime = localtimeRaw;
+          if (localtimeRaw) {
+            const date = new Date(localtimeRaw);
+            const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            const day = days[date.getDay()];
+            let hours = date.getHours();
+            const ampm = hours >= 12 ? "PM" : "AM";
+            hours = hours % 12 || 12;
+            formattedTime = `${day} ${hours}${ampm}`;
+          }
+
+          const hasScore = ascore > 0 || hscore > 0;
+          const displayText = hasScore
+            ? `${hteam} ${hscore} Vs ${ateam} ${ascore} ${formattedTime}`
+            : `${hteam} Vs ${ateam} ${formattedTime}`;
+
+          const div = document.createElement("div");
+          div.className = "game";
+          div.textContent = displayText;
+          output.appendChild(div);
         }
-
-        const hasScore = ascore > 0 || hscore > 0;
-        const displayText = hasScore
-          ? `${hteam} ${hscore} Vs ${ateam} ${ascore} ${formattedTime}`
-          : `${hteam} Vs ${ateam} ${formattedTime}`;
-
-        const div = document.createElement("div");
-        div.className = "game";
-        div.textContent = displayText;
-        output.appendChild(div);
-      }
-    })
-    .catch(err => {
-      console.error("Failed to load or parse XML:", err);
-      document.getElementById("games").textContent = "Failed to load games.";
-    });
-</script>
-
+      })
+      .catch(err => {
+        console.error("Failed to load or parse XML:", err);
+        document.getElementById("games").textContent = "Failed to load games.";
+      });
+  </script>
 </body>
 </html>
