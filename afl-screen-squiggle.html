@@ -11,23 +11,23 @@
     font-style: normal;
   }
 
-  body {
-    margin: 0;
-    padding: 0;
-    background-image: url('/aflbg.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    font-family: Arial, sans-serif;
-    color: #1a3b8d;
-  }
+    body {
+      font-family: Arial, sans-serif;
+      color: #1a3b8d;
+      display: flex;
+      flex-direction: column;
+      background-image: url('aflbg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
 
   h1 {
-    font-family: 'Anton', sans-serif;
-    font-size: 5rem;
-    text-align: center;
-    margin: 40px 0;
-    color: #1a3b8d;
+      color: #1a3b8d;
+      padding: 20px;
+      text-align: center;
+      font-size: 5rem;
+      font-family: 'Anton', sans-serif;
   }
 
   #games {
@@ -48,26 +48,23 @@
 }
 
   .game-card {
-    background: rgba(232, 231, 220, 0.5);
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 800px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
+      background: rgba(232, 231, 220, 0.5); /* 50% transparent */
+      border-radius: 10px;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .team-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-    gap: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-wrap: wrap;
   }
 
   .team-name {
@@ -104,6 +101,11 @@
     font-size: 1rem;
     opacity: 0.8;
   }
+
+     @media screen and (max-width: 500px) {
+      .team {
+        width: 100px;
+      } 
 </style>
 </head>
 <body>
