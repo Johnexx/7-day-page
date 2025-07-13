@@ -4,7 +4,7 @@ export async function handler(event, context) {
       "https://api.squiggle.com.au/?q=games;year=2025;round=15;format=xml",
       {
         headers: {
-          "User-Agent": "33 Degrees AFL Display - contact@33degrees.com.au"
+          "User-Agent": "AFL Displa\y - Johnrk95@gmail.com"
         }
       }
     );
