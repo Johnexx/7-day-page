@@ -47,7 +47,7 @@
       padding-bottom: 5px;
 }
 
-  .game-card {
+    .match {
       background: rgba(232, 231, 220, 0.5); /* 50% transparent */
       border-radius: 10px;
       width: 100%;
@@ -57,7 +57,7 @@
       flex-direction: column;
       align-items: center;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+    }
 
   .team-block {
       display: flex;
@@ -191,7 +191,7 @@ function getTeamLogoUrl(teamName) {
           const vsLabel = hasScore ? `${hscore} VS ${ascore}` : "VS";
 
           const card = document.createElement("div");
-          card.className = "game-card";
+          card.className = "match";
 
           card.innerHTML = `
             <div class="team-block">
