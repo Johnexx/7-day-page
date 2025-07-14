@@ -15,7 +15,7 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: auto; /* ✅ Allows scrolling */
+      overflow: auto;
     }
 
     body {
@@ -214,14 +214,18 @@
 
             card.innerHTML = `
               <div class="teams">
-                <div class="team">${hasScore ? hscore : ""}</div>
+                <div class="team" style="color: ${hasScore ? (hscore > ascore ? 'green' : (hscore < ascore ? 'red' : '#1a3b8d')) : ''}">
+                  ${hasScore ? hscore : ""}
+                </div>
                 <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
                 <div class="team">
                   <div>vs</div>
-                  <div class="time">${timeOnly}</div>
+                  <div class="time">${hasScore ? 'Result' : timeOnly}</div>
                 </div>
                 <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
-                <div class="team">${hasScore ? ascore : ""}</div>
+                <div class="team" style="color: ${hasScore ? (ascore > hscore ? 'green' : (ascore < hscore ? 'red' : '#1a3b8d')) : ''}">
+                  ${hasScore ? ascore : ""}
+                </div>
               </div>
             `;
 
