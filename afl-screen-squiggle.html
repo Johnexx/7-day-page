@@ -132,7 +132,7 @@
   </style>
 </head>
 <body>
-  <header>AFL This Week</header>
+  <header id="page-title">AFL THIS WEEK</header>
   <main class="main-wrapper">
     <section class="schedule" id="schedule">
       Loading schedule...
@@ -169,8 +169,6 @@
       { name: "Bye Round", start: "2025-08-25", end: "2025-08-31" }
     ];
 
-    const today = new Date();
-
     function getCurrentRound(today) {
       for (let round of rounds) {
         const start = new Date(round.start);
@@ -182,11 +180,16 @@
       return "This Week";
     }
 
-    const roundName = getCurrentRound(today);
-
     document.addEventListener("DOMContentLoaded", () => {
+      const roundName = getCurrentRound(new Date());
       document.title = `AFL ${roundName}`;
-      document.querySelector("header").textContent = `AFL ${roundName}`;
+      const header = document.getElementById("page-title");
+      if (header) {
+        header.textContent = `AFL ${roundName}`;
+        console.log("✅ Header updated to:", header.textContent);
+      } else {
+        console.warn("⚠️ Header not found.");
+      }
     });
   </script>
 
