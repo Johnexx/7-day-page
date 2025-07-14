@@ -2,137 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>33 Degrees | Esperance</title>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Open+Sans&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Open Sans', sans-serif;
-      color: #1a3b8d;
-      background-color: #f5f9fb;
-    }
-
-    header {
-      background: url('https://www.33degreesesp.com.au/wp-content/uploads/2022/05/33Degrees-clear-BG.png') center/contain no-repeat, linear-gradient(to bottom, #e0f7fa, #ffffff);
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-    }
-
-    header h1 {
-      font-family: 'Anton', sans-serif;
-      font-size: 4rem;
-      margin-top: 1rem;
-    }
-
-    section {
-      padding: 60px 20px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      font-size: 2.5rem;
-      font-family: 'Anton', sans-serif;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .about, .menu, .events, .gallery, .contact {
-      margin-bottom: 60px;
-    }
-
-    .menu ul, .events ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .menu li, .events li {
-      padding: 10px 0;
-      border-bottom: 1px solid #ccc;
-    }
-
-    .gallery img {
-      width: 100%;
-      max-width: 300px;
-      margin: 10px;
-      border-radius: 10px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px;
-      background-color: #e0f7fa;
-      font-size: 0.9rem;
-    }
-
-    @media (min-width: 768px) {
-      .gallery {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-    }
-  </style>
+  <title>Placeholder</title>
 </head>
 <body>
-  <header>
-    <img src="https://www.33degreesesp.com.au/wp-content/uploads/2022/05/33Degrees-clear-BG.png" alt="33 Degrees Logo" style="max-width: 200px;">
-    <h1>Welcome to 33 Degrees</h1>
-    <p>Coastal Chill | Great Food | Live Sport | Esperance</p>
-  </header>
+  <header id="page-title">PLACEHOLDER</header>
 
-  <section class="about">
-    <h2 class="section-title">About Us</h2>
-    <p>33 Degrees is your beachside escape in Esperance. With cold drinks, great food, friendly faces, and live sport always on — we bring the good vibes all week long.</p>
-  </section>
-
-  <section class="menu">
-    <h2 class="section-title">Menu Highlights</h2>
-    <ul>
-      <li>Philly Cheese Steak Sandwich</li>
-      <li>Corn Ribs with Spiced Ranch</li>
-      <li>Butter Chicken Curry</li>
-      <li>Confit Duck with Potato Rosti</li>
-      <li>Chef Kieran’s Snickers Bar</li>
-    </ul>
-  </section>
-
-  <section class="events">
-    <h2 class="section-title">Live Sport & Events</h2>
-    <ul>
-      <li>All AFL Games Live & Loud</li>
-      <li>Friday Night Footy Happy Hour</li>
-      <li>Weekend DJs & Acoustic Sets</li>
-    </ul>
-  </section>
-
-  <section class="gallery">
-    <h2 class="section-title">Gallery</h2>
-    <img src="https://www.33degreesesp.com.au/wp-content/uploads/2021/07/33D_bar.jpg" alt="Bar View">
-    <img src="https://www.33degreesesp.com.au/wp-content/uploads/2021/07/33D_food.jpg" alt="Food Plating">
-    <img src="https://www.33degreesesp.com.au/wp-content/uploads/2021/07/33D_people.jpg" alt="Guests Enjoying">
-  </section>
-
-  <section class="contact">
-    <h2 class="section-title">Contact</h2>
-    <p>📍 33 Andrew St, Esperance WA 6450</p>
-    <p>📞 <a href="tel:+61890711588">(08) 9071 1588</a></p>
-    <p>📧 <a href="mailto:info@33degreesesp.com.au">info@33degreesesp.com.au</a></p>
-    <p><a href="https://www.google.com/maps/place/33+Degrees+Esperance" target="_blank">View on Google Maps</a></p>
-  </section>
-
-  <footer>
-    &copy; 2025 33 Degrees Esperance — Designed for Coastal Chill
-  </footer>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const roundName = "Round 19";
+      document.title = `AFL ${roundName}`;
+      const header = document.getElementById("page-title");
+      if (header) {
+        header.textContent = `AFL ${roundName}`;
+      }
+    });
+  </script>
 </body>
 </html>
