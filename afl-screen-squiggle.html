@@ -15,7 +15,7 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: auto;
+      overflow: auto; /* ✅ Allows scrolling */
     }
 
     body {
@@ -96,7 +96,7 @@
       min-height: 100px;
       text-align: center;
       font-family: 'Anton', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.4rem;
     }
 
     .logo {
@@ -214,14 +214,14 @@
 
             card.innerHTML = `
               <div class="teams">
-                <div class="team">${hteam}</div>
+                <div class="team">${hasScore ? hscore : ""}</div>
                 <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
                 <div class="team">
-                  <div>${hasScore ? `${hscore} vs ${ascore}` : "vs"}</div>
+                  <div>vs</div>
                   <div class="time">${timeOnly}</div>
                 </div>
                 <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
-                <div class="team">${ateam}</div>
+                <div class="team">${hasScore ? ascore : ""}</div>
               </div>
             `;
 
