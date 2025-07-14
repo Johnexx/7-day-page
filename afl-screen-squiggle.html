@@ -2,14 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AFL Round 15 Scores</title>
-<style>
-  @font-face {
-    font-family: 'Anton';
-    src: url('/fonts/Anton-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
+  <title>AFL This Week</title>
+  <style>
+    @font-face {
+      font-family: 'Anton';
+      src: url('/fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
 
     body {
       font-family: Arial, sans-serif;
@@ -22,34 +29,46 @@
       background-repeat: no-repeat;
     }
 
-  h1 {
+    header {
       color: #1a3b8d;
       padding: 20px;
       text-align: center;
       font-size: 5rem;
       font-family: 'Anton', sans-serif;
-  }
+    }
 
-  #schedule {
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .schedule {
       flex: 1;
       padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       overflow: hidden;
-  }
+    }
 
-  .day-heading {
+    .day-group {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    .day-heading {
       font-size: 1.8rem;
       font-family: 'Anton', sans-serif;
       margin: 20px 0 10px;
       text-align: center;
       border-bottom: 2px solid #1a3b8d;
       padding-bottom: 5px;
-}
+    }
 
     .match {
-      background: rgba(232, 231, 220, 0.5); /* 50% transparent */
+      background: rgba(232, 231, 220, 0.5);
       border-radius: 10px;
       width: 100%;
       margin: 10px 0;
@@ -60,164 +79,162 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-  .team-block {
+    .teams {
       display: flex;
       justify-content: center;
       align-items: center;
       text-align: center;
       flex-wrap: wrap;
-  }
+    }
 
-  .team-name {
-    font-family: 'Anton', sans-serif;
-    font-size: 1.4rem;
-  }
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      min-height: 100px;
+      text-align: center;
+      font-family: 'Anton', sans-serif;
+      font-size: 1.1rem;
+    }
 
-  .team-logo {
+    .logo {
       width: 100px;
       height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 10px;
-  }
+    }
 
-  .vs-block {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    font-size: 1.2rem;
-    color: #1a3b8d;
-    min-width: 100px;
-  }
+    .logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
 
-  .vs-label {
-    font-weight: bold;
-  }
+    .time {
+      font-size: 1.1rem;
+      color: #333;
+      margin-top: 5px;
+    }
 
-  .vs-time {
-    font-size: 1rem;
-    opacity: 0.8;
-  }
-
-     @media screen and (max-width: 500px) {
+    @media screen and (max-width: 500px) {
       .team {
         width: 100px;
-      } 
-</style>
+      }
+
+      header {
+        font-size: 3rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>AFL Round 15</h1>
-  <div id="schedule">Loading schedule...</div>
+  <header>AFL THIS WEEK</header>
+  <main class="main-wrapper">
+    <section class="schedule" id="schedule">
+      Loading schedule...
+    </section>
+  </main>
 
-<script>
-function getTeamLogoUrl(teamName) {
-  const logoMap = {
-    "Richmond": "richmond.png",
-    "Western Bulldogs": "western_bulldogs.png",
-    "Gold Coast": "suns.png",
-    "Collingwood": "collingwood.png",
-    "St Kilda": "st_kilda.png",
-    "Fremantle": "fremantle_dockers.png",
-    "Brisbane Lions": "brisbane_lions.png",
-    "North Melbourne": "north_melbourne.png",
-    "Port Adelaide": "port_adelaide.png",
-    "Geelong": "geelong_cats.png",
-    "Essendon": "essendon.png",
-    "Carlton": "carlton.png",
-    "Sydney": "sydney_swans.png",
-    "Greater Western Sydney": "giants.png",
-    "Adelaide": "adelaide_crows.png",
-    "Hawthorn": "hawks.png",
-    "Melbourne": "melbourne.png",
-    "West Coast": "west_coast.png"
-    
-  };
+  <script>
+    function getTeamLogoUrl(teamName) {
+      const logoMap = {
+        "Richmond": "richmond.png",
+        "Western Bulldogs": "western_bulldogs.png",
+        "Gold Coast": "suns.png",
+        "Collingwood": "collingwood.png",
+        "St Kilda": "st_kilda.png",
+        "Fremantle": "fremantle_dockers.png",
+        "Brisbane Lions": "brisbane_lions.png",
+        "North Melbourne": "north_melbourne.png",
+        "Port Adelaide": "port_adelaide.png",
+        "Geelong": "geelong_cats.png",
+        "Essendon": "essendon.png",
+        "Carlton": "carlton.png",
+        "Sydney": "sydney_swans.png",
+        "Greater Western Sydney": "giants.png",
+        "Adelaide": "adelaide_crows.png",
+        "Hawthorn": "hawks.png",
+        "Melbourne": "melbourne.png",
+        "West Coast": "west_coast.png"
+      };
 
-  const fileName = logoMap[teamName] || `${teamName.replace(/\s+/g, '').toLowerCase()}.png`;
-  return `/afl-logos/${fileName}`;
-}
-
-
-  function groupscheduleByDay(schedule) {
-    const grouped = {};
-    for (let game of schedule) {
-      const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent;
-      const date = new Date(localtimeRaw);
-      const dayName = date.toLocaleDateString("en-AU", { weekday: "long" }).toUpperCase();
-      if (!grouped[dayName]) {
-        grouped[dayName] = [];
-      }
-      grouped[dayName].push({ game, date });
+      const fileName = logoMap[teamName] || `${teamName.replace(/\s+/g, '').toLowerCase()}.png`;
+      return `/afl-logos/${fileName}`;
     }
-    return grouped;
-  }
 
-  fetch('/.netlify/functions/squiggle')
-    .then(res => res.text())
-    .then(xmlString => {
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(xmlString, "application/xml");
-
-      const gameNodes = Array.from(xml.getElementsByTagName("anon"));
-      const grouped = groupscheduleByDay(gameNodes);
-
-      const output = document.getElementById("schedule");
-      output.innerHTML = "";
-
-      for (const [dayName, schedule] of Object.entries(grouped)) {
-        // Add day heading
-        const heading = document.createElement("h2");
-        heading.className = "day-heading";
-        heading.textContent = dayName;
-        output.appendChild(heading);
-
-        for (let { game, date } of schedule) {
-          const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
-          const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
-          const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
-          const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
-
-          // Format time only (e.g. 7PM)
-          let timeOnly = "";
-          let hours = date.getHours();
-          const ampm = hours >= 12 ? "PM" : "AM";
-          hours = hours % 12 || 12;
-          timeOnly = `${hours}${ampm}`;
-
-          const hasScore = ascore > 0 || hscore > 0;
-          const vsLabel = hasScore ? `${hscore} VS ${ascore}` : "VS";
-
-          const card = document.createElement("div");
-          card.className = "match";
-
-          card.innerHTML = `
-            <div class="team-block">
-              <div class="team-name">${hteam}</div>
-              <img class="team-logo" src="${getTeamLogoUrl(hteam)}" alt="${hteam}" />
-            </div>
-            <div class="vs-block">
-              <div class="vs-label">${vsLabel}</div>
-              <div class="vs-time">${timeOnly}</div>
-            </div>
-            <div class="team-block">
-              <img class="team-logo" src="${getTeamLogoUrl(ateam)}" alt="${ateam}" />
-              <div class="team-name">${ateam}</div>
-            </div>
-          `;
-
-          output.appendChild(card);
+    function groupScheduleByDay(schedule) {
+      const grouped = {};
+      for (let game of schedule) {
+        const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent;
+        const date = new Date(localtimeRaw);
+        const dayName = date.toLocaleDateString("en-AU", { weekday: "long", day: "numeric", month: "short" });
+        if (!grouped[dayName]) {
+          grouped[dayName] = [];
         }
+        grouped[dayName].push({ game, date });
       }
-    })
-    .catch(err => {
-      console.error("Failed to load or parse XML:", err);
-      document.getElementById("schedule").textContent = "Failed to load schedule.";
-    });
-</script>
+      return grouped;
+    }
 
+    fetch('/.netlify/functions/squiggle')
+      .then(res => res.text())
+      .then(xmlString => {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlString, "application/xml");
+        const gameNodes = Array.from(xml.getElementsByTagName("anon"));
+        const grouped = groupScheduleByDay(gameNodes);
+
+        const output = document.getElementById("schedule");
+        output.innerHTML = "";
+
+        for (const [dayName, schedule] of Object.entries(grouped)) {
+          const daySection = document.createElement("div");
+          daySection.className = "day-group";
+          daySection.innerHTML = `<div class="day-heading">${dayName}</div>`;
+
+          for (let { game, date } of schedule) {
+            const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
+            const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
+            const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
+            const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
+
+            let hours = date.getHours();
+            const ampm = hours >= 12 ? "PM" : "AM";
+            hours = hours % 12 || 12;
+            const timeOnly = `${hours}${ampm}`;
+
+            const hasScore = ascore > 0 || hscore > 0;
+
+            const card = document.createElement("div");
+            card.className = "match";
+
+            card.innerHTML = `
+              <div class="teams">
+                <div class="team">${hteam}</div>
+                <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
+                <div class="team">
+                  <div>${hasScore ? `${hscore} vs ${ascore}` : "vs"}</div>
+                  <div class="time">${timeOnly}</div>
+                </div>
+                <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
+                <div class="team">${ateam}</div>
+              </div>
+            `;
+
+            daySection.appendChild(card);
+          }
+
+          output.appendChild(daySection);
+        }
+      })
+      .catch(err => {
+        console.error("Failed to load or parse XML:", err);
+        document.getElementById("schedule").textContent = "Failed to load schedule.";
+      });
+  </script>
 </body>
 </html>
