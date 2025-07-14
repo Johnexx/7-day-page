@@ -170,6 +170,7 @@
     ];
 
     const today = new Date();
+
     function getCurrentRound(today) {
       for (let round of rounds) {
         const start = new Date(round.start);
@@ -182,8 +183,11 @@
     }
 
     const roundName = getCurrentRound(today);
-    document.title = `AFL ${roundName}`;
-    document.querySelector("header").textContent = `AFL ${roundName}`;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.title = `AFL ${roundName}`;
+      document.querySelector("header").textContent = `AFL ${roundName}`;
+    });
   </script>
 
   <script>
