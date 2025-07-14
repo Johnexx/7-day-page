@@ -30,12 +30,13 @@
       font-family: 'Anton', sans-serif;
   }
 
-  #games {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
+  #schedule {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
   }
 
   .day-heading {
@@ -110,7 +111,7 @@
 </head>
 <body>
   <h1>AFL Round 15</h1>
-  <div id="games">Loading games...</div>
+  <div id="schedule">Loading schedule...</div>
 
 <script>
 function getTeamLogoUrl(teamName) {
@@ -141,9 +142,9 @@ function getTeamLogoUrl(teamName) {
 }
 
 
-  function groupGamesByDay(games) {
+  function groupscheduleByDay(schedule) {
     const grouped = {};
-    for (let game of games) {
+    for (let game of schedule) {
       const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent;
       const date = new Date(localtimeRaw);
       const dayName = date.toLocaleDateString("en-AU", { weekday: "long" }).toUpperCase();
@@ -162,19 +163,19 @@ function getTeamLogoUrl(teamName) {
       const xml = parser.parseFromString(xmlString, "application/xml");
 
       const gameNodes = Array.from(xml.getElementsByTagName("anon"));
-      const grouped = groupGamesByDay(gameNodes);
+      const grouped = groupscheduleByDay(gameNodes);
 
-      const output = document.getElementById("games");
+      const output = document.getElementById("schedule");
       output.innerHTML = "";
 
-      for (const [dayName, games] of Object.entries(grouped)) {
+      for (const [dayName, schedule] of Object.entries(grouped)) {
         // Add day heading
         const heading = document.createElement("h2");
         heading.className = "day-heading";
         heading.textContent = dayName;
         output.appendChild(heading);
 
-        for (let { game, date } of games) {
+        for (let { game, date } of schedule) {
           const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
           const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
           const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
@@ -214,7 +215,7 @@ function getTeamLogoUrl(teamName) {
     })
     .catch(err => {
       console.error("Failed to load or parse XML:", err);
-      document.getElementById("games").textContent = "Failed to load games.";
+      document.getElementById("schedule").textContent = "Failed to load schedule.";
     });
 </script>
 
