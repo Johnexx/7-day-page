@@ -170,13 +170,21 @@
       return `/afl-logos/${logos[name] || name.replace(/\s+/g, '').toLowerCase() + '.png'}`;
     }
 
-    function convertToAWST(dateString) {
-      const [datePart, timePart] = dateString.split("T");
-      const [year, month, day] = datePart.split("-").map(Number);
-      const [hour, minute, second] = timePart.split(":").map(Number);
-      const utcDate = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
-      return new Date(utcDate.getTime() + 8 * 60 * 60 * 1000);
-    }
+function convertToAWST(dateString) {
+  try {
+    const [datePart, timePart] = dateString.split("T");
+    if (!datePart || !timePart) throw new Error("Invalid date format");
+
+    const [year, month, day] = datePart.split("-").map(Number);
+    const [hour, minute, second] = timePart.split(":").map(Number);
+
+    const utcDate = new Date(Date.UTC(year, month - 1, day, hour, minute || 0, second || 0));
+    return new Date(utcDate.getTime() + 8 * 60 * 60 * 1000); // Convert to AWST (UTC+8)
+  } catch (err) {
+    console.error("Failed to parse date:", dateString, err);
+    return new Date(); // fallback: now
+  }
+}
 
     // ... rest of code remains unchanged
   </script>
