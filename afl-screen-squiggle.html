@@ -220,10 +220,13 @@
       const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
       const hasScore = ascore > 0 || hscore > 0;
 
-      let hours = date.getHours();
-      const ampm = hours >= 12 ? "PM" : "AM";
-      hours = hours % 12 || 12;
-      const timeOnly = `${hours}${ampm}`;
+let hours = date.getHours();
+let minutes = date.getMinutes();
+const ampm = hours >= 12 ? "PM" : "AM";
+hours = hours % 12 || 12;
+minutes = minutes.toString().padStart(2, '0');
+const timeOnly = `${hours}:${minutes}${ampm}`;
+
 
       const card = document.createElement("div");
       card.className = "match";
