@@ -264,7 +264,10 @@ const timeOnly = `${hours}:${minutes}${ampm}`;
         for (let game of gameNodes) {
           const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent;
           const timestr = game.getElementsByTagName("timestr")[0]?.textContent || "";
-          const date = new Date(localtimeRaw);
+const date = new Date(localtimeRaw);
+const awstOffset = 8 * 60; // minutes
+const localOffset = date.getTimezoneOffset(); // in minutes
+const correctedDate = new Date(date.getTime() + (awstOffset + localOffset) * 60000);
 
           if (timestr === "Full Time") {
             results.push({ game, date });
