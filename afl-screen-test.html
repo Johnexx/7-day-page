@@ -49,7 +49,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow: hidden;
     }
 
     .day-group {
@@ -208,7 +207,6 @@
         "Melbourne": "melbourne.png",
         "West Coast": "west_coast.png"
       };
-
       const fileName = logoMap[teamName] || `${teamName.replace(/\s+/g, '').toLowerCase()}.png`;
       return `/afl-logos/${fileName}`;
     }
@@ -218,6 +216,7 @@
       const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
       const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
       const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
+      const timestr = game.getElementsByTagName("timestr")[0]?.textContent || "";
       const hasScore = ascore > 0 || hscore > 0;
 
       let hours = date.getHours();
@@ -225,9 +224,12 @@
       hours = hours % 12 || 12;
       const timeOnly = `${hours}${ampm}`;
 
+      const statusDisplay = timestr.startsWith("Q")
+        ? timestr.split(" ")[0]
+        : (hasScore ? "Result" : timeOnly);
+
       const card = document.createElement("div");
       card.className = "match";
-
       card.innerHTML = `
         <div class="teams">
           <div class="team" style="color: ${hasScore ? (hscore > ascore ? 'green' : (hscore < ascore ? 'red' : '#1a3b8d')) : ''}">
@@ -236,7 +238,7 @@
           <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
           <div class="team">
             <div>vs</div>
-            <div class="time">${hasScore ? '' : timeOnly}</div>
+            <div class="time">${statusDisplay}</div>
           </div>
           <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
           <div class="team" style="color: ${hasScore ? (ascore > hscore ? 'green' : (ascore < hscore ? 'red' : '#1a3b8d')) : ''}">
@@ -244,7 +246,6 @@
           </div>
         </div>
       `;
-
       return card;
     }
 
@@ -275,7 +276,6 @@
         const output = document.getElementById("schedule");
         output.innerHTML = "";
 
-        // Display games grouped by day
         for (const [dayName, schedule] of Object.entries(grouped)) {
           const daySection = document.createElement("div");
           daySection.className = "day-group";
@@ -286,7 +286,6 @@
           output.appendChild(daySection);
         }
 
-        // Display Full Time results at the bottom
         if (results.length > 0) {
           const resultSection = document.createElement("div");
           resultSection.className = "day-group";
