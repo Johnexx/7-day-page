@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Specials</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    .specials-list {
+      margin-top: 20px;
+    }
+    .special-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+    .remove-btn {
+      background-color: red;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .remove-btn:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+  <h1>Manage Specials</h1>
+  <button class="button" onclick="window.location.href='add_special.html'">Add Special</button>
+  <button class="button" onclick="window.location.href='past_specials.html'">Past Specials</button>
+
+  <div class="specials-list">
+    <h2>Current Specials</h2>
+    <div class="special-item">
+      <span>Special 1 - $12.99</span>
+      <button class="remove-btn">X</button>
+    </div>
+    <div class="special-item">
+      <span>Special 2 - $9.99</span>
+      <button class="remove-btn">X</button>
+    </div>
+  </div>
+</body>
+</html>
