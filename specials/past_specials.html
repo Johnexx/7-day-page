@@ -31,15 +31,23 @@
 <body>
   <h1>Past Specials</h1>
 
-  <div class="specials-list">
-    <div class="special-item">
-      <span>Special 1 - $12.99</span>
-      <button class="add-btn">+ Add to Current</button>
-    </div>
-    <div class="special-item">
-      <span>Special 2 - $9.99</span>
-      <button class="add-btn">+ Add to Current</button>
-    </div>
-  </div>
+  <div class="specials-list" id="pastSpecials"></div>
+
+  <script>
+    fetch('https://script.google.com/macros/s/AKfycbzl6Q56xDXjIrrcXeVq7gTNKoTcwrtczlagffjtS3k-ZOvcOIkPcEgubKwpsD_yguG8/exec') // Replace with your Web App URL
+      .then(response => response.json())
+      .then(data => {
+        const specialsList = document.getElementById("pastSpecials");
+        data.forEach(special => {
+          const specialItem = document.createElement("div");
+          specialItem.className = "special-item";
+          specialItem.innerHTML = `
+            <span>${special[0]} - $${special[2]}</span>
+            <button class="add-btn">+ Add to Current</button>
+          `;
+          specialsList.appendChild(specialItem);
+        });
+      });
+  </script>
 </body>
 </html>
