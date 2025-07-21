@@ -32,11 +32,39 @@
 </head>
 <body>
   <h1>Add New Special</h1>
-  <form action="save_special.php" method="POST">
-    <input class="input-field" type="text" name="name" placeholder="Special Name" required>
-    <textarea class="input-field" name="description" placeholder="Description" required></textarea>
-    <input class="input-field" type="number" name="price" placeholder="Price" required>
+  <form id="addSpecialForm">
+    <input class="input-field" type="text" id="name" placeholder="Special Name" required>
+    <textarea class="input-field" id="description" placeholder="Description" required></textarea>
+    <input class="input-field" type="number" id="price" placeholder="Price" required>
     <button type="submit" class="button">Save Special</button>
   </form>
+
+  <script>
+    document.getElementById("addSpecialForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const specialData = {
+        name: document.getElementById("name").value,
+        description: document.getElementById("description").value,
+        price: document.getElementById("price").value
+      };
+
+      fetch(https://script.google.com/macros/s/AKfycbzl6Q56xDXjIrrcXeVq7gTNKoTcwrtczlagffjtS3k-ZOvcOIkPcEgubKwpsD_yguG8/exec', { // Replace with your Web App URL
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(specialData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Special added successfully!");
+          window.location.href = 'index.html'; // Redirect back to homepage
+        } else {
+          alert("Error: " + data.message);
+        }
+      })
+      .catch(error => alert("Error: " + error));
+    });
+  </script>
 </body>
 </html>
