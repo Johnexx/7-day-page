@@ -33,11 +33,11 @@ export async function handler(event, context) {
     const today = new Date();
 
     // Find current round
-    const currentRound = rounds.find((round) => {
-      const start = new Date(round.start);
-      const end = new Date(round.end);
-      return today >= start && today <= end;
-    });
+const currentRound = rounds.find((round) => {
+  const start = new Date(round.start + "T00:00:00");
+  const end = new Date(round.end + "T23:59:59");
+  return today >= start && today <= end;
+});
 
     let roundParam = null;
 
