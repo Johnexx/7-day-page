@@ -11,17 +11,6 @@
       font-style: normal;
     }
 
-    :root{
-      --brand:#1a3b8d;
-      --card-bg: rgba(232,231,220,0.55);
-      --ink:#0f274e;
-      --win:#1a8f3a;
-      --lose:#c9352b;
-      --draw:#6b7280; /* slate-ish */
-      --banner-bg: rgba(26,59,141,0.9);
-      --banner-ink:#ffffff;
-    }
-
     html, body {
       margin: 0;
       padding: 0;
@@ -31,7 +20,7 @@
 
     body {
       font-family: Arial, sans-serif;
-      color: var(--ink);
+      color: #1a3b8d;
       display: flex;
       flex-direction: column;
       background-image: url('aflbg.png');
@@ -41,20 +30,11 @@
     }
 
     header {
-      color: var(--brand);
-      padding: 14px 20px 4px;
+      color: #1a3b8d;
+      padding: 20px;
       text-align: center;
-      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-size: 5rem;
       font-family: 'Anton', sans-serif;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.15);
-    }
-
-    .subhead {
-      text-align:center;
-      font-size: clamp(0.9rem, 1.8vw, 1.1rem);
-      opacity: .85;
-      margin-bottom: 10px;
     }
 
     .main-wrapper {
@@ -65,168 +45,113 @@
 
     .schedule {
       flex: 1;
-      padding: 16px 20px 40px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 28px;
     }
 
-    /* Day banner */
     .day-group {
-      width: min(1200px, 96vw);
-    }
-    .day-heading {
-      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
-      font-family: 'Anton', sans-serif;
-      text-align: center;
-      color: var(--banner-ink);
-      background: var(--banner-bg);
-      padding: 10px 14px;
-      border-radius: 16px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-      letter-spacing: .5px;
-      backdrop-filter: blur(2px);
-    }
-
-    /* Match card */
-    .match {
-      background: var(--card-bg);
-      border-radius: 18px;
       width: 100%;
-      margin: 14px 0 0;
-      padding: 16px 18px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 14px;
-      align-items: center;
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
-      animation: riseIn .45s ease both;
+      max-width: 600px;
+      margin-bottom: 40px;
     }
 
-    @keyframes riseIn {
-      from { opacity: 0; transform: translateY(10px) scale(.98); }
-      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    .day-heading {
+      font-size: 1.8rem;
+      font-family: 'Anton', sans-serif;
+      margin: 20px 0 10px;
+      text-align: center;
+      border-bottom: 2px solid #1a3b8d;
+      padding-bottom: 5px;
+    }
+
+    .match {
+      background: rgba(232, 231, 220, 0.5);
+      border-radius: 10px;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .teams {
-      display: contents; /* grid children use card grid */
-    }
-
-    .team-col {
-      display: grid;
-      grid-template-columns: auto auto;
+      display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      text-align: center;
+      flex-wrap: wrap;
     }
 
-    .side {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      min-width: 110px;
-      gap: 6px;
-    }
-
-    .score {
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      min-height: 100px;
+      text-align: center;
       font-family: 'Anton', sans-serif;
-      font-size: clamp(1.4rem, 2.8vw, 2.1rem);
-      line-height: 1;
-      min-height: 1em;
+      font-size: 1.4rem;
     }
 
     .logo {
-      width: clamp(90px, 10vw, 120px);
-      height: clamp(90px, 10vw, 120px);
-      border-radius: 50%;
-      background: #fff;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-      overflow: hidden;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 10px;
     }
+
     .logo img {
-      max-width: 88%;
-      max-height: 88%;
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
-      display: block;
-      filter: drop-shadow(0 2px 2px rgba(0,0,0,.12));
-    }
-
-    .vs-col {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap: 6px;
-      min-width: 110px;
-    }
-
-    .vs {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(1rem, 2.4vw, 1.4rem);
-      color: var(--ink);
-      opacity: .9;
     }
 
     .time {
-      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      font-size: 1.1rem;
+      color: #333;
+      margin-top: 5px;
     }
 
+    /* NEW: LIVE badge style */
     .badge-live {
       font-family: 'Anton', sans-serif;
-      font-size: clamp(0.8rem, 1.8vw, 1rem);
+      font-size: 0.9rem;
       color: #fff;
-      background: linear-gradient(90deg,#ff3b30,#ff684f);
-      padding: 4px 10px;
+      background: linear-gradient(90deg, #ff3b30, #ff6a55);
+      padding: 2px 8px;
       border-radius: 999px;
-      letter-spacing: .5px;
-      box-shadow: 0 6px 18px rgba(255,80,60,.35);
-      animation: pulse 1.2s ease-in-out infinite;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(255, 80, 60, 0.35);
+      display: inline-block;
     }
 
-    @keyframes pulse {
-      0%,100% { transform: scale(1); }
-      50%     { transform: scale(1.05); }
-    }
-
-    /* Score colours */
-    .win  { color: var(--win); }
-    .lose { color: var(--lose); }
-    .draw { color: var(--draw); }
-
-    /* Responsive tweaks */
-    @media (max-width: 640px){
-      .match {
-        grid-template-columns: 1fr;
-        text-align:center;
+    @media screen and (max-width: 500px) {
+      .team {
+        width: 100px;
       }
-      .team-col { grid-template-columns: 1fr 1fr; }
-      .vs-col { order: -1; }
-    }
 
-    @media (min-width: 1400px){
-      .logo{
-        width: 140px;
-        height: 140px;
-      }
-      .score{
-        font-size: 2.2rem;
+      header {
+        font-size: 3rem;
       }
     }
   </style>
 </head>
 <body>
   <header id="page-title">AFL THIS WEEK</header>
-  <div class="subhead" id="subhead"></div>
-
   <main class="main-wrapper">
-    <section class="schedule" id="schedule">Loading schedule...</section>
+    <section class="schedule" id="schedule">
+      Loading schedule...
+    </section>
   </main>
-
 <script>
-  /* ---------- Week/Round detection to set the title ---------- */
+  // NEW: Round list to drive "AFL Week X" title
   const rounds = [
     { name: "Opening Round", start: "2025-03-06", end: "2025-03-09" },
     { name: "Round 1", start: "2025-03-10", end: "2025-03-16" },
@@ -255,8 +180,7 @@
     { name: "Round 24", start: "2025-08-18", end: "2025-08-24" },
     { name: "Bye Round", start: "2025-08-25", end: "2025-08-31" }
   ];
-
-  function setTitleFromRound(){
+  (function setTitleFromRound(){
     const today = new Date();
     const currentRound = rounds.find(r => {
       const start = new Date(r.start + "T00:00:00");
@@ -264,8 +188,6 @@
       return today >= start && today <= end;
     });
     const titleEl = document.getElementById("page-title");
-    const subEl = document.getElementById("subhead");
-
     if (currentRound) {
       const m = currentRound.name.match(/^Round (\d+)$/);
       if (m) {
@@ -273,15 +195,9 @@
       } else {
         titleEl.textContent = `AFL ${currentRound.name}`;
       }
-      subEl.textContent = `${currentRound.start} → ${currentRound.end}`;
-    } else {
-      titleEl.textContent = "AFL Fixtures & Results";
-      subEl.textContent = "";
     }
-  }
-  setTitleFromRound();
+  })();
 
-  /* ---------- Existing screen rendering ---------- */
   const teamTimeOffsets = {
     "West Coast": 0,
     "Fremantle": 0,
@@ -328,14 +244,8 @@
     return `/afl-logos/${fileName}`;
   }
 
-  function classifyScore(me, opp){
-    if (me > opp) return 'win';
-    if (me < opp) return 'lose';
-    return 'draw';
-  }
-
+  // NEW: helper to detect in-progress
   function isLive(timestr){
-    // Covers "Q1 Q2 Q3 Q4", "Half Time", "3/4 Time", "ET", etc.
     return /^Q\d/.test(timestr) || /Half Time|3\/4 Time|ET|Extra Time/i.test(timestr);
   }
 
@@ -347,7 +257,6 @@
     const timestr = game.getElementsByTagName("timestr")[0]?.textContent || "";
     const hasScore = ascore > 0 || hscore > 0;
 
-    // Time format
     let hours = date.getHours();
     let minutes = date.getMinutes();
     const ampm = hours >= 12 ? "PM" : "AM";
@@ -355,36 +264,29 @@
     minutes = minutes.toString().padStart(2, '0');
     const timeOnly = `${hours}.${minutes}${ampm}`;
 
+    // NEW: LIVE badge support
     const live = isLive(timestr);
-    const statusDisplay = live ? 'LIVE' : (timestr === 'Full Time' ? 'Result' : timeOnly);
-
-    // Score classes
-    const hClass = hasScore ? classifyScore(hscore, ascore) : '';
-    const aClass = hasScore ? classifyScore(ascore, hscore) : '';
+    const statusDisplay = live
+      ? `<span class="badge-live">LIVE</span>`
+      : (timestr.startsWith("Q")
+          ? timestr.split(" ")[0]
+          : (hasScore ? "Result" : timeOnly));
 
     const card = document.createElement("div");
     card.className = "match";
     card.innerHTML = `
       <div class="teams">
-        <div class="team-col">
-          <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
-          <div class="side">
-            <div class="score ${hClass}">${hasScore ? hscore : ""}</div>
-          </div>
+        <div class="team" style="color: ${hasScore ? (hscore > ascore ? 'green' : (hscore < ascore ? 'red' : '#1a3b8d')) : ''}">
+          ${hasScore ? hscore : ""}
         </div>
-
-        <div class="vs-col">
-          <div class="vs">vs</div>
-          <div class="time">
-            ${live ? `<span class="badge-live">LIVE</span>` : statusDisplay}
-          </div>
+        <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
+        <div class="team">
+          <div>vs</div>
+          <div class="time">${statusDisplay}</div>
         </div>
-
-        <div class="team-col">
-          <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
-          <div class="side">
-            <div class="score ${aClass}">${hasScore ? ascore : ""}</div>
-          </div>
+        <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
+        <div class="team" style="color: ${hasScore ? (ascore > hscore ? 'green' : (ascore < hscore ? 'red' : '#1a3b8d')) : ''}">
+          ${hasScore ? ascore : ""}
         </div>
       </div>
     `;
@@ -408,7 +310,7 @@
 
         const date = new Date(dateRaw);
 
-        // Subtract 2 hours for Perth view depending on team (your current logic)
+        // Subtract 2 hours ONLY for West Coast and Fremantle
         if (hteam === "West Coast" || hteam === "Fremantle") {
           date.setHours(date.getHours() - 2);
         } else {
@@ -428,7 +330,6 @@
       const output = document.getElementById("schedule");
       output.innerHTML = "";
 
-      // Upcoming & live by day
       for (const [dayName, schedule] of Object.entries(grouped)) {
         const daySection = document.createElement("div");
         daySection.className = "day-group";
@@ -439,7 +340,6 @@
         output.appendChild(daySection);
       }
 
-      // Results at bottom
       if (results.length > 0) {
         const resultSection = document.createElement("div");
         resultSection.className = "day-group";
