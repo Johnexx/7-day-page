@@ -137,169 +137,155 @@
       Loading schedule...
     </section>
   </main>
+<script>
+  const teamTimeOffsets = {
+    "West Coast": 0,
+    "Fremantle": 0,
+    "Adelaide": 2,
+    "Port Adelaide": 2,
+    "Brisbane Lions": 2,
+    "Gold Coast": 2,
+    "Sydney": 2,
+    "Greater Western Sydney": 2,
+    "Melbourne": 2,
+    "Western Bulldogs": 2,
+    "Hawthorn": 2,
+    "Collingwood": 2,
+    "Carlton": 2,
+    "Essendon": 2,
+    "St Kilda": 2,
+    "Richmond": 2,
+    "Geelong": 2,
+    "North Melbourne": 2,
+  };
 
-  <script>
-    const rounds = [
-      { name: "Opening Round", start: "2025-03-06", end: "2025-03-09" },
-      { name: "Round 1", start: "2025-03-10", end: "2025-03-16" },
-      { name: "Round 2", start: "2025-03-17", end: "2025-03-23" },
-      { name: "Round 3", start: "2025-03-24", end: "2025-03-30" },
-      { name: "Round 4", start: "2025-03-31", end: "2025-04-06" },
-      { name: "Round 5", start: "2025-04-07", end: "2025-04-13" },
-      { name: "Round 6", start: "2025-04-14", end: "2025-04-20" },
-      { name: "Round 7", start: "2025-04-21", end: "2025-04-27" },
-      { name: "Round 8", start: "2025-04-28", end: "2025-05-04" },
-      { name: "Round 9", start: "2025-05-05", end: "2025-05-11" },
-      { name: "Round 10", start: "2025-05-12", end: "2025-05-18" },
-      { name: "Round 11", start: "2025-05-19", end: "2025-05-25" },
-      { name: "Round 12", start: "2025-05-26", end: "2025-06-01" },
-      { name: "Round 13", start: "2025-06-02", end: "2025-06-08" },
-      { name: "Round 14", start: "2025-06-09", end: "2025-06-15" },
-      { name: "Round 15", start: "2025-06-16", end: "2025-06-22" },
-      { name: "Round 16", start: "2025-06-23", end: "2025-06-29" },
-      { name: "Round 17", start: "2025-06-30", end: "2025-07-06" },
-      { name: "Round 18", start: "2025-07-07", end: "2025-07-13" },
-      { name: "Round 19", start: "2025-07-14", end: "2025-07-20" },
-      { name: "Round 20", start: "2025-07-21", end: "2025-07-27" },
-      { name: "Round 21", start: "2025-07-28", end: "2025-08-03" },
-      { name: "Round 22", start: "2025-08-04", end: "2025-08-10" },
-      { name: "Round 23", start: "2025-08-11", end: "2025-08-17" },
-      { name: "Round 24", start: "2025-08-18", end: "2025-08-24" },
-      { name: "Bye Round", start: "2025-08-25", end: "2025-08-31" }
-    ];
+  function getTeamLogoUrl(teamName) {
+    const logoMap = {
+      "Richmond": "richmond.png",
+      "Western Bulldogs": "western_bulldogs.png",
+      "Gold Coast": "suns.png",
+      "Collingwood": "collingwood.png",
+      "St Kilda": "st_kilda.png",
+      "Fremantle": "fremantle_dockers.png",
+      "Brisbane Lions": "brisbane_lions.png",
+      "North Melbourne": "north_melbourne.png",
+      "Port Adelaide": "port_adelaide.png",
+      "Geelong": "geelong_cats.png",
+      "Essendon": "essendon.png",
+      "Carlton": "carlton.png",
+      "Sydney": "sydney_swans.png",
+      "Greater Western Sydney": "giants.png",
+      "Adelaide": "adelaide_crows.png",
+      "Hawthorn": "hawks.png",
+      "Melbourne": "melbourne.png",
+      "West Coast": "west_coast.png"
+    };
+    const fileName = logoMap[teamName] || `${teamName.replace(/\s+/g, '').toLowerCase()}.png`;
+    return `/afl-logos/${fileName}`;
+  }
 
-    function getCurrentRound(today) {
-      for (let round of rounds) {
-        const start = new Date(round.start);
-        const end = new Date(round.end);
-        if (today >= start && today <= end) {
-          return round.name;
+  function buildMatchCard(game, date) {
+    const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
+    const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
+    const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
+    const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
+    const timestr = game.getElementsByTagName("timestr")[0]?.textContent || "";
+    const hasScore = ascore > 0 || hscore > 0;
+
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    minutes = minutes.toString().padStart(2, '0');
+    const timeOnly = `${hours}.${minutes}${ampm}`;
+
+    const statusDisplay = timestr.startsWith("Q")
+      ? timestr.split(" ")[0]
+      : (hasScore ? "Result" : timeOnly);
+
+    const card = document.createElement("div");
+    card.className = "match";
+    card.innerHTML = `
+      <div class="teams">
+        <div class="team" style="color: ${hasScore ? (hscore > ascore ? 'green' : (hscore < ascore ? 'red' : '#1a3b8d')) : ''}">
+          ${hasScore ? hscore : ""}
+        </div>
+        <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
+        <div class="team">
+          <div>vs</div>
+          <div class="time">${statusDisplay}</div>
+        </div>
+        <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
+        <div class="team" style="color: ${hasScore ? (ascore > hscore ? 'green' : (ascore < hscore ? 'red' : '#1a3b8d')) : ''}">
+          ${hasScore ? ascore : ""}
+        </div>
+      </div>
+    `;
+    return card;
+  }
+
+  fetch('/.netlify/functions/squiggle')
+    .then(res => res.text())
+    .then(xmlString => {
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(xmlString, "application/xml");
+      const gameNodes = Array.from(xml.getElementsByTagName("anon"));
+
+      const grouped = {};
+      const results = [];
+
+      for (let game of gameNodes) {
+        const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
+        const dateRaw = game.getElementsByTagName("date")[0]?.textContent;
+        const timestr = game.getElementsByTagName("timestr")[0]?.textContent || "";
+
+        const date = new Date(dateRaw);
+
+        // Subtract 2 hours ONLY for West Coast and Fremantle
+        if (hteam === "West Coast" || hteam === "Fremantle") {
+          date.setHours(date.getHours() - 2);
+        } else {
+          const offset = teamTimeOffsets[hteam] ?? 0;
+          date.setHours(date.getHours() - offset);
+        }
+
+        if (timestr === "Full Time") {
+          results.push({ game, date });
+        } else {
+          const dayName = date.toLocaleDateString("en-AU", { weekday: "long", day: "numeric", month: "short" });
+          if (!grouped[dayName]) grouped[dayName] = [];
+          grouped[dayName].push({ game, date });
         }
       }
-      return "This Week";
-    }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const roundName = getCurrentRound(new Date());
-      document.title = `AFL ${roundName}`;
-      const header = document.getElementById("page-title");
-      if (header) header.textContent = `AFL ${roundName}`;
+      const output = document.getElementById("schedule");
+      output.innerHTML = "";
+
+      for (const [dayName, schedule] of Object.entries(grouped)) {
+        const daySection = document.createElement("div");
+        daySection.className = "day-group";
+        daySection.innerHTML = `<div class="day-heading">${dayName}</div>`;
+        for (let { game, date } of schedule) {
+          daySection.appendChild(buildMatchCard(game, date));
+        }
+        output.appendChild(daySection);
+      }
+
+      if (results.length > 0) {
+        const resultSection = document.createElement("div");
+        resultSection.className = "day-group";
+        resultSection.innerHTML = `<div class="day-heading">Results</div>`;
+        for (let { game, date } of results) {
+          resultSection.appendChild(buildMatchCard(game, date));
+        }
+        output.appendChild(resultSection);
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load or parse XML:", err);
+      document.getElementById("schedule").textContent = "Failed to load schedule.";
     });
+</script>
 
-    function getTeamLogoUrl(teamName) {
-      const logoMap = {
-        "Richmond": "richmond.png",
-        "Western Bulldogs": "western_bulldogs.png",
-        "Gold Coast": "suns.png",
-        "Collingwood": "collingwood.png",
-        "St Kilda": "st_kilda.png",
-        "Fremantle": "fremantle_dockers.png",
-        "Brisbane Lions": "brisbane_lions.png",
-        "North Melbourne": "north_melbourne.png",
-        "Port Adelaide": "port_adelaide.png",
-        "Geelong": "geelong_cats.png",
-        "Essendon": "essendon.png",
-        "Carlton": "carlton.png",
-        "Sydney": "sydney_swans.png",
-        "Greater Western Sydney": "giants.png",
-        "Adelaide": "adelaide_crows.png",
-        "Hawthorn": "hawks.png",
-        "Melbourne": "melbourne.png",
-        "West Coast": "west_coast.png"
-      };
-      const fileName = logoMap[teamName] || `${teamName.replace(/\s+/g, '').toLowerCase()}.png`;
-      return `/afl-logos/${fileName}`;
-    }
-
-    function buildMatchCard(game, date) {
-      const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
-      const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
-      const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
-      const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
-      const timestr = game.getElementsByTagName("timestr")[0]?.textContent || "";
-      const hasScore = ascore > 0 || hscore > 0;
-
-      let hours = date.getHours();
-      const ampm = hours >= 12 ? "PM" : "AM";
-      hours = hours % 12 || 12;
-      const timeOnly = `${hours}${ampm}`;
-
-      const statusDisplay = timestr.startsWith("Q")
-        ? timestr.split(" ")[0]
-        : (hasScore ? "Result" : timeOnly);
-
-      const card = document.createElement("div");
-      card.className = "match";
-      card.innerHTML = `
-        <div class="teams">
-          <div class="team" style="color: ${hasScore ? (hscore > ascore ? 'green' : (hscore < ascore ? 'red' : '#1a3b8d')) : ''}">
-            ${hasScore ? hscore : ""}
-          </div>
-          <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
-          <div class="team">
-            <div>vs</div>
-            <div class="time">${statusDisplay}</div>
-          </div>
-          <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
-          <div class="team" style="color: ${hasScore ? (ascore > hscore ? 'green' : (ascore < hscore ? 'red' : '#1a3b8d')) : ''}">
-            ${hasScore ? ascore : ""}
-          </div>
-        </div>
-      `;
-      return card;
-    }
-
-    fetch('/.netlify/functions/squiggle')
-      .then(res => res.text())
-      .then(xmlString => {
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlString, "application/xml");
-        const gameNodes = Array.from(xml.getElementsByTagName("anon"));
-
-        const grouped = {};
-        const results = [];
-
-        for (let game of gameNodes) {
-          const localtimeRaw = game.getElementsByTagName("localtime")[0]?.textContent;
-          const timestr = game.getElementsByTagName("timestr")[0]?.textContent || "";
-          const date = new Date(localtimeRaw);
-
-          if (timestr === "Full Time") {
-            results.push({ game, date });
-          } else {
-            const dayName = date.toLocaleDateString("en-AU", { weekday: "long", day: "numeric", month: "short" });
-            if (!grouped[dayName]) grouped[dayName] = [];
-            grouped[dayName].push({ game, date });
-          }
-        }
-
-        const output = document.getElementById("schedule");
-        output.innerHTML = "";
-
-        for (const [dayName, schedule] of Object.entries(grouped)) {
-          const daySection = document.createElement("div");
-          daySection.className = "day-group";
-          daySection.innerHTML = `<div class="day-heading">${dayName}</div>`;
-          for (let { game, date } of schedule) {
-            daySection.appendChild(buildMatchCard(game, date));
-          }
-          output.appendChild(daySection);
-        }
-
-        if (results.length > 0) {
-          const resultSection = document.createElement("div");
-          resultSection.className = "day-group";
-          resultSection.innerHTML = `<div class="day-heading">Results</div>`;
-          for (let { game, date } of results) {
-            resultSection.appendChild(buildMatchCard(game, date));
-          }
-          output.appendChild(resultSection);
-        }
-      })
-      .catch(err => {
-        console.error("Failed to load or parse XML:", err);
-        document.getElementById("schedule").textContent = "Failed to load schedule.";
-      });
-  </script>
 </body>
 </html>
