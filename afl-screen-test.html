@@ -249,49 +249,48 @@
     return /^Q\d/.test(timestr) || /Half Time|3\/4 Time|ET|Extra Time/i.test(timestr);
   }
 
-  function buildMatchCard(game, date) {
-    const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
-    const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
-    const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
-    const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
-    const timestr = game.getElementsByTagName("timestr")[0]?.textContent || "";
-    const hasScore = ascore > 0 || hscore > 0;
+function buildMatchCard(game, date) {
+  const hteam = game.getElementsByTagName("hteam")[0]?.textContent || "";
+  const hscore = parseInt(game.getElementsByTagName("hscore")[0]?.textContent || "0");
+  const ateam = game.getElementsByTagName("ateam")[0]?.textContent || "";
+  const ascore = parseInt(game.getElementsByTagName("ascore")[0]?.textContent || "0");
+  const timestr = game.getElementsByTagName("timestr")[0]?.textContent || "";
+  const hasScore = ascore > 0 || hscore > 0;
 
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12;
-    minutes = minutes.toString().padStart(2, '0');
-    const timeOnly = `${hours}.${minutes}${ampm}`;
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+  minutes = minutes.toString().padStart(2, '0');
+  const timeOnly = `${hours}.${minutes}${ampm}`;
 
-    // NEW: LIVE badge support
-    const live = isLive(timestr);
-    const statusDisplay = live
-      ? `<span class="badge-live">LIVE</span>`
-      : (timestr.startsWith("Q")
-          ? timestr.split(" ")[0]
-          : (hasScore ? "Result" : timeOnly));
+  // LIVE badge support, with blank if full time
+  const live = isLive(timestr);
+  const statusDisplay = live
+    ? `<span class="badge-live">LIVE</span>`
+    : (timestr.startsWith("Q")
+        ? timestr.split(" ")[0]
+        : (hasScore ? "" : timeOnly));
 
-    const card = document.createElement("div");
-    card.className = "match";
-    card.innerHTML = `
-      <div class="teams">
-        <div class="team" style="color: ${hasScore ? (hscore > ascore ? 'green' : (hscore < ascore ? 'red' : '#1a3b8d')) : ''}">
-          ${hasScore ? hscore : ""}
-        </div>
-        <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
-        <div class="team">
-          <div>vs</div>
-          <div class="time">${statusDisplay}</div>
-        </div>
-        <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
-        <div class="team" style="color: ${hasScore ? (ascore > hscore ? 'green' : (ascore < hscore ? 'red' : '#1a3b8d')) : ''}">
-          ${hasScore ? ascore : ""}
-        </div>
+  const card = document.createElement("div");
+  card.className = "match";
+  card.innerHTML = `
+    <div class="teams">
+      <div class="team" style="color: ${hasScore ? (hscore > ascore ? 'green' : (hscore < ascore ? 'red' : '#1a3b8d')) : ''}">
+        ${hasScore ? hscore : ""}
       </div>
-    `;
-    return card;
-  }
+      <div class="logo"><img src="${getTeamLogoUrl(hteam)}" alt="${hteam} Logo"></div>
+      <div class="team">
+        <div>vs</div>
+        <div class="time">${statusDisplay}</div>
+      </div>
+      <div class="logo"><img src="${getTeamLogoUrl(ateam)}" alt="${ateam} Logo"></div>
+      <div class="team" style="color: ${hasScore ? (ascore > hscore ? 'green' : (ascore < hscore ? 'red' : '#1a3b8d')) : ''}">
+        ${hasScore ? ascore : ""}
+      </div>
+    </div>
+  `;
+  return card;
 
   fetch('/.netlify/functions/squiggle')
     .then(res => res.text())
