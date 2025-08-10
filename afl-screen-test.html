@@ -291,7 +291,7 @@ function buildMatchCard(game, date) {
     </div>
   `;
   return card;
-
+}
   fetch('/.netlify/functions/squiggle')
     .then(res => res.text())
     .then(xmlString => {
