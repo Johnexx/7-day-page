@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NEXT UP</title>
+  <style>
+    @font-face {
+      font-family: 'Anton';
+      src: url('/fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    :root {
+      --brand: #1a3b8d;
+      --ink: #1a3b8d;
+      --card-bg: rgba(232,231,220,0.5);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      color: var(--ink);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background-image: url('aflbg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 16px;
+    }
+
+    header {
+      text-align: center;
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      letter-spacing: 1px;
+      color: var(--brand);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+
+    .content {
+      display: grid;
+      place-items: center;
+      padding: 10px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: clamp(16px, 3vw, 28px);
+      width: min(1100px, 96vw);
+      text-align: center;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+    }
+
+    .matchline {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(1.6rem, 4.5vw, 3.4rem);
+      margin-bottom: clamp(10px, 2vw, 16px);
+    }
+
+    .timeline {
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge-live {
