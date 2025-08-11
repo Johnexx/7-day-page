@@ -3,133 +3,96 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Diagonal Two-Colour Poster</title>
+  <title>Showing Next — Diagonal Split</title>
   <style>
     :root {
-      /* Tweak these */
-      --color-1: #1a3b8d;   /* left/top colour */
-      --color-2: #e8e7dc;   /* right/bottom colour */
-      --angle: 135deg;       /* 0 = left→right, 90 = top→bottom */
+      /* These will be set by your JS later based on the next AFL game */
+      --color-1: #1a3b8d; /* Home team colour (top-left area) */
+      --color-2: #e8e7dc; /* Away team colour (bottom-right area) */
+      --angle: 150deg;    /* Diagonal split angle */
 
-      /* Poster sizing */
-      --poster-width: 210mm;  /* A4 width */
-      --poster-height: 297mm; /* A4 height */
-      --safe-margin: 12mm;    /* visual safe area for text */
+      --safe-margin: 48px; /* edge padding for header/footer on the poster */
     }
 
+    /* Reset & page fit */
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
     body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: #000; /* fills around the poster, if any */
+      display: grid; place-items: center; overflow: hidden;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: #111;
-      background: #111; /* page background around poster */
-      display: grid;
-      place-items: center;
     }
 
-    /* Poster container keeps A4 aspect but scales to screen */
-    .poster-wrapper {
-      width: min(95vw, calc(95vh * (210/297)));
-      aspect-ratio: 210 / 297; /* A4 portrait */
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 30px 80px rgba(0,0,0,.35), 0 10px 30px rgba(0,0,0,.35);
+    /* Fixed-size poster for portrait 1080x1920 displays */
+    .poster {
+      width: 1080px; height: 1920px;
+      position: relative; overflow: hidden; border-radius: 0; /* ad screens are edge-to-edge */
       background: linear-gradient(var(--angle), var(--color-1) 0 50%, var(--color-2) 50% 100%);
+      /* mild grain to avoid gradient banding on some panels */
       isolation: isolate;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.02) inset;
     }
 
-    /* An optional subtle texture to help with banding on some printers */
-    .grain { position: absolute; inset: 0; opacity: .04; mix-blend-mode: multiply; background-image: url('data:image/svg+xml;utf8,\
-      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">\
-        <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter>\
-        <rect width="100%" height="100%" filter="url(%23n)" opacity="0.7"/>\
-      </svg>'); }
-
-    /* Optional content areas (hidden by default—toggle the classes if you want text) */
-    .safe { position: absolute; inset: var(--safe-margin); display: grid; grid-template-rows: auto 1fr auto; gap: 16px; }
-    .header, .footer { font-weight: 700; letter-spacing: 0.02em; font-size: clamp(18px, 3.2vw, 28px); color: rgba(17,17,17,0.9); }
-    .footer { justify-self: end; }
-
-    .title { align-self: center; justify-self: center; text-align: center; }
-    .title h1 { margin: 0; font-size: clamp(32px, 7vw, 72px); line-height: 1.05; color: rgba(17,17,17,0.92); }
-    .title p  { margin: .5rem 0 0; font-size: clamp(14px, 2.4vw, 20px); opacity: .85; }
-
-    /* Control panel */
-    .controls {
-      position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
-      background: rgba(255,255,255,0.9); backdrop-filter: blur(8px);
-      border: 1px solid rgba(0,0,0,.08); border-radius: 12px; padding: 10px 12px;
-      display: flex; gap: 10px; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,.2);
+    /* Optional: auto scale to available viewport while preserving 1080x1920 ratio */
+    .stage { width: 100vw; height: 100vh; display: grid; place-items: center; }
+    @media (max-aspect-ratio: 9/16) {
+      .poster { width: 100vw; height: calc(100vw * (16/9)); }
     }
-    .controls label { font-size: 12px; display: grid; gap: 6px; text-align: center; }
-    .controls input[type="color"] { width: 36px; height: 28px; border: none; background: none; padding: 0; cursor: pointer; }
-    .controls input[type="range"] { width: 180px; }
-    .controls button { padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,.1); cursor: pointer; background: white; }
-
-    /* Print: fill entire A4 sheet with no margins */
-    @media print {
-      @page { size: A4 portrait; margin: 0; }
-      body { background: transparent; }
-      .poster-wrapper { width: auto; height: auto; inset: 0; border-radius: 0; box-shadow: none; }
-      .controls { display: none !important; }
+    @media (min-aspect-ratio: 9/16) {
+      .poster { height: 100vh; width: calc(100vh * (9/16)); }
     }
+
+    /* Header & footer */
+    .header, .footer {
+      position: absolute; left: var(--safe-margin); right: var(--safe-margin);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #fff; /* readable on most team colours */
+      text-shadow: 0 2px 8px rgba(0,0,0,.35), 0 0 1px rgba(0,0,0,.4);
+    }
+    .header { top: var(--safe-margin); font-size: 84px; line-height: 1; }
+    .footer { bottom: var(--safe-margin); font-size: 54px; line-height: 1.1; }
+
+    /* If you want stronger legibility, uncomment the backdrop badges
+    .badge { background: rgba(0,0,0,.35); padding: 16px 24px; border-radius: 14px; backdrop-filter: blur(2px); }
+    */
+
+    /* Safe content area for optional centre text/logo later */
+    .safe { position: absolute; inset: 240px var(--safe-margin) 240px; display: grid; place-items: center; }
+
+    /* Hide scrollbars and prevent accidental selection */
+    .poster, .header, .footer { user-select: none; -webkit-user-select: none; }
   </style>
 </head>
 <body>
-  <div class="poster-wrapper" id="poster">
-    <div class="grain" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="poster" id="poster">
+      <div class="header" id="hdr">SHOWING NEXT</div>
 
-    <!-- Optional content area: remove the comments and tweak copy if you want text on the poster  -->
-    <!--
-    <div class="safe">
-      <div class="header">LIVE & LOUD AT 33 DEGREES</div>
-      <div class="title">
-        <h1>NEXT UP</h1>
-        <p>Saturday 7:30 PM</p>
-      </div>
-      <div class="footer">ESP · WA</div>
+      <!-- Optional middle content block (leave empty for pure colour split) -->
+      <div class="safe" id="center"></div>
+
+      <div class="footer" id="ftr">LIVE AND LOUD AT 33 DEGREES</div>
     </div>
-    -->
-  </div>
-
-  <div class="controls" aria-label="Controls">
-    <label>Colour A
-      <input type="color" id="c1" value="#1a3b8d" />
-    </label>
-    <label>Colour B
-      <input type="color" id="c2" value="#e8e7dc" />
-    </label>
-    <label>Angle (<span id="angleVal">135</span>°)
-      <input type="range" id="angle" min="0" max="360" value="135" />
-    </label>
-    <button id="swap">Swap</button>
-    <button onclick="window.print()">Print</button>
   </div>
 
   <script>
-    const root = document.documentElement;
-    const c1 = document.getElementById('c1');
-    const c2 = document.getElementById('c2');
-    const angle = document.getElementById('angle');
-    const angleVal = document.getElementById('angleVal');
-    const swap = document.getElementById('swap');
-
-    function apply() {
-      root.style.setProperty('--color-1', c1.value);
-      root.style.setProperty('--color-2', c2.value);
-      root.style.setProperty('--angle', angle.value + 'deg');
-      angleVal.textContent = angle.value;
+    // Helper functions so your external script can set colours/angle easily
+    function setColours(homeHex, awayHex) {
+      if (homeHex) document.documentElement.style.setProperty('--color-1', homeHex);
+      if (awayHex) document.documentElement.style.setProperty('--color-2', awayHex);
+    }
+    function setAngle(deg) {
+      if (typeof deg === 'number') document.documentElement.style.setProperty('--angle', deg + 'deg');
     }
 
-    c1.addEventListener('input', apply);
-    c2.addEventListener('input', apply);
-    angle.addEventListener('input', apply);
-    swap.addEventListener('click', () => {
-      const tmp = c1.value; c1.value = c2.value; c2.value = tmp; apply();
-    });
+    // Defaults (you'll override via your XML-driven logic)
+    setAngle(150);
 
-    apply();
+    // Example usage you can delete later:
+    // setColours('#001489', '#e8e7dc');
   </script>
 </body>
 </html>
