@@ -17,11 +17,7 @@
       --card-bg: rgba(232,231,220,0.5);
     }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
-
+    html, body { height: 100%; margin: 0; }
     body {
       font-family: Arial, sans-serif;
       color: var(--ink);
@@ -43,11 +39,7 @@
       text-shadow: 0 2px 12px rgba(0,0,0,0.15);
     }
 
-    .content {
-      display: grid;
-      place-items: center;
-      padding: 10px;
-    }
+    .content { display: grid; place-items: center; padding: 10px; }
 
     .card {
       background: var(--card-bg);
@@ -56,6 +48,7 @@
       width: min(1100px, 96vw);
       text-align: center;
       box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+      font-size: clamp(1rem, 2.8vw, 1.2rem);
     }
 
     .matchline {
@@ -72,3 +65,38 @@
     }
 
     .badge-live {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(0.8rem, 2.4vw, 1rem);
+      color: #fff;
+      background: linear-gradient(90deg,#ff3b30,#ff684f);
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: .5px;
+      box-shadow: 0 6px 18px rgba(255,80,60,.35);
+    }
+
+    footer {
+      text-align: center;
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(1.2rem, 3.2vw, 2rem);
+      letter-spacing: 0.5px;
+      color: var(--brand);
+      padding: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>NEXT UP</header>
+
+  <div class="content">
+    <div class="card" id="card">Loading next game...</div>
+  </div>
+
+  <footer>LIVE AND LOUD AT 33 DEGREES</footer>
+
+<script>
+  // Same offset map you use on the main page
+  const teamTimeOffsets = {
+    "West Coast": 0, "Fremantle": 0, "Adelaide": 2, "Port Adelaide": 2,
+    "Brisbane Lions": 2, "Gold Coast": 2, "Sydney": 2, "Greater Western Sydney": 2,
+    "Melbourne": 2, "Western Bulldogs":
