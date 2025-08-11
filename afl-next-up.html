@@ -3,38 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Showing Next — Diagonal Split</title>
+  <title>Next Game — Diagonal Split</title>
   <style>
-    :root {
-      /* These will be set by your JS later based on the next AFL game */
-      --color-1: #1a3b8d; /* Home team colour (top-left area) */
-      --color-2: #e8e7dc; /* Away team colour (bottom-right area) */
-      --angle: 150deg;    /* Diagonal split angle */
-
-      --safe-margin: 48px; /* edge padding for header/footer on the poster */
+    @font-face {
+      font-family: 'Anton';
+      src: url('/fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
     }
 
-    /* Reset & page fit */
+    :root {
+      --color-1: #1a3b8d; /* Home team colour */
+      --color-2: #e8e7dc; /* Away team colour */
+      --angle: 150deg;
+      --safe-margin: 48px;
+    }
+
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
     body {
-      background: #000; /* fills around the poster, if any */
+      background: #000;
       display: grid; place-items: center; overflow: hidden;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      font-family: 'Anton', system-ui, sans-serif;
       color: #111;
     }
 
-    /* Fixed-size poster for portrait 1080x1920 displays */
     .poster {
       width: 1080px; height: 1920px;
-      position: relative; overflow: hidden; border-radius: 0; /* ad screens are edge-to-edge */
+      position: relative; overflow: hidden;
       background: linear-gradient(var(--angle), var(--color-1) 0 50%, var(--color-2) 50% 100%);
-      /* mild grain to avoid gradient banding on some panels */
       isolation: isolate;
       box-shadow: 0 0 0 1px rgba(255,255,255,0.02) inset;
     }
 
-    /* Optional: auto scale to available viewport while preserving 1080x1920 ratio */
     .stage { width: 100vw; height: 100vh; display: grid; place-items: center; }
     @media (max-aspect-ratio: 9/16) {
       .poster { width: 100vw; height: calc(100vw * (16/9)); }
@@ -43,43 +44,54 @@
       .poster { height: 100vh; width: calc(100vh * (9/16)); }
     }
 
-    /* Header & footer */
-    .header, .footer {
-      position: absolute; left: var(--safe-margin); right: var(--safe-margin);
+    .header {
+      position: absolute; top: var(--safe-margin);
+      left: var(--safe-margin); right: var(--safe-margin);
       display: flex; align-items: center; justify-content: center;
       font-weight: 800; letter-spacing: 0.04em;
       text-transform: uppercase;
-      color: #fff; /* readable on most team colours */
+      color: #fff;
       text-shadow: 0 2px 8px rgba(0,0,0,.35), 0 0 1px rgba(0,0,0,.4);
+      font-size: 84px; line-height: 1;
     }
-    .header { top: var(--safe-margin); font-size: 84px; line-height: 1; }
-    .footer { bottom: var(--safe-margin); font-size: 54px; line-height: 1.1; }
 
-    /* If you want stronger legibility, uncomment the backdrop badges
-    .badge { background: rgba(0,0,0,.35); padding: 16px 24px; border-radius: 14px; backdrop-filter: blur(2px); }
-    */
+    .footer {
+      position: absolute; bottom: var(--safe-margin);
+      left: var(--safe-margin); right: var(--safe-margin);
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 12px;
+    }
+    .footer span {
+      font-weight: 800; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,.35), 0 0 1px rgba(0,0,0,.4);
+      font-size: 54px; line-height: 1.1;
+    }
+    .footer img {
+      height: 60px; width: auto;
+    }
 
-    /* Safe content area for optional centre text/logo later */
     .safe { position: absolute; inset: 240px var(--safe-margin) 240px; display: grid; place-items: center; }
 
-    /* Hide scrollbars and prevent accidental selection */
     .poster, .header, .footer { user-select: none; -webkit-user-select: none; }
   </style>
 </head>
 <body>
   <div class="stage">
     <div class="poster" id="poster">
-      <div class="header" id="hdr">SHOWING NEXT</div>
+      <div class="header" id="hdr">NEXT GAME</div>
 
-      <!-- Optional middle content block (leave empty for pure colour split) -->
       <div class="safe" id="center"></div>
 
-      <div class="footer" id="ftr">LIVE AND LOUD AT 33 DEGREES</div>
+      <div class="footer" id="ftr">
+        <span>LIVE AND LOUD AT</span>
+        <img src="/images/33Degrees-clear-BG.png" alt="33 Degrees Logo">
+      </div>
     </div>
   </div>
 
   <script>
-    // Helper functions so your external script can set colours/angle easily
     function setColours(homeHex, awayHex) {
       if (homeHex) document.documentElement.style.setProperty('--color-1', homeHex);
       if (awayHex) document.documentElement.style.setProperty('--color-2', awayHex);
@@ -88,11 +100,7 @@
       if (typeof deg === 'number') document.documentElement.style.setProperty('--angle', deg + 'deg');
     }
 
-    // Defaults (you'll override via your XML-driven logic)
     setAngle(150);
-
-    // Example usage you can delete later:
-    // setColours('#001489', '#e8e7dc');
   </script>
 </body>
 </html>
