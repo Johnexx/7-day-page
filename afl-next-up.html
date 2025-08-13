@@ -39,7 +39,7 @@
     .err { position:absolute; top:0; left:0; right:0; padding:8px 12px; background:rgba(255,50,50,.85); color:#fff; font: 600 20px/1.2 Arial, sans-serif; z-index:999; display:none; }
   </style>
 </head>
-<body data-endpoint="">
+<body data-endpoint="/.netlify/functions/squiggle">
   <div class="frame" id="frame">
     <div class="err" id="err"></div>
     <div class="bg" id="bg"></div>
@@ -75,187 +75,209 @@
   </div>
 
   <script>
-    /* ===== Public helpers ===== */
-    function setColours(homeHex, awayHex) {
-      const bg = document.getElementById('bg');
-      if (homeHex) bg.style.setProperty('--home', homeHex);
-      if (awayHex) bg.style.setProperty('--away', awayHex);
-    }
-    function setAngle(deg) {
-      document.getElementById('bg').style.setProperty('--angle', (deg || 150) + 'deg');
-    }
-    setAngle(150);
+  /* ===== Public helpers (unchanged) ===== */
+  function setColours(homeHex, awayHex) {
+    const bg = document.getElementById('bg');
+    if (homeHex) bg.style.setProperty('--home', homeHex);
+    if (awayHex) bg.style.setProperty('--away', awayHex);
+  }
+  function setAngle(deg) {
+    document.getElementById('bg').style.setProperty('--angle', (deg || 150) + 'deg');
+  }
+  setAngle(150);
 
-    /* ===== Team assets (adjust file names/paths to your set) ===== */
-    const logoBase = '/afl-logos/';
-    const teamLogo = {
-      "Adelaide": "adelaide_crows.png",
-      "Brisbane Lions": "brisbane_lions.png",
-      "Carlton": "carlton.png",
-      "Collingwood": "collingwood.png",
-      "Essendon": "essendon.png",
-      "Fremantle": "fremantle_dockers.png",
-      "Geelong": "geelong_cats.png",
-      "Gold Coast": "suns.png",
-      "Greater Western Sydney": "giants.png",
-      "Hawthorn": "hawks.png",
-      "Melbourne": "melbourne.png",
-      "North Melbourne": "north_melbourne.png",
-      "Port Adelaide": "port_adelaide.png",
-      "Richmond": "richmond.png",
-      "St Kilda": "st_kilda.png",
-      "Sydney": "sydney_swans.png",
-      "West Coast": "west_coast.png",
-      "Western Bulldogs": "western_bulldogs.png"
-    };
-    const teamColour = {
-      "Adelaide": "#001A57",
-      "Brisbane Lions": "#7C1C3A",
-      "Carlton": "#001F5B",
-      "Collingwood": "#000000",
-      "Essendon": "#D50032",
-      "Fremantle": "#2A0E54",
-      "Geelong": "#0D3B66",
-      "Gold Coast": "#E31837",
-      "Greater Western Sydney": "#F05A28",
-      "Hawthorn": "#3B1B0A",
-      "Melbourne": "#0F1131",
-      "North Melbourne": "#0245A3",
-      "Port Adelaide": "#00B3B8",
-      "Richmond": "#F6BE00",
-      "St Kilda": "#D50032",
-      "Sydney": "#D50032",
-      "West Coast": "#003087",
-      "Western Bulldogs": "#0055A4"
-    };
-    function getLogo(team) { const f = teamLogo[team]; return f ? logoBase + f : ''; }
+  /* ===== Team assets (unchanged — adjust paths/files if needed) ===== */
+  const logoBase = '/afl-logos/';
+  const teamLogo = {
+    "Adelaide": "adelaide_crows.png",
+    "Brisbane Lions": "brisbane_lions.png",
+    "Carlton": "carlton.png",
+    "Collingwood": "collingwood.png",
+    "Essendon": "essendon.png",
+    "Fremantle": "fremantle_dockers.png",
+    "Geelong": "geelong_cats.png",
+    "Gold Coast": "suns.png",
+    "Greater Western Sydney": "giants.png",
+    "Hawthorn": "hawks.png",
+    "Melbourne": "melbourne.png",
+    "North Melbourne": "north_melbourne.png",
+    "Port Adelaide": "port_adelaide.png",
+    "Richmond": "richmond.png",
+    "St Kilda": "st_kilda.png",
+    "Sydney": "sydney_swans.png",
+    "West Coast": "west_coast.png",
+    "Western Bulldogs": "western_bulldogs.png"
+  };
+  const teamColour = {
+    "Adelaide": "#001A57",
+    "Brisbane Lions": "#7C1C3A",
+    "Carlton": "#001F5B",
+    "Collingwood": "#000000",
+    "Essendon": "#D50032",
+    "Fremantle": "#2A0E54",
+    "Geelong": "#0D3B66",
+    "Gold Coast": "#E31837",
+    "Greater Western Sydney": "#F05A28",
+    "Hawthorn": "#3B1B0A",
+    "Melbourne": "#0F1131",
+    "North Melbourne": "#0245A3",
+    "Port Adelaide": "#00B3B8",
+    "Richmond": "#F6BE00",
+    "St Kilda": "#D50032",
+    "Sydney": "#D50032",
+    "West Coast": "#003087",
+    "Western Bulldogs": "#0055A4"
+  };
+  function getLogo(team) { const f = teamLogo[team]; return f ? logoBase + f : ''; }
 
-    /* ===== Error ribbon ===== */
-    function showErr(msg) {
-      const el = document.getElementById('err');
-      el.textContent = msg;
-      el.style.display = 'block';
+  /* ===== Error ribbon ===== */
+  function showErr(msg) {
+    const el = document.getElementById('err');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  function hideErr(){ document.getElementById('err').style.display = 'none'; }
+
+  /* ===== XML helpers ===== */
+  function getTagText(el, names) {
+    for (const n of names) {
+      const node = el.getElementsByTagName(n)[0];
+      if (node && node.textContent) return node.textContent.trim();
     }
-    function hideErr(){ document.getElementById('err').style.display = 'none'; }
+    return '';
+  }
+  function xmlToGames(xmlText) {
+    const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
 
-    /* ===== Parse helpers ===== */
-    function parseGameStart(game) {
-      let s = game.localtime || game.start || game.date || game.utc || game.time || null;
-      if (!s) return null;
-      // normalise "YYYY-MM-DD HH:mm:ss" → "YYYY-MM-DDTHH:mm:ss"
-      if (typeof s === 'string' && s.indexOf('T') === -1 && /^\d{4}-\d{2}-\d{2} \d{2}:/.test(s)) {
-        s = s.replace(' ', 'T');
-      }
-      return new Date(s); // interpreted in device local time (WA screen)
+    // Catch XML parser errors (if HTML error page came back)
+    const parserErr = doc.getElementsByTagName('parsererror')[0];
+    if (parserErr) return [];
+
+    // Most Squiggle XML responses have <game> nodes
+    const nodes = Array.from(doc.getElementsByTagName('game'));
+    if (!nodes.length) return [];
+
+    return nodes.map(n => ({
+      hteam: getTagText(n, ['hteam','home','hometeam','home_team']),
+      ateam: getTagText(n, ['ateam','away','awayteam','away_team']),
+      // common: <localtime> or <start>
+      localtime: getTagText(n, ['localtime','start','date','time'])
+    }));
+  }
+
+  /* ===== Time helpers ===== */
+  function parseGameStart(game) {
+    let s = game.localtime || game.start || game.date || game.time || null;
+    if (!s) return null;
+    if (typeof s === 'string' && s.indexOf('T') === -1 && /^\d{4}-\d{2}-\d{2} \d{2}:/.test(s)) {
+      s = s.replace(' ', 'T'); // "YYYY-MM-DD HH:mm" → "YYYY-MM-DDTHH:mm"
     }
-    function isStarted(game, now) { const d = parseGameStart(game); return d ? (+d <= +now) : false; }
-    function fmtMeta(game) {
-      const d = parseGameStart(game); if (!d) return '';
-      return new Intl.DateTimeFormat('en-AU', { weekday:'short', day:'2-digit', month:'short', hour:'numeric', minute:'2-digit', hour12:true }).format(d);
-    }
-    function pickNextGame(list) {
-      const now = new Date();
-      return list.filter(g => parseGameStart(g))
-                 .filter(g => !isStarted(g, now))
-                 .sort((a,b) => parseGameStart(a) - parseGameStart(b))[0] || null;
-    }
+    return new Date(s);
+  }
+  function isStarted(game, now) { const d = parseGameStart(game); return d ? (+d <= +now) : false; }
+  function fmtMeta(game) {
+    const d = parseGameStart(game); if (!d) return '';
+    return new Intl.DateTimeFormat('en-AU', {
+      weekday:'short', day:'2-digit', month:'short', hour:'numeric', minute:'2-digit', hour12:true
+    }).format(d);
+  }
+  function pickNextGame(list) {
+    const now = new Date();
+    return list.filter(g => parseGameStart(g))
+               .filter(g => !isStarted(g, now))
+               .sort((a,b) => parseGameStart(a) - parseGameStart(b))[0] || null;
+  }
 
-    /* ===== XML parsing (if your function passes Squiggle XML through) ===== */
-    function xmlToGames(xmlText) {
-      const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
-      // Squiggle XML often uses <games><game>...</game></games>
-      const nodes = Array.from(doc.getElementsByTagName('game'));
-      if (nodes.length === 0) return [];
-      return nodes.map(n => ({
-        hteam: n.getElementsByTagName('hteam')[0]?.textContent ?? '',
-        ateam: n.getElementsByTagName('ateam')[0]?.textContent ?? '',
-        localtime: n.getElementsByTagName('localtime')[0]?.textContent ?? n.getElementsByTagName('start')[0]?.textContent ?? ''
-      }));
-    }
+  /* ===== Fetch Netlify function (XML expected) ===== */
+  async function fetchSquiggle() {
+    const url = (document.body.dataset.endpoint || '/.netlify/functions/squiggle').trim();
 
-    /* ===== Fetch Netlify function (JSON or XML) ===== */
-    async function fetchSquiggle() {
-      const forced = document.body.dataset.endpoint?.trim();
-      const endpoints = forced ? [forced] : ['/.netlify/functions/squiggle', '/netlify/functions/squiggle.js'];
+    // Ask for XML explicitly; no credentials; avoid cached panels
+    const res = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      cache: 'no-store',
+      headers: { 'Accept': 'application/xml,text/xml,*/*' }
+    });
 
-      for (const url of endpoints) {
-        try {
-          const res = await fetch(url, { cache: 'no-store' });
-          if (!res.ok) { console.warn('Endpoint not OK', url, res.status); continue; }
-          const ctype = (res.headers.get('content-type') || '').toLowerCase();
+    const raw = await res.text(); // always read body so we can show it on error
 
-          if (ctype.includes('application/json') || ctype.includes('text/json')) {
-            const j = await res.json();
-            return Array.isArray(j) ? j : (j.games || j.data || j.items || j.game || j);
-          }
-
-          // Try XML
-          const txt = await res.text();
-          if (txt && (txt.trim().startsWith('<'))) {
-            const games = xmlToGames(txt);
-            if (games.length) return games;
-          }
-        } catch (e) {
-          console.warn('Fetch error', url, e);
-          // keep trying next endpoint
-        }
-      }
-      throw new Error('No valid response from Netlify function (check path/CORS/content-type).');
-    }
-
-    /* ===== UI bindings ===== */
-    function setTeamUI(home, away) {
-      document.getElementById('homeName').textContent = home || 'HOME';
-      document.getElementById('awayName').textContent = away || 'AWAY';
-      const hLogo = getLogo(home), aLogo = getLogo(away);
-      const homeLogo = document.getElementById('homeLogo'), awayLogo = document.getElementById('awayLogo');
-      if (hLogo) { homeLogo.src = hLogo; homeLogo.style.visibility = 'visible'; } else { homeLogo.removeAttribute('src'); homeLogo.style.visibility = 'hidden'; }
-      if (aLogo) { awayLogo.src = aLogo; awayLogo.style.visibility = 'visible'; } else { awayLogo.removeAttribute('src'); awayLogo.style.visibility = 'hidden'; }
-    }
-    function setSubtitle(text){ document.getElementById('subtitle').textContent = text || ''; }
-    function setMeta(text){ document.getElementById('meta').textContent = text || ''; }
-    function updateColoursForTeams(home, away) {
-      const homeHex = teamColour[home] || '#1a3b8d';
-      const awayHex = teamColour[away] || '#e63946';
-      setColours(homeHex, awayHex);
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status} ${res.statusText} — ${raw.slice(0,240)}…`);
     }
 
-    /* ===== Init ===== */
-    async function init() {
-      hideErr();
+    // If the function returned JSON by accident, handle that gracefully
+    const ct = (res.headers.get('content-type') || '').toLowerCase();
+    if (ct.includes('json') || raw.trim().startsWith('{') || raw.trim().startsWith('[')) {
       try {
-        const payload = await fetchSquiggle();
-
-        // Normalise to a list
-        const list = Array.isArray(payload) ? payload : [payload];
-
-        // Expected keys: hteam/ateam/localtime (or common alternates)
-        const normalised = list.map(g => ({
-          hteam: g.hteam || g.home || g.h || g.homeTeam || '',
-          ateam: g.ateam || g.away || g.a || g.awayTeam || '',
-          localtime: g.localtime || g.start || g.date || g.time || ''
-        }));
-
-        const next = pickNextGame(normalised);
-        if (!next) {
-          setTeamUI('TBC', 'TBC'); setSubtitle('Awaiting fixture…'); setMeta('');
-          return;
-        }
-
-        const home = next.hteam, away = next.ateam;
-        setTeamUI(home, away);
-        setSubtitle(`${home} vs ${away}`);
-        setMeta(fmtMeta(next));
-        updateColoursForTeams(home, away);
-      } catch (err) {
-        console.error(err);
-        showErr('Error loading fixture — check function path/CORS/content-type (see console).');
-        setTeamUI('TBC', 'TBC'); setSubtitle('Unable to load next fixture'); setMeta('');
+        const j = JSON.parse(raw);
+        return Array.isArray(j) ? j : (j.games || j.data || j.items || j);
+      } catch {
+        throw new Error(`Got JSON-like response but failed to parse: ${raw.slice(0,240)}…`);
       }
     }
 
-    init();
-    setInterval(init, 1000 * 60 * 5); // refresh every 5 mins
-  </script>
+    // Otherwise parse as XML
+    const games = xmlToGames(raw);
+    if (!games.length) {
+      throw new Error(`XML parsed but found no <game> elements. First 240 chars: ${raw.slice(0,240)}…`);
+    }
+    return games;
+  }
+
+  /* ===== UI bindings ===== */
+  function setTeamUI(home, away) {
+    document.getElementById('homeName').textContent = home || 'HOME';
+    document.getElementById('awayName').textContent = away || 'AWAY';
+    const hLogo = getLogo(home), aLogo = getLogo(away);
+    const homeLogo = document.getElementById('homeLogo'), awayLogo = document.getElementById('awayLogo');
+    if (hLogo) { homeLogo.src = hLogo; homeLogo.style.visibility = 'visible'; } else { homeLogo.removeAttribute('src'); homeLogo.style.visibility = 'hidden'; }
+    if (aLogo) { awayLogo.src = aLogo; awayLogo.style.visibility = 'visible'; } else { awayLogo.removeAttribute('src'); awayLogo.style.visibility = 'hidden'; }
+  }
+  function setSubtitle(text){ document.getElementById('subtitle').textContent = text || ''; }
+  function setMeta(text){ document.getElementById('meta').textContent = text || ''; }
+  function updateColoursForTeams(home, away) {
+    const homeHex = teamColour[home] || '#1a3b8d';
+    const awayHex = teamColour[away] || '#e63946';
+    setColours(homeHex, awayHex);
+  }
+
+  /* ===== Init ===== */
+  async function init() {
+    hideErr();
+    try {
+      const payload = await fetchSquiggle();
+      const list = Array.isArray(payload) ? payload : [payload];
+
+      // Normalise to expected keys
+      const normalised = list.map(g => ({
+        hteam: g.hteam || g.home || g.h || g.homeTeam || '',
+        ateam: g.ateam || g.away || g.a || g.awayTeam || '',
+        localtime: g.localtime || g.start || g.date || g.time || ''
+      }));
+
+      const next = pickNextGame(normalised);
+      if (!next) {
+        setTeamUI('TBC', 'TBC'); setSubtitle('Awaiting fixture…'); setMeta('');
+        return;
+      }
+
+      const home = next.hteam, away = next.ateam;
+      setTeamUI(home, away);
+      setSubtitle(`${home} vs ${away}`);
+      setMeta(fmtMeta(next));
+      updateColoursForTeams(home, away);
+    } catch (err) {
+      console.error(err);
+      showErr(`Error loading fixture — ${String(err.message || err).slice(0,240)}`);
+      setTeamUI('TBC', 'TBC'); setSubtitle('Unable to load next fixture'); setMeta('');
+    }
+  }
+
+  init();
+  setInterval(init, 1000 * 60 * 5); // refresh every 5 mins
+</script>
+
 </body>
 </html>
