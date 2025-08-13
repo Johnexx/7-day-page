@@ -16,10 +16,9 @@
 
     /* Lock to 1080x1920 and scale to fit */
     html, body { margin:0; padding:0; background:#000; height:100%; overflow:hidden; }
-    .frame { position:relative; width:1080px; height:1920px; margin:0 auto; color:#fff; transform-origin:top left; transition: opacity 600ms ease; }
+    .frame { position:relative; width:1080px; height:1920px; margin:0 auto; color:#fff; transform-origin:top left; }
     @media (min-aspect-ratio: 9/16) { .frame { transform: scale(calc(100vh / 1920)); } }
     @media (max-aspect-ratio: 9/16) { .frame { transform: scale(calc(100vw / 1080)); } }
-    body.off .frame { opacity: 0; }
 
     /* Diagonal background */
     .bg {
@@ -45,57 +44,54 @@
       display:grid; grid-template-rows: 1fr auto 1fr auto; align-items:center; justify-items:center; gap:20px;
     }
 
-    /* Team blocks: logos only */
+    /* Team blocks: logos only (no circles) */
     .team {
       display:grid; place-items:center;
-      text-shadow:0 6px 16px rgba(0,0,0,.35);
       width:100%;
+      text-shadow:0 6px 16px rgba(0,0,0,.35);
     }
-
     /* Nudge the home logo left, away logo right */
     #homeTeam { justify-self: start; }
     #awayTeam { justify-self: end; }
 
-    .team .logo {
-      width: 560px;   /* scaled up */
-      height: 560px;  /* scaled up */
-      background: rgba(255,255,255,.06);
-      border-radius: 50%;
+    /* Logo wrapper just for positioning/animation – no background/border */
+    .logo {
+      position: relative;
+      width: 560px;
+      height: 560px;
       display: grid;
       place-items: center;
-      overflow: hidden;
-      backdrop-filter: blur(2px);
-      /* Subtle white stroke + inner glow + soft drop */
-      border: 3px solid rgba(255,255,255,0.65);
-      box-shadow:
-        0 0 0 2px rgba(255,255,255,0.12) inset,
-        0 10px 28px rgba(0,0,0,0.40);
+      overflow: visible; /* we want the glow to extend */
     }
-    .team .logo img {
-      max-width: 90%;
-      max-height: 90%;
+
+    /* Logos: halo drop-shadow to pop on any background */
+    #homeLogo, #awayLogo {
+      max-width: 560px;
+      max-height: 560px;
+      width: auto;
+      height: auto;
       display: block;
+      /* Subtle white halo + soft depth shadow */
+      filter:
+        drop-shadow(0 0 8px rgba(255,255,255,0.90))
+        drop-shadow(0 0 16px rgba(255,255,255,0.45))
+        drop-shadow(0 10px 24px rgba(0,0,0,0.40));
     }
 
-/* Entrance animations */
-@keyframes slideInLeft {
-  0% { transform: translateX(-120%) scale(0.9); opacity: 0; }
-  60% { transform: translateX(20%) scale(1.02); opacity: 1; }
-  100% { transform: translateX(0) scale(1); opacity: 1; }
-}
-@keyframes slideInRight {
-  0% { transform: translateX(120%) scale(0.9); opacity: 0; }
-  60% { transform: translateX(-20%) scale(1.02); opacity: 1; }
-  100% { transform: translateX(0) scale(1); opacity: 1; }
-}
-
-/* Apply animations to each logo wrapper with a 5s delay */
-#homeTeam .logo {
-  animation: slideInLeft 900ms cubic-bezier(.2,.8,.2,1) both 5s;
-}
-#awayTeam .logo {
-  animation: slideInRight 900ms cubic-bezier(.2,.8,.2,1) both 5s;
-}
+    /* Entrance animations with 5s delay */
+    @keyframes slideInLeft {
+      0% { transform: translateX(-120%) scale(0.9); opacity: 0; }
+      60% { transform: translateX(20%) scale(1.02); opacity: 1; }
+      100% { transform: translateX(0) scale(1); opacity: 1; }
+    }
+    @keyframes slideInRight {
+      0% { transform: translateX(120%) scale(0.9); opacity: 0; }
+      60% { transform: translateX(-20%) scale(1.02); opacity: 1; }
+      100% { transform: translateX(0) scale(1); opacity: 1; }
+    }
+    /* Apply animation to the IMGs directly */
+    #homeLogo { animation: slideInLeft 900ms cubic-bezier(.2,.8,.2,1) both 5s; }
+    #awayLogo { animation: slideInRight 900ms cubic-bezier(.2,.8,.2,1) both 5s; }
 
     /* VS badge */
     .vs {
@@ -128,8 +124,7 @@
 
     /* Respect reduced-motion */
     @media (prefers-reduced-motion: reduce) {
-      #homeTeam .logo, #awayTeam .logo { animation: none !important; }
-      .frame { transition: none; }
+      #homeLogo, #awayLogo { animation: none !important; }
     }
   </style>
 </head>
@@ -169,9 +164,6 @@
   </div>
 
   <script>
-    /* ===== Config: display time (ms) before auto-off ===== */
-    const DISPLAY_MS = 15000; // 15 seconds
-
     /* ===== Public helpers (override colours/angle if you want) ===== */
     function setColours(homeHex, awayHex) {
       const bg = document.getElementById('bg');
@@ -239,14 +231,11 @@
       }
       return '';
     }
-
     function xmlToGames(xmlText) {
       const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
       if (doc.getElementsByTagName('parsererror')[0]) return [];
 
       const gamesRoot = doc.getElementsByTagName('games')[0] || doc.documentElement;
-
-      // Squiggle sometimes uses <game>, often <anon>
       let nodes = Array.from(gamesRoot.getElementsByTagName('game'));
       if (!nodes.length) nodes = Array.from(gamesRoot.getElementsByTagName('anon'));
       if (!nodes.length) nodes = Array.from(gamesRoot.children); // fallback
@@ -264,27 +253,23 @@
     function parseGameStart(game) {
       let s = game.localtime || game.start || game.date || game.time || null;
       if (!s) return null;
-      // Normalise "YYYY-MM-DD HH:mm:ss" -> "YYYY-MM-DDTHH:mm:ss"
       if (typeof s === 'string' && s.indexOf('T') === -1 && /^\d{4}-\d{2}-\d{2} \d{2}:/.test(s)) {
-        s = s.replace(' ', 'T');
+        s = s.replace(' ', 'T'); // "YYYY-MM-DD HH:mm" → "YYYY-MM-DDTHH:mm"
       }
-      return new Date(s); // Treated as local device time (WA screen)
+      return new Date(s); // Device local time (WA screen)
     }
-
     function isStarted(game, now) { const d = parseGameStart(game); return d ? (+d <= +now) : false; }
-
     function fmtMeta(game) {
       const d = parseGameStart(game); if (!d) return '';
       return new Intl.DateTimeFormat('en-AU', {
         weekday:'short', day:'2-digit', month:'short', hour:'numeric', minute:'2-digit', hour12:true
       }).format(d);
     }
-
     function pickNextGame(list) {
       const now = new Date();
       return list
-        .filter(g => parseGameStart(g))     // must have a time
-        .filter(g => !isStarted(g, now))    // not started yet
+        .filter(g => parseGameStart(g))
+        .filter(g => !isStarted(g, now))
         .sort((a,b) => parseGameStart(a) - parseGameStart(b))[0] || null;
     }
 
@@ -302,11 +287,8 @@
 
       const raw = await res.text();
 
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status} ${res.statusText} — ${raw.slice(0,240)}…`);
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText} — ${raw.slice(0,240)}…`);
 
-      // If JSON sneaks through, handle it
       const ct = (res.headers.get('content-type') || '').toLowerCase();
       if (ct.includes('json') || raw.trim().startsWith('{') || raw.trim().startsWith('[')) {
         try {
@@ -326,7 +308,6 @@
     function setTeamUI(home, away) {
       const homeLogo = document.getElementById('homeLogo');
       const awayLogo = document.getElementById('awayLogo');
-
       const hLogo = getLogo(home), aLogo = getLogo(away);
 
       if (hLogo) { homeLogo.src = hLogo; homeLogo.style.visibility = 'visible'; }
@@ -335,7 +316,6 @@
       if (aLogo) { awayLogo.src = aLogo; awayLogo.style.visibility = 'visible'; }
       else { awayLogo.removeAttribute('src'); awayLogo.style.visibility = 'hidden'; }
     }
-
     function setSubtitle(text){ document.getElementById('subtitle').textContent = text || ''; }
     function setMeta(text){ document.getElementById('meta').textContent = text || ''; }
     function updateColoursForTeams(home, away) {
@@ -344,15 +324,13 @@
       setColours(homeHex, awayHex);
     }
 
-    /* ===== Init + auto-off ===== */
-    let refreshTimer = null;
+    /* ===== Init ===== */
     async function init() {
       hideErr();
       try {
         const payload = await fetchSquiggle();
         const list = Array.isArray(payload) ? payload : [payload];
 
-        // Normalise keys so downstream is simple
         const normalised = list.map(g => ({
           hteam: g.hteam || g.home || g.h || g.homeTeam || '',
           ateam: g.ateam || g.away || g.a || g.awayTeam || '',
@@ -379,13 +357,9 @@
       }
     }
 
-    // Kick off
     init();
-
-    // Optional refresh (disabled after screen hides)
-    refreshTimer = setInterval(init, 1000 * 60 * 5); // every 5 mins
-
-
+    // Optional: refresh every 5 minutes to roll to a new game automatically
+    setInterval(init, 1000 * 60 * 5);
   </script>
 </body>
 </html>
