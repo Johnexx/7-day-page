@@ -10,6 +10,7 @@
       src: url('/fonts/Anton-Regular.ttf') format('truetype');
       font-weight: normal;
       font-style: normal;
+      font-display: swap;
     }
 
     :root {
@@ -25,7 +26,7 @@
       background: #000;
       display: grid; place-items: center; overflow: hidden;
       font-family: 'Anton', system-ui, sans-serif;
-      color: #111;
+      color: #fff;
     }
 
     .poster {
@@ -68,11 +69,19 @@
       text-shadow: 0 2px 8px rgba(0,0,0,.35), 0 0 1px rgba(0,0,0,.4);
       font-size: 54px; line-height: 1.1;
     }
-    .footer img {
-      height: 60px; width: auto;
-    }
+    .footer img { height: 60px; width: auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,.3)); }
 
-    .safe { position: absolute; inset: 240px var(--safe-margin) 240px; display: grid; place-items: center; }
+    /* Centre fixture area */
+    .fixture { position: absolute; inset: 320px var(--safe-margin) 320px; display: grid; place-items: center; }
+    .matchup { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 48px; }
+    .team { display: grid; place-items: center; gap: 18px; text-align: center; }
+    .team .logo-wrap { width: 340px; height: 340px; border-radius: 999px; display: grid; place-items: center; background: rgba(0,0,0,.12); backdrop-filter: blur(2px); }
+    .team img { width: 80%; height: 80%; object-fit: contain; }
+    .team .name { font-size: 48px; letter-spacing: 0.02em; text-shadow: 0 2px 8px rgba(0,0,0,.35); }
+
+    .vs { font-size: 120px; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,.35); }
+
+    .kickoff { margin-top: 36px; font-size: 48px; letter-spacing: 0.03em; text-shadow: 0 2px 8px rgba(0,0,0,.35); }
 
     .poster, .header, .footer { user-select: none; -webkit-user-select: none; }
   </style>
@@ -82,7 +91,9 @@
     <div class="poster" id="poster">
       <div class="header" id="hdr">NEXT GAME</div>
 
-      <div class="safe" id="center"></div>
+      <div class="fixture" id="fixture">
+        <!-- Filled by JS -->
+      </div>
 
       <div class="footer" id="ftr">
         <span>LIVE AND LOUD AT</span>
@@ -92,6 +103,7 @@
   </div>
 
   <script>
+    // ===== Helpers you can reuse from your other screen =====
     function setColours(homeHex, awayHex) {
       if (homeHex) document.documentElement.style.setProperty('--color-1', homeHex);
       if (awayHex) document.documentElement.style.setProperty('--color-2', awayHex);
@@ -99,8 +111,153 @@
     function setAngle(deg) {
       if (typeof deg === 'number') document.documentElement.style.setProperty('--angle', deg + 'deg');
     }
-
     setAngle(150);
+
+    // Map team → logo file (update paths if different in your project)
+    const LOGOS = {
+      "Adelaide": "/afl-logos/adelaide_crows.png",
+      "Brisbane Lions": "/afl-logos/brisbane_lions.png",
+      "Carlton": "/afl-logos/carlton.png",
+      "Collingwood": "/afl-logos/collingwood.png",
+      "Essendon": "/afl-logos/essendon.png",
+      "Fremantle": "/afl-logos/fremantle_dockers.png",
+      "Geelong": "/afl-logos/geelong_cats.png",
+      "Gold Coast": "/afl-logos/suns.png",
+      "GWS": "/afl-logos/giants.png",
+      "Greater Western Sydney": "/afl-logos/giants.png",
+      "Hawthorn": "/afl-logos/hawks.png",
+      "Melbourne": "/afl-logos/melbourne.png",
+      "North Melbourne": "/afl-logos/north_melbourne.png",
+      "Port Adelaide": "/afl-logos/port_adelaide.png",
+      "Richmond": "/afl-logos/richmond.png",
+      "St Kilda": "/afl-logos/st_kilda.png",
+      "Sydney": "/afl-logos/sydney_swans.png",
+      "West Coast": "/afl-logos/west_coast.png",
+      "Western Bulldogs": "/afl-logos/western_bulldogs.png"
+    };
+
+    // Optional team colour map if you want auto background colours later
+    const TEAM_COLORS = {
+      "Adelaide": ["#002B5C", "#E41B13"],
+      "Brisbane Lions": ["#7C003D", "#FDB913"],
+      "Carlton": ["#001E3C", "#0A2740"],
+      "Collingwood": ["#000000", "#C4C4C4"],
+      "Essendon": ["#000000", "#D50032"],
+      "Fremantle": ["#2A0A4B", "#5A2D81"],
+      "Geelong": ["#001E3C", "#9AA3AD"],
+      "Gold Coast": ["#E41B13", "#F9A01B"],
+      "Greater Western Sydney": ["#F57C00", "#4A4A4A"],
+      "Hawthorn": ["#4A2E00", "#FFC425"],
+      "Melbourne": ["#0A2342", "#D00027"],
+      "North Melbourne": ["#0055A4", "#FFFFFF"],
+      "Port Adelaide": ["#01B3B3", "#000000"],
+      "Richmond": ["#000000", "#F4D23E"],
+      "St Kilda": ["#000000", "#D50032"],
+      "Sydney": ["#D50032", "#FFFFFF"],
+      "West Coast": ["#002B5C", "#FDB913"],
+      "Western Bulldogs": ["#0055A4", "#E41B13"],
+      "GWS": ["#F57C00", "#4A4A4A"]
+    };
+
+    // Robust date parse (supports 'localtime' like '2025-08-13 19:30:00' or ISO strings)
+    function parseLocalTime(s) {
+      if (!s) return null;
+      // If it's ISO, new Date works. If it's 'YYYY-MM-DD HH:mm:ss', make it ISO with 'T'
+      const iso = /T/.test(s) ? s : s.replace(' ', 'T');
+      const d = new Date(iso);
+      return isNaN(d) ? null : d;
+    }
+
+    async function fetchSquiggleGames() {
+      // Netlify functions are exposed at '/.netlify/functions/<name>'
+      const res = await fetch('/.netlify/functions/squiggle');
+      if (!res.ok) throw new Error('Failed to fetch squiggle function');
+      const data = await res.json();
+      return data;
+    }
+
+    function normaliseGames(data) {
+      // Try to support a few shapes: {games:[...]}, [...] directly, or squiggle's {games}
+      const games = Array.isArray(data) ? data : (data && (data.games || data.items || data.data || []));
+      return games.map(g => ({
+        hteam: g.hteam || g.homeTeam || g.home || g.h || g.hteamname,
+        ateam: g.ateam || g.awayTeam || g.away || g.a || g.ateamname,
+        // prefer localtime if present
+        localtime: g.localtime || g.startTimeLocal || g.localTime || g.time || g.date,
+        status: g.status || g.complete || g.is_in_progress || g.progress || null
+      })).filter(g => g.hteam && g.ateam && g.localtime);
+    }
+
+    function pickNextUpcoming(games) {
+      const now = new Date();
+      const entries = games
+        .map(g => ({ g, t: parseLocalTime(g.localtime) }))
+        .filter(x => x.t);
+      // Only future games (strictly after now). If a game has started, skip it.
+      const future = entries.filter(x => x.t > now).sort((a,b) => a.t - b.t);
+      return future.length ? { ...future[0].g, start: future[0].t } : null;
+    }
+
+    function teamLogo(name) {
+      if (!name) return '';
+      // Accept common variants
+      if (name === 'Greater Western Sydney') return LOGOS['Greater Western Sydney'];
+      if (name === 'GWS' || /Giants?/i.test(name)) return LOGOS['GWS'];
+      return LOGOS[name] || '';
+    }
+
+    function formatKickoff(d) {
+      if (!d) return '';
+      // Format like: Fri 16 Aug · 7:30 PM
+      return d.toLocaleString(undefined, {
+        weekday: 'short', day: '2-digit', month: 'short',
+        hour: 'numeric', minute: '2-digit'
+      });
+    }
+
+    function renderFixture(hteam, ateam, start) {
+      const fixture = document.getElementById('fixture');
+      fixture.innerHTML = `
+        <div class="matchup">
+          <div class="team">
+            <div class="logo-wrap"><img src="${teamLogo(hteam)}" alt="${hteam}"></div>
+            <div class="name">${hteam}</div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="team">
+            <div class="logo-wrap"><img src="${teamLogo(ateam)}" alt="${ateam}"></div>
+            <div class="name">${ateam}</div>
+          </div>
+        </div>
+        <div class="kickoff">${formatKickoff(start)}</div>
+      `;
+    }
+
+    function maybeSetTeamColours(hteam, ateam) {
+      const hc = TEAM_COLORS[hteam]?.[0];
+      const ac = TEAM_COLORS[ateam]?.[0];
+      if (hc && ac) setColours(hc, ac);
+    }
+
+    async function loadNextFixture() {
+      try {
+        const raw = await fetchSquiggleGames();
+        const games = normaliseGames(raw);
+        const next = pickNextUpcoming(games);
+        if (!next) {
+          document.getElementById('fixture').innerHTML = '<div class="kickoff">No upcoming AFL game found</div>';
+          return;
+        }
+        renderFixture(next.hteam, next.ateam, next.start);
+        // Optional: auto colour the background (you can remove if you plan to set externally)
+        maybeSetTeamColours(next.hteam, next.ateam);
+      } catch (e) {
+        document.getElementById('fixture').innerHTML = '<div class="kickoff">Error loading fixture</div>';
+        console.error(e);
+      }
+    }
+
+    loadNextFixture();
   </script>
 </body>
 </html>
