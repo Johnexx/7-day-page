@@ -77,25 +77,25 @@
       display: block;
     }
 
-    /* Entrance animations */
-    @keyframes slideInLeft {
-      0% { transform: translateX(-120%) scale(0.9); opacity: 0; }
-      60% { transform: translateX(20%) scale(1.02); opacity: 1; }
-      100% { transform: translateX(0) scale(1); opacity: 1; }
-    }
-    @keyframes slideInRight {
-      0% { transform: translateX(120%) scale(0.9); opacity: 0; }
-      60% { transform: translateX(-20%) scale(1.02); opacity: 1; }
-      100% { transform: translateX(0) scale(1); opacity: 1; }
-    }
+/* Entrance animations */
+@keyframes slideInLeft {
+  0% { transform: translateX(-120%) scale(0.9); opacity: 0; }
+  60% { transform: translateX(20%) scale(1.02); opacity: 1; }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
+}
+@keyframes slideInRight {
+  0% { transform: translateX(120%) scale(0.9); opacity: 0; }
+  60% { transform: translateX(-20%) scale(1.02); opacity: 1; }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
+}
 
-    /* Apply animations to each logo wrapper */
-    #homeTeam .logo {
-      animation: slideInLeft 900ms cubic-bezier(.2,.8,.2,1) both 100ms;
-    }
-    #awayTeam .logo {
-      animation: slideInRight 900ms cubic-bezier(.2,.8,.2,1) both 220ms;
-    }
+/* Apply animations to each logo wrapper with a 5s delay */
+#homeTeam .logo {
+  animation: slideInLeft 900ms cubic-bezier(.2,.8,.2,1) both 5s;
+}
+#awayTeam .logo {
+  animation: slideInRight 900ms cubic-bezier(.2,.8,.2,1) both 5s;
+}
 
     /* VS badge */
     .vs {
@@ -385,13 +385,7 @@
     // Optional refresh (disabled after screen hides)
     refreshTimer = setInterval(init, 1000 * 60 * 5); // every 5 mins
 
-    // Auto-off after DISPLAY_MS
-    setTimeout(() => {
-      if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
-      document.body.classList.add('off');
-      // If you want to completely remove from layout after fade:
-      // setTimeout(() => (document.getElementById('frame').style.display = 'none'), 650);
-    }, DISPLAY_MS);
+
   </script>
 </body>
 </html>
