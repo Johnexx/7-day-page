@@ -12,10 +12,12 @@
       font-style: normal;
       font-display: swap;
     }
+
     html, body { margin:0; padding:0; background:#000; height:100%; overflow:hidden; }
     .frame { position:relative; width:1080px; height:1920px; margin:0 auto; color:#fff; transform-origin:top left; }
     @media (min-aspect-ratio: 9/16) { .frame { transform: scale(calc(100vh / 1920)); } }
     @media (max-aspect-ratio: 9/16) { .frame { transform: scale(calc(100vw / 1080)); } }
+
     .bg {
       position:absolute; inset:0;
       --home:#1a3b8d;
@@ -24,178 +26,178 @@
       background: linear-gradient(var(--angle), var(--home) 50%, var(--away) 50%);
       z-index:0;
     }
+
     header {
       position:absolute; top:40px; left:60px; right:60px; z-index:5; text-align:left;
       font-family:'Anton', sans-serif; font-size:120px; letter-spacing:2px; line-height:1;
       text-transform:uppercase; text-shadow:0 6px 18px rgba(0,0,0,.35);
     }
     header .sub { display:block; font-size:40px; font-family:Arial, sans-serif; opacity:.9; margin-top:10px; }
+
     .center-wrap {
       position:absolute; top:220px; bottom:200px; left:60px; right:60px; z-index:3;
-      display:grid; grid-template-rows: 1fr auto 1fr auto; align-items:center; justify-items:center; gap:20px;
+      display:grid; grid-template-rows: 1fr auto 1fr; align-items:center; justify-items:center; gap:40px;
     }
-    .team { display:grid; place-items:center; width:100%; text-shadow:0 6px 16px rgba(0,0,0,.35); }
-    #homeTeam { justify-self: center; }
-    #awayTeam { justify-self: center; }
-    .logo { position: relative; width: 800px; height: 800px; display: grid; place-items: center; overflow: visible; }
-    #homeLogo, #awayLogo {
-      max-width: 800px;
-      max-height: 800px;
-      width: auto;
-      height: auto;
-      display: block;
-      filter:
-        drop-shadow(0 0 8px rgba(255,255,255,0.90))
-        drop-shadow(0 0 16px rgba(255,255,255,0.45))
-        drop-shadow(0 10px 24px rgba(0,0,0,0.40));
-    }
-    @keyframes slideInLeft {
-      0% { transform: translateX(-120%) scale(0.9); opacity: 0; }
-      60% { transform: translateX(20%) scale(1.02); opacity: 1; }
-      100% { transform: translateX(0) scale(1); opacity: 1; }
-    }
-    @keyframes slideInRight {
-      0% { transform: translateX(120%) scale(0.9); opacity: 0; }
-      60% { transform: translateX(-20%) scale(1.02); opacity: 1; }
-      100% { transform: translateX(0) scale(1); opacity: 1; }
-    }
-    #homeLogo { animation: slideInLeft 900ms cubic-bezier(.2,.8,.2,1) both 5s; }
-    #awayLogo { animation: slideInRight 900ms cubic-bezier(.2,.8,.2,1) both 5s; }
-    .vs {
-      font-family:'Anton', sans-serif; font-size:120px; letter-spacing:2px;
+
+    .team {
+      display:grid; place-items:center;
+      width:100%;
       text-shadow:0 6px 16px rgba(0,0,0,.35);
     }
-    .meta { margin-top:10px; font-size:44px; font-family:'Anton', sans-serif; text-shadow:0 6px 16px rgba(0,0,0,.35); }
+
+    .logo {
+      position: relative;
+      width: 700px; height: 700px;
+      display: grid; place-items: center;
+      overflow: visible;
+    }
+    #homeLogo, #awayLogo {
+      max-width: 700px; max-height: 700px;
+      filter:
+        drop-shadow(0 0 6px rgba(255,255,255,0.8))
+        drop-shadow(0 0 14px rgba(255,255,255,0.35))
+        drop-shadow(0 10px 24px rgba(0,0,0,0.40));
+    }
+
+    #homeLogo { animation: slideInLeft 900ms cubic-bezier(.2,.8,.2,1) both 5s; }
+    #awayLogo { animation: slideInRight 900ms cubic-bezier(.2,.8,.2,1) both 5s; }
+
+    @keyframes slideInLeft {
+      0% { transform: translateX(-120%) scale(0.9); opacity:0; }
+      60% { transform: translateX(20%) scale(1.02); opacity:1; }
+      100% { transform: translateX(0) scale(1); opacity:1; }
+    }
+    @keyframes slideInRight {
+      0% { transform: translateX(120%) scale(0.9); opacity:0; }
+      60% { transform: translateX(-20%) scale(1.02); opacity:1; }
+      100% { transform: translateX(0) scale(1); opacity:1; }
+    }
+
+    .vs {
+      font-family:'Anton', sans-serif; font-size:160px; letter-spacing:2px;
+      text-shadow:0 6px 16px rgba(0,0,0,.35);
+    }
+
+    .meta {
+      margin-top:20px;
+      font-size:44px;
+      font-weight:700;
+      text-shadow:0 6px 16px rgba(0,0,0,.35);
+      font-family: Arial, sans-serif;
+    }
+
     footer {
       position:absolute; bottom:36px; left:60px; right:60px; z-index:5;
       display:flex; align-items:center; justify-content:flex-end; gap:20px;
       text-shadow:0 6px 16px rgba(0,0,0,.35);
     }
-    footer .cta { font-family:'Anton', sans-serif; font-size:44px; letter-spacing:1px; text-transform:uppercase; white-space:nowrap; }
-    footer img { height:70px; width:auto; display:block; object-fit:contain; filter:drop-shadow(0 6px 12px rgba(0,0,0,0.35)); }
+    footer .cta { font-family:'Anton', sans-serif; font-size:44px; text-transform:uppercase; }
+    footer img { height:70px; filter:drop-shadow(0 6px 12px rgba(0,0,0,0.35)); }
+
     .fade-top, .fade-bottom { position:absolute; left:0; right:0; height:240px; z-index:1; pointer-events:none; }
     .fade-top { top:0; background:linear-gradient(to bottom, rgba(0,0,0,.35), transparent); }
     .fade-bottom { bottom:0; background:linear-gradient(to top, rgba(0,0,0,.35), transparent); }
+
     .err { position:absolute; top:0; left:0; right:0; padding:8px 12px; background:rgba(255,50,50,.85); color:#fff;
       font:600 20px/1.2 Arial, sans-serif; z-index:999; display:none; }
-    @media (prefers-reduced-motion: reduce) {
-      #homeLogo, #awayLogo { animation: none !important; }
-    }
   </style>
 </head>
 <body data-endpoint="/.netlify/functions/squiggle">
-  <div class="frame" id="frame">
+  <div class="frame">
     <div class="err" id="err"></div>
     <div class="bg" id="bg"></div>
+
     <header>
       NEXT GAME
       <span class="sub" id="subtitle"></span>
     </header>
+
     <div class="center-wrap">
       <div class="team" id="homeTeam">
-        <div class="logo"><img id="homeLogo" alt="Home team logo"></div>
+        <div class="logo"><img id="homeLogo" alt="Home logo"></div>
+        <div class="meta" id="homeMeta"></div>
       </div>
+
       <div class="vs">VS</div>
+
       <div class="team" id="awayTeam">
-        <div class="logo"><img id="awayLogo" alt="Away team logo"></div>
+        <div class="logo"><img id="awayLogo" alt="Away logo"></div>
+        <div class="meta" id="awayMeta"></div>
       </div>
-      <div class="meta" id="meta"></div>
     </div>
+
     <footer>
       <div class="cta">LIVE AND LOUD AT</div>
       <img src="/images/33Degrees-clear-BG.png" alt="33 Degrees">
     </footer>
+
     <div class="fade-top"></div>
     <div class="fade-bottom"></div>
   </div>
 
   <script>
-    const endpoint = document.body.dataset.endpoint;
-    const errEl = document.getElementById('err');
+    const logoBase = '/afl-logos/';
+    const teamLogo = {
+      "Adelaide": "adelaide_crows.png",
+      "Brisbane Lions": "brisbane_lions.png",
+      "Carlton": "carlton.png",
+      "Collingwood": "collingwood.png",
+      "Essendon": "essendon.png",
+      "Fremantle": "fremantle_dockers.png",
+      "Geelong": "geelong_cats.png",
+      "Gold Coast": "suns.png",
+      "Greater Western Sydney": "giants.png",
+      "Hawthorn": "hawks.png",
+      "Melbourne": "melbourne.png",
+      "North Melbourne": "north_melbourne.png",
+      "Port Adelaide": "port_adelaide.png",
+      "Richmond": "richmond.png",
+      "St Kilda": "st_kilda.png",
+      "Sydney": "sydney_swans.png",
+      "West Coast": "west_coast.png",
+      "Western Bulldogs": "western_bulldogs.png"
+    };
 
-    function showError(msg) {
-      errEl.textContent = msg;
-      errEl.style.display = 'block';
+    function getLogo(team){ return teamLogo[team] ? logoBase+teamLogo[team] : ''; }
+
+    function parseGameStart(game){
+      let s = game.localtime || game.start || '';
+      if (!s) return null;
+      if (s.includes(' ') && !s.includes('T')) s = s.replace(' ','T');
+      return new Date(s);
+    }
+    function fmtMeta(game){
+      const d = parseGameStart(game); if (!d) return '';
+      return new Intl.DateTimeFormat('en-AU',{
+        weekday:'short', day:'2-digit', month:'short', hour:'numeric', minute:'2-digit', hour12:true
+      }).format(d);
     }
 
-    function getTagText(el, names) {
-      for (const n of names) {
-        const node = el.getElementsByTagName(n)[0];
-        if (node && node.textContent) return node.textContent.trim();
-      }
-      return '';
+    async function fetchSquiggle(){
+      const res = await fetch('/.netlify/functions/squiggle');
+      const raw = await res.text();
+      const doc = new DOMParser().parseFromString(raw,"text/xml");
+      const node = doc.querySelector('anon, game');
+      return node ? {
+        hteam: node.querySelector('hteam,home,hometeam')?.textContent,
+        ateam: node.querySelector('ateam,away,awayteam')?.textContent,
+        localtime: node.querySelector('localtime,start,date,time')?.textContent
+      } : null;
     }
 
-    function xmlToGames(xmlText) {
-      const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
-      if (doc.getElementsByTagName('parsererror')[0]) return [];
-      const gamesRoot = doc.getElementsByTagName('games')[0] || doc.documentElement;
-      let nodes = Array.from(gamesRoot.getElementsByTagName('game'));
-      if (!nodes.length) nodes = Array.from(gamesRoot.getElementsByTagName('anon'));
-      if (!nodes.length) nodes = Array.from(gamesRoot.children);
-      return nodes.map(n => ({
-        hteam: getTagText(n, ['hteam']),
-        ateam: getTagText(n, ['ateam']),
-        localtime: getTagText(n, ['localtime']),
-        complete: getTagText(n, ['complete']),
-      }));
-    }
-
-    function getLogoUrl(team) {
-      const map = {
-        "Richmond": "richmond.png",
-        "Western Bulldogs": "western_bulldogs.png",
-        "Gold Coast": "suns.png",
-        "Collingwood": "collingwood.png",
-        "St Kilda": "st_kilda.png",
-        "Fremantle": "fremantle_dockers.png",
-        "Brisbane Lions": "brisbane_lions.png",
-        "North Melbourne": "north_melbourne.png",
-        "Port Adelaide": "port_adelaide.png",
-        "Geelong": "geelong_cats.png",
-        "Essendon": "essendon.png",
-        "Carlton": "carlton.png",
-        "Sydney": "sydney_swans.png",
-        "Greater Western Sydney": "giants.png",
-        "Adelaide": "adelaide_crows.png",
-        "Hawthorn": "hawks.png",
-        "Melbourne": "melbourne.png",
-        "West Coast": "west_coast.png"
-      };
-      return '/afl-logos/' + map[team];
-    }
-
-    function setColours(homeHex, awayHex) {
-      document.getElementById('bg').style.setProperty('--home', homeHex);
-      document.getElementById('bg').style.setProperty('--away', awayHex);
-    }
-
-    async function loadFixture() {
+    async function init(){
       try {
-        const res = await fetch(endpoint);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const text = await res.text();
-        const games = xmlToGames(text);
-        const now = new Date();
-        const next = games.find(g => {
-          const start = new Date(g.localtime);
-          return start > now && g.complete !== "1";
-        });
-        if (!next) throw new Error("No upcoming game found");
-
-        document.getElementById('homeLogo').src = getLogoUrl(next.hteam);
-        document.getElementById('awayLogo').src = getLogoUrl(next.ateam);
-        document.getElementById('subtitle').textContent = `${next.hteam} vs ${next.ateam}`;
-        const dateObj = new Date(next.localtime);
-        document.getElementById('meta').textContent = dateObj.toLocaleString('en-AU', {
-          weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'
-        });
-      } catch (e) {
-        showError(`Error loading fixture — ${e.message}`);
-      }
+        const g = await fetchSquiggle();
+        if(!g) return;
+        document.getElementById('homeLogo').src = getLogo(g.hteam);
+        document.getElementById('awayLogo').src = getLogo(g.ateam);
+        document.getElementById('subtitle').textContent = `${g.hteam} vs ${g.ateam}`;
+        const when = fmtMeta(g);
+        document.getElementById('homeMeta').textContent = when;
+        document.getElementById('awayMeta').textContent = when;
+      } catch(e){ console.error(e); document.getElementById('err').textContent = 'Error loading fixture'; }
     }
-
-    loadFixture();
+    init();
   </script>
 </body>
 </html>
