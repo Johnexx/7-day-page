@@ -17,20 +17,14 @@
       --shadow:0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
       --radius:16px;
     }
-
-    /* Reset-ish */
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Noto Sans, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Noto Sans;
       color:#0f172a;
       background:var(--bg);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
     }
-
-    /* Header */
     header{
       position:sticky; top:0; z-index:10;
       background: linear-gradient(180deg, #e9eefb 0%, #f7f9ff 100%);
@@ -38,102 +32,253 @@
       padding: clamp(16px, 3vw, 24px);
     }
     header h1{
-      margin:0;
-      text-align:center;
-      font-weight:800;
-      letter-spacing:0.02em;
-      color:var(--brand);
-      font-size: clamp(1.5rem, 3.5vw + 0.5rem, 2.25rem);
+      margin:0; text-align:center; font-weight:800; letter-spacing:.02em; color:var(--brand);
+      font-size: clamp(1.5rem, 3.5vw + .5rem, 2.25rem);
     }
-    header p{
-      margin:.35rem 0 0;
-      text-align:center;
-      color:var(--muted);
-      font-size:.95rem;
-    }
+    header p{ margin:.35rem 0 0; text-align:center; color:var(--muted); font-size:.95rem; }
 
-    /* Container */
-    .wrap{
-      max-width: 960px;
-      margin: 0 auto;
-      padding: clamp(12px, 3vw, 24px);
-    }
+    .wrap{ max-width:960px; margin:0 auto; padding: clamp(12px, 3vw, 24px); padding-bottom:calc(env(safe-area-inset-bottom,0px)+16px); }
 
-    /* Day section */
-    .day{
-      margin: 20px 0 28px;
-    }
+    .day{ margin:20px 0 28px; }
     .day-title{
       position: sticky; top: calc(env(safe-area-inset-top, 0px) + 64px);
-      background: transparent;
-      backdrop-filter: blur(2px);
-      font-weight: 800;
-      color: var(--brand);
-      letter-spacing: .06em;
-      margin: 0 0 12px;
-      padding: 6px 2px;
-      font-size: .95rem;
+      font-weight:800; color:var(--brand); letter-spacing:.06em; margin:0 0 12px; padding:6px 2px; font-size:.95rem;
     }
 
-    /* Card list */
-    .grid{
-      display:grid;
-      gap: 12px;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 700px){
-      .grid{ grid-template-columns: 1fr 1fr; }
-    }
+    .grid{ display:grid; gap:12px; grid-template-columns:1fr; }
+    @media (min-width:700px){ .grid{ grid-template-columns:1fr 1fr; } }
 
     .card{
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid #eef1f7;
-      overflow: hidden;
-      display:flex;
-      align-items: stretch;
-      min-height: 92px;
-      transition: transform .12s ease, box-shadow .12s ease;
+      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid #eef1f7;
+      overflow:hidden; display:flex; align-items:stretch; min-height:92px; transition:transform .12s, box-shadow .12s;
     }
-    .card:focus-within, .card:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 10px 28px rgba(0,0,0,.10), 0 2px 10px rgba(0,0,0,.05);
-      outline: 0;
-    }
+    .card:hover{ transform:translateY(-1px); box-shadow:0 10px 28px rgba(0,0,0,.10), 0 2px 10px rgba(0,0,0,.05); }
 
     .time-col{
       display:flex; flex-direction:column; align-items:center; justify-content:center;
-      min-width: 92px; padding: 10px;
-      background: #f4f7ff;
-      border-right: 1px solid #e9eef9;
+      min-width:92px; padding:10px; background:#f4f7ff; border-right:1px solid #e9eef9;
     }
-    .time{
-      font-size: 1.25rem; font-weight: 800; color:#0f172a; line-height:1.1;
-    }
-    .ampm{
-      color: var(--muted); font-size:.8rem; letter-spacing:.04em; margin-top:2px;
-    }
+    .time{ font-size:1.25rem; font-weight:800; color:#0f172a; line-height:1.1; }
+    .ampm{ color:var(--muted); font-size:.8rem; letter-spacing:.04em; margin-top:2px; }
 
-    .content{
-      padding: 12px 14px;
-      display:flex; gap:8px; align-items: center; flex:1; min-width: 0;
-    }
-    .text{
-      flex:1; min-width:0;
-    }
-    .title{
-      margin:0 0 4px;
-      font-size: 1.02rem; font-weight: 700; color:#0b1533;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
+    .content{ padding:12px 14px; display:flex; gap:8px; align-items:center; flex:1; min-width:0; }
+    .text{ flex:1; min-width:0; }
+    .title{ margin:0 0 4px; font-size:1.02rem; font-weight:700; color:#0b1533; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .desc{
-      margin:0;
-      color:#374151;
-      font-size:.95rem;
-      line-height:1.35;
-      overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      margin:0; color:#374151; font-size:.95rem; line-height:1.35;
+      overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
     }
 
-    .badges{
-      display:fle
+    .badges{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-left:auto; }
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      border:1px solid #e7ecfa; background:#f7f9ff; color:#0b1533;
+      padding:6px 10px; border-radius:999px; font-size:.8rem; font-weight:700; letter-spacing:.02em;
+      box-shadow: inset 0 0 0 1px var(--ring); white-space:nowrap;
+    }
+    .badge img{ width:16px; height:16px; vertical-align:middle; }
+
+    /* Loading */
+    .skeleton{ display:grid; gap:12px; grid-template-columns:1fr; }
+    @media (min-width:700px){ .skeleton{ grid-template-columns:1fr 1fr; } }
+    .shimmer{
+      border-radius:var(--radius); height:92px;
+      background:linear-gradient(90deg, #eef2ff 25%, #f5f7ff 37%, #eef2ff 63%);
+      background-size:400% 100%; animation:shimmer 1.2s infinite linear; border:1px solid #e8edfb;
+    }
+    @keyframes shimmer{ 0%{background-position:100% 0} 100%{background-position:0 0} }
+
+    .empty{
+      text-align:center; color:var(--muted);
+      background:#fff; border:1px dashed #dbe2f3; border-radius:var(--radius);
+      padding:24px; box-shadow:var(--shadow);
+    }
+
+    /* tiny debug */
+    #debug{ text-align:center; font-size:.8rem; color:#6b7280; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>What's on in the sports bar</h1>
+    <p>Next 7 days • Times shown in Australia/Perth</p>
+  </header>
+
+  <main class="wrap" id="app">
+    <div class="skeleton" id="skeleton">
+      <div class="shimmer"></div><div class="shimmer"></div>
+      <div class="shimmer"></div><div class="shimmer"></div>
+    </div>
+  </main>
+  <div id="debug"></div>
+
+  <script>
+    (function(){
+      const FANZO_URL = 'https://www-service.fanzo.com/venues/127232/fixture/xml?newFields=1';
+      const TZ = 'Australia/Perth';
+
+      const app = document.getElementById('app');
+      const skeleton = document.getElementById('skeleton');
+      const dbg = document.getElementById('debug');
+
+      // --- Helpers ---
+      const fmtParts = (d, opts) =>
+        new Intl.DateTimeFormat('en-AU', { timeZone: TZ, ...opts })
+          .formatToParts(d)
+          .reduce((a,p)=> (a[p.type]=p.value, a), {});
+
+      const perthDateOnlyKey = (d) => {
+        const p = fmtParts(d, { year:'numeric', month:'2-digit', day:'2-digit' });
+        return `${p.year}-${p.month}-${p.day}`; // YYYY-MM-DD in Perth time
+      };
+
+      const dayLabel = (d) =>
+        new Intl.DateTimeFormat('en-AU', { timeZone: TZ, weekday:'short', day:'2-digit', month:'short' })
+          .format(d).toUpperCase();
+
+      const timeBits = (d) => {
+        const s = new Intl.DateTimeFormat('en-AU', { timeZone: TZ, hour:'numeric', minute:'2-digit', hour12:true }).format(d);
+        const [time, ap] = s.split(/\s/);
+        return { time, ap:(ap||'').toUpperCase() };
+      };
+
+      const el = (tag, cls, html) => {
+        const e = document.createElement(tag);
+        if(cls) e.className = cls;
+        if(html !== undefined) e.innerHTML = html;
+        return e;
+      };
+
+      const safeGet = (node, tag) => node.getElementsByTagName(tag)[0]?.textContent?.trim() || '';
+
+      function render(groups){
+        app.innerHTML = '';
+        const days = Object.keys(groups).sort();
+        if(!days.length){
+          app.appendChild(el('div','empty','No upcoming events in the next 7 days.'));
+          return;
+        }
+        days.forEach(k=>{
+          const list = groups[k].sort((a,b)=> a._start - b._start);
+          const section = el('section','day');
+          section.appendChild(el('div','day-title', dayLabel(list[0]._start)));
+          const grid = el('div','grid');
+
+          list.forEach(item=>{
+            const card = el('article','card');
+            const tcol = el('div','time-col');
+            const tb = timeBits(item._start);
+            tcol.appendChild(el('div','time', tb.time));
+            tcol.appendChild(el('div','ampm', tb.ap));
+            const content = el('div','content');
+            const text = el('div','text');
+            text.appendChild(el('h3','title', item.title || 'Untitled Event'));
+            text.appendChild(el('p','desc', item.description || ''));
+            const badges = el('div','badges');
+            if(item.sound === '1'){
+              const b = el('span','badge','🔊 Sound On');
+              badges.appendChild(b);
+            }
+            content.appendChild(text);
+            if(badges.childElementCount) content.appendChild(badges);
+            card.appendChild(tcol);
+            card.appendChild(content);
+            grid.appendChild(card);
+          });
+
+          section.appendChild(grid);
+          app.appendChild(section);
+        });
+      }
+
+      function show(msg, cls='empty'){
+        app.innerHTML = '';
+        app.appendChild(el('div', cls, msg));
+      }
+
+      function removeSkeleton(){ if(skeleton && skeleton.parentNode){ skeleton.parentNode.removeChild(skeleton); } }
+
+      // Build date window in PERTH (by date keys, not timestamps)
+      const now = new Date();
+      const todayKey = perthDateOnlyKey(now);
+      const endDate = new Date(now); endDate.setDate(now.getDate() + 7);
+      const endKey = perthDateOnlyKey(endDate);
+
+      // string key "YYYY-MM-DD" → numeric yyyymmdd for easy compare
+      const k2n = k => parseInt(k.replaceAll('-',''), 10);
+      const startN = k2n(todayKey);
+      const endN = k2n(endKey);
+
+      let totalItems = 0, keptItems = 0;
+
+      function withinWindow(perthKey){
+        const n = k2n(perthKey);
+        return n >= startN && n <= endN; // inclusive
+      }
+
+      function parseXMLFromXHR(xhr){
+        // Use responseXML if present, else DOMParser fallback
+        if (xhr.responseXML) return xhr.responseXML;
+        if (xhr.responseText){
+          try{
+            return new DOMParser().parseFromString(xhr.responseText, 'text/xml');
+          }catch(e){ /* fallthrough */ }
+        }
+        return null;
+      }
+
+      // --- Load ---
+      try{
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', FANZO_URL, true);
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState === 4){
+            removeSkeleton();
+            if(xhr.status >= 200 && xhr.status < 300){
+              const xml = parseXMLFromXHR(xhr);
+              if(!xml){ show('Could not read the feed (XML parse).'); dbg.textContent = 'Debug: responseXML null'; return; }
+
+              const items = xml.getElementsByTagName('item');
+              totalItems = items.length;
+
+              const groups = {};
+              for(let i=0; i<items.length; i++){
+                const it = items[i];
+                const startStr = safeGet(it, 'startTimeLocal');
+                if(!startStr) continue;
+
+                const start = new Date(startStr); // Fanzo usually includes offset; keep native parse
+                if(isNaN(start)) continue;
+
+                const dayKey = perthDateOnlyKey(start);
+                if(!withinWindow(dayKey)) continue;
+
+                keptItems++;
+
+                const evt = {
+                  title: safeGet(it, 'title'),
+                  description: safeGet(it, 'description'),
+                  sound: (it.getElementsByTagName('sound')[0]?.textContent || '0').trim(),
+                  _start: start
+                };
+                (groups[dayKey] ||= []).push(evt);
+              }
+
+              render(groups);
+              dbg.textContent = `Debug: total=${totalItems}, shown=${keptItems}, window=${todayKey} → ${endKey}`;
+            }else{
+              show('Could not load events (network/CORS).');
+              dbg.textContent = `Debug: HTTP ${xhr.status}`;
+            }
+          }
+        };
+        xhr.send();
+      }catch(err){
+        removeSkeleton();
+        show('Something went wrong while loading events.');
+        dbg.textContent = 'Debug: exception in XHR';
+      }
+    })();
+  </script>
+</body>
+</html>
