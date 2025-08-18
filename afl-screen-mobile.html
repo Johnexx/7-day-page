@@ -35,7 +35,6 @@
       background:var(--bg);
     }
 
-    /* Header */
     header{
       position:sticky; top:0; z-index:10;
       background: linear-gradient(180deg, #e9eefb 0%, #f7f9ff 100%);
@@ -52,7 +51,6 @@
       font-size: clamp(1.5rem, 3.5vw + .5rem, 2.25rem);
     }
 
-    /* Container */
     .wrap{
       max-width: 960px;
       margin: 0 auto;
@@ -60,10 +58,7 @@
       padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
     }
 
-    /* Day section */
-    .day{
-      margin: 20px 0 28px;
-    }
+    .day{ margin: 20px 0 28px; }
     .day-title{
       position: sticky; top: calc(env(safe-area-inset-top, 0px) + 64px);
       font-family:'Anton', sans-serif;
@@ -75,7 +70,6 @@
       font-size: 1.1rem;
     }
 
-    /* Card list */
     .grid{
       display:grid;
       gap: 12px;
@@ -126,16 +120,16 @@
       font-size: 1.02rem;
       font-weight: 700;
       color:#0b1533;
-      white-space: normal;      /* allow wrapping */
-      overflow: visible;        /* show full text */
+      white-space: normal;
+      overflow: visible;
     }
     .desc{
       margin:0;
       color:#374151;
       font-size:.95rem;
       line-height:1.35;
-      white-space: normal;      /* allow wrapping */
-      overflow: visible;        /* show full text */
+      white-space: normal;
+      overflow: visible;
     }
 
     .badges{
@@ -155,7 +149,6 @@
     }
     .badge img{ width: 16px; height: 16px; vertical-align: middle }
 
-    /* Loading skeleton */
     .skeleton{
       display:grid; gap:12px; grid-template-columns: 1fr;
     }
@@ -173,16 +166,12 @@
       100%{ background-position: 0 0; }
     }
 
-    /* Empty state */
     .empty{
       text-align:center; color:var(--muted);
       background:#fff; border:1px dashed #dbe2f3;
       border-radius: var(--radius);
       padding: 24px; box-shadow: var(--shadow);
     }
-
-    /* tiny debug */
-    #debug{ text-align:center; font-size:.8rem; color:#6b7280; margin: 8px 0 16px; }
   </style>
 </head>
 <body>
@@ -191,7 +180,6 @@
   </header>
 
   <main class="wrap" id="app">
-    <!-- Loading skeleton shown first -->
     <div class="skeleton" id="skeleton">
       <div class="shimmer"></div>
       <div class="shimmer"></div>
@@ -199,7 +187,6 @@
       <div class="shimmer"></div>
     </div>
   </main>
-  <div id="debug"></div>
 
   <script>
     (function(){
@@ -208,7 +195,6 @@
 
       const app = document.getElementById('app');
       const skeleton = document.getElementById('skeleton');
-      const dbg = document.getElementById('debug');
 
       const fmtParts = (d, opts) =>
         new Intl.DateTimeFormat('en-AU', { timeZone: TZ, ...opts })
@@ -299,8 +285,6 @@
       const startN = k2n(todayKey);
       const endN = k2n(endKey);
 
-      let totalItems = 0, keptItems = 0;
-
       function withinWindow(perthKey){
         const n = k2n(perthKey);
         return n >= startN && n <= endN;
@@ -326,13 +310,10 @@
               const xml = parseXMLFromXHR(xhr);
               if(!xml){
                 show('Could not read the feed (XML parse).');
-                dbg.textContent = 'Debug: responseXML null';
                 return;
               }
 
               const items = xml.getElementsByTagName('item');
-              totalItems = items.length;
-
               const groups = {};
               for(let i=0; i<items.length; i++){
                 const it = items[i];
@@ -345,8 +326,6 @@
                 const key = perthDateOnlyKey(start);
                 if(!withinWindow(key)) continue;
 
-                keptItems++;
-
                 const evt = {
                   title: safeGet(it, 'title'),
                   description: safeGet(it, 'description'),
@@ -357,10 +336,8 @@
               }
 
               render(groups);
-              dbg.textContent = `Debug: total=${totalItems}, shown=${keptItems}, window=${todayKey} → ${endKey}`;
             }else{
               show('Could not load events (network/CORS).');
-              dbg.textContent = `Debug: HTTP ${xhr.status}`;
             }
           }
         };
@@ -368,7 +345,6 @@
       }catch(err){
         removeSkeleton();
         show('Something went wrong while loading events.');
-        dbg.textContent = 'Debug: exception in XHR';
       }
     })();
   </script>
