@@ -8,6 +8,15 @@
   />
   <title>SPORTS THIS WEEK</title>
   <style>
+    /* Anton font */
+    @font-face {
+      font-family: 'Anton';
+      src: url('/fonts/Anton-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root{
       --brand:#1a3b8d;
       --bg:#f5f7fb;
@@ -24,7 +33,11 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Noto Sans;
       color:#0f172a;
       background:var(--bg);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
+
+    /* Header */
     header{
       position:sticky; top:0; z-index:10;
       background: linear-gradient(180deg, #e9eefb 0%, #f7f9ff 100%);
@@ -32,82 +45,159 @@
       padding: clamp(16px, 3vw, 24px);
     }
     header h1{
-      margin:0; text-align:center; font-weight:800; letter-spacing:.02em; color:var(--brand);
+      margin:0;
+      text-align:center;
+      font-family:'Anton', sans-serif;
+      font-weight:normal;
+      letter-spacing:.02em;
+      color:var(--brand);
       font-size: clamp(1.5rem, 3.5vw + .5rem, 2.25rem);
     }
-    header p{ margin:.35rem 0 0; text-align:center; color:var(--muted); font-size:.95rem; }
 
-    .wrap{ max-width:960px; margin:0 auto; padding: clamp(12px, 3vw, 24px); padding-bottom:calc(env(safe-area-inset-bottom,0px)+16px); }
+    /* Container */
+    .wrap{
+      max-width: 960px;
+      margin: 0 auto;
+      padding: clamp(12px, 3vw, 24px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+    }
 
-    .day{ margin:20px 0 28px; }
+    /* Day section */
+    .day{
+      margin: 20px 0 28px;
+    }
     .day-title{
       position: sticky; top: calc(env(safe-area-inset-top, 0px) + 64px);
-      font-weight:800; color:var(--brand); letter-spacing:.06em; margin:0 0 12px; padding:6px 2px; font-size:.95rem;
+      background: transparent;
+      backdrop-filter: blur(2px);
+      font-family:'Anton', sans-serif;
+      font-weight: normal;
+      color: var(--brand);
+      letter-spacing: .06em;
+      margin: 0 0 12px;
+      padding: 6px 2px;
+      font-size: 1.1rem;
     }
 
-    .grid{ display:grid; gap:12px; grid-template-columns:1fr; }
-    @media (min-width:700px){ .grid{ grid-template-columns:1fr 1fr; } }
+    /* Card list */
+    .grid{
+      display:grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 700px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
 
     .card{
-      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid #eef1f7;
-      overflow:hidden; display:flex; align-items:stretch; min-height:92px; transition:transform .12s, box-shadow .12s;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid #eef1f7;
+      overflow: hidden;
+      display:flex;
+      align-items: stretch;
+      min-height: 92px;
+      transition: transform .12s ease, box-shadow .12s ease;
     }
-    .card:hover{ transform:translateY(-1px); box-shadow:0 10px 28px rgba(0,0,0,.10), 0 2px 10px rgba(0,0,0,.05); }
+    .card:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(0,0,0,.10), 0 2px 10px rgba(0,0,0,.05);
+    }
 
     .time-col{
       display:flex; flex-direction:column; align-items:center; justify-content:center;
-      min-width:92px; padding:10px; background:#f4f7ff; border-right:1px solid #e9eef9;
+      min-width: 92px; padding: 10px;
+      background: #1a3b8d;           /* your request */
+      border-right: 1px solid #0f1f4f;
     }
-    .time{ font-size:1.25rem; font-weight:800; color:#0f172a; line-height:1.1; }
-    .ampm{ color:var(--muted); font-size:.8rem; letter-spacing:.04em; margin-top:2px; }
+    .time{
+      font-size: 1.25rem; font-weight: 800; color:#fff; line-height:1.1;
+      font-family:'Anton', sans-serif;
+    }
+    .ampm{
+      color: #e0e7ff; font-size:.8rem; letter-spacing:.04em; margin-top:2px;
+      font-family:'Anton', sans-serif;
+    }
 
-    .content{ padding:12px 14px; display:flex; gap:8px; align-items:center; flex:1; min-width:0; }
+    .content{
+      padding: 12px 14px;
+      display:flex; gap:8px; align-items: center; flex:1; min-width: 0;
+    }
     .text{ flex:1; min-width:0; }
-    .title{ margin:0 0 4px; font-size:1.02rem; font-weight:700; color:#0b1533; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .title{
+      margin:0 0 4px;
+      font-size: 1.02rem; font-weight: 700; color:#0b1533;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
     .desc{
-      margin:0; color:#374151; font-size:.95rem; line-height:1.35;
-      overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+      margin:0;
+      color:#374151;
+      font-size:.95rem;
+      line-height:1.35;
+      overflow: hidden; text-overflow: ellipsis;
+      display:-webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
     }
 
-    .badges{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-left:auto; }
+    .badges{
+      display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+      margin-left:auto;
+    }
     .badge{
       display:inline-flex; align-items:center; gap:6px;
-      border:1px solid #e7ecfa; background:#f7f9ff; color:#0b1533;
-      padding:6px 10px; border-radius:999px; font-size:.8rem; font-weight:700; letter-spacing:.02em;
-      box-shadow: inset 0 0 0 1px var(--ring); white-space:nowrap;
+      border:1px solid #e7ecfa;
+      background:#f7f9ff;
+      color:#0b1533;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size:.8rem; font-weight:700; letter-spacing:.02em;
+      box-shadow: inset 0 0 0 1px var(--ring);
+      white-space: nowrap;
     }
-    .badge img{ width:16px; height:16px; vertical-align:middle; }
+    .badge img{ width: 16px; height: 16px; vertical-align: middle }
 
-    /* Loading */
-    .skeleton{ display:grid; gap:12px; grid-template-columns:1fr; }
-    @media (min-width:700px){ .skeleton{ grid-template-columns:1fr 1fr; } }
+    /* Loading skeleton */
+    .skeleton{
+      display:grid; gap:12px; grid-template-columns: 1fr;
+    }
+    @media (min-width:700px){ .skeleton{ grid-template-columns: 1fr 1fr; } }
     .shimmer{
-      border-radius:var(--radius); height:92px;
-      background:linear-gradient(90deg, #eef2ff 25%, #f5f7ff 37%, #eef2ff 63%);
-      background-size:400% 100%; animation:shimmer 1.2s infinite linear; border:1px solid #e8edfb;
+      border-radius: var(--radius);
+      height: 92px;
+      background: linear-gradient(90deg, #eef2ff 25%, #f5f7ff 37%, #eef2ff 63%);
+      background-size: 400% 100%;
+      animation: shimmer 1.2s infinite linear;
+      border:1px solid #e8edfb;
     }
-    @keyframes shimmer{ 0%{background-position:100% 0} 100%{background-position:0 0} }
+    @keyframes shimmer{
+      0%{ background-position: 100% 0; }
+      100%{ background-position: 0 0; }
+    }
 
+    /* Empty state */
     .empty{
       text-align:center; color:var(--muted);
-      background:#fff; border:1px dashed #dbe2f3; border-radius:var(--radius);
-      padding:24px; box-shadow:var(--shadow);
+      background:#fff; border:1px dashed #dbe2f3;
+      border-radius: var(--radius);
+      padding: 24px; box-shadow: var(--shadow);
     }
 
     /* tiny debug */
-    #debug{ text-align:center; font-size:.8rem; color:#6b7280; margin-top:8px; }
+    #debug{ text-align:center; font-size:.8rem; color:#6b7280; margin: 8px 0 16px; }
   </style>
 </head>
 <body>
   <header>
     <h1>What's on in the sports bar</h1>
-    <p>Next 7 days • Times shown in Australia/Perth</p>
   </header>
 
   <main class="wrap" id="app">
+    <!-- Loading skeleton shown first -->
     <div class="skeleton" id="skeleton">
-      <div class="shimmer"></div><div class="shimmer"></div>
-      <div class="shimmer"></div><div class="shimmer"></div>
+      <div class="shimmer"></div>
+      <div class="shimmer"></div>
+      <div class="shimmer"></div>
+      <div class="shimmer"></div>
     </div>
   </main>
   <div id="debug"></div>
@@ -127,15 +217,18 @@
           .formatToParts(d)
           .reduce((a,p)=> (a[p.type]=p.value, a), {});
 
+      // Date key in Perth timezone (YYYY-MM-DD)
       const perthDateOnlyKey = (d) => {
         const p = fmtParts(d, { year:'numeric', month:'2-digit', day:'2-digit' });
-        return `${p.year}-${p.month}-${p.day}`; // YYYY-MM-DD in Perth time
+        return `${p.year}-${p.month}-${p.day}`;
       };
 
+      // Label like "MON 18 AUG"
       const dayLabel = (d) =>
         new Intl.DateTimeFormat('en-AU', { timeZone: TZ, weekday:'short', day:'2-digit', month:'short' })
           .format(d).toUpperCase();
 
+      // Time like "7:30" + "PM"
       const timeBits = (d) => {
         const s = new Intl.DateTimeFormat('en-AU', { timeZone: TZ, hour:'numeric', minute:'2-digit', hour12:true }).format(d);
         const [time, ap] = s.split(/\s/);
@@ -166,21 +259,27 @@
 
           list.forEach(item=>{
             const card = el('article','card');
+
+            // Time column
             const tcol = el('div','time-col');
             const tb = timeBits(item._start);
             tcol.appendChild(el('div','time', tb.time));
             tcol.appendChild(el('div','ampm', tb.ap));
+
+            // Content
             const content = el('div','content');
             const text = el('div','text');
             text.appendChild(el('h3','title', item.title || 'Untitled Event'));
             text.appendChild(el('p','desc', item.description || ''));
+
             const badges = el('div','badges');
             if(item.sound === '1'){
-              const b = el('span','badge','🔊 Sound On');
-              badges.appendChild(b);
+              badges.appendChild(el('span','badge','🔊 Sound On'));
             }
+
             content.appendChild(text);
             if(badges.childElementCount) content.appendChild(badges);
+
             card.appendChild(tcol);
             card.appendChild(content);
             grid.appendChild(card);
@@ -198,13 +297,12 @@
 
       function removeSkeleton(){ if(skeleton && skeleton.parentNode){ skeleton.parentNode.removeChild(skeleton); } }
 
-      // Build date window in PERTH (by date keys, not timestamps)
+      // Build date window in PERTH (compare by YYYYMMDD integer keys to avoid tz drift)
       const now = new Date();
       const todayKey = perthDateOnlyKey(now);
       const endDate = new Date(now); endDate.setDate(now.getDate() + 7);
       const endKey = perthDateOnlyKey(endDate);
 
-      // string key "YYYY-MM-DD" → numeric yyyymmdd for easy compare
       const k2n = k => parseInt(k.replaceAll('-',''), 10);
       const startN = k2n(todayKey);
       const endN = k2n(endKey);
@@ -217,12 +315,11 @@
       }
 
       function parseXMLFromXHR(xhr){
-        // Use responseXML if present, else DOMParser fallback
         if (xhr.responseXML) return xhr.responseXML;
         if (xhr.responseText){
           try{
             return new DOMParser().parseFromString(xhr.responseText, 'text/xml');
-          }catch(e){ /* fallthrough */ }
+          }catch(e){}
         }
         return null;
       }
@@ -236,7 +333,11 @@
             removeSkeleton();
             if(xhr.status >= 200 && xhr.status < 300){
               const xml = parseXMLFromXHR(xhr);
-              if(!xml){ show('Could not read the feed (XML parse).'); dbg.textContent = 'Debug: responseXML null'; return; }
+              if(!xml){
+                show('Could not read the feed (XML parse).');
+                dbg.textContent = 'Debug: responseXML null';
+                return;
+              }
 
               const items = xml.getElementsByTagName('item');
               totalItems = items.length;
@@ -247,11 +348,11 @@
                 const startStr = safeGet(it, 'startTimeLocal');
                 if(!startStr) continue;
 
-                const start = new Date(startStr); // Fanzo usually includes offset; keep native parse
+                const start = new Date(startStr);
                 if(isNaN(start)) continue;
 
-                const dayKey = perthDateOnlyKey(start);
-                if(!withinWindow(dayKey)) continue;
+                const key = perthDateOnlyKey(start);
+                if(!withinWindow(key)) continue;
 
                 keptItems++;
 
@@ -261,7 +362,7 @@
                   sound: (it.getElementsByTagName('sound')[0]?.textContent || '0').trim(),
                   _start: start
                 };
-                (groups[dayKey] ||= []).push(evt);
+                (groups[key] ||= []).push(evt);
               }
 
               render(groups);
