@@ -33,8 +33,6 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Noto Sans;
       color:#0f172a;
       background:var(--bg);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
     }
 
     /* Header */
@@ -68,8 +66,6 @@
     }
     .day-title{
       position: sticky; top: calc(env(safe-area-inset-top, 0px) + 64px);
-      background: transparent;
-      backdrop-filter: blur(2px);
       font-family:'Anton', sans-serif;
       font-weight: normal;
       color: var(--brand);
@@ -108,7 +104,7 @@
     .time-col{
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       min-width: 92px; padding: 10px;
-      background: #1a3b8d;           /* your request */
+      background: #1a3b8d;
       border-right: 1px solid #0f1f4f;
     }
     .time{
@@ -127,16 +123,19 @@
     .text{ flex:1; min-width:0; }
     .title{
       margin:0 0 4px;
-      font-size: 1.02rem; font-weight: 700; color:#0b1533;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      font-size: 1.02rem;
+      font-weight: 700;
+      color:#0b1533;
+      white-space: normal;      /* allow wrapping */
+      overflow: visible;        /* show full text */
     }
     .desc{
       margin:0;
       color:#374151;
       font-size:.95rem;
       line-height:1.35;
-      overflow: hidden; text-overflow: ellipsis;
-      display:-webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      white-space: normal;      /* allow wrapping */
+      overflow: visible;        /* show full text */
     }
 
     .badges{
@@ -211,24 +210,20 @@
       const skeleton = document.getElementById('skeleton');
       const dbg = document.getElementById('debug');
 
-      // --- Helpers ---
       const fmtParts = (d, opts) =>
         new Intl.DateTimeFormat('en-AU', { timeZone: TZ, ...opts })
           .formatToParts(d)
           .reduce((a,p)=> (a[p.type]=p.value, a), {});
 
-      // Date key in Perth timezone (YYYY-MM-DD)
       const perthDateOnlyKey = (d) => {
         const p = fmtParts(d, { year:'numeric', month:'2-digit', day:'2-digit' });
         return `${p.year}-${p.month}-${p.day}`;
       };
 
-      // Label like "MON 18 AUG"
       const dayLabel = (d) =>
         new Intl.DateTimeFormat('en-AU', { timeZone: TZ, weekday:'short', day:'2-digit', month:'short' })
           .format(d).toUpperCase();
 
-      // Time like "7:30" + "PM"
       const timeBits = (d) => {
         const s = new Intl.DateTimeFormat('en-AU', { timeZone: TZ, hour:'numeric', minute:'2-digit', hour12:true }).format(d);
         const [time, ap] = s.split(/\s/);
@@ -260,13 +255,11 @@
           list.forEach(item=>{
             const card = el('article','card');
 
-            // Time column
             const tcol = el('div','time-col');
             const tb = timeBits(item._start);
             tcol.appendChild(el('div','time', tb.time));
             tcol.appendChild(el('div','ampm', tb.ap));
 
-            // Content
             const content = el('div','content');
             const text = el('div','text');
             text.appendChild(el('h3','title', item.title || 'Untitled Event'));
@@ -297,7 +290,6 @@
 
       function removeSkeleton(){ if(skeleton && skeleton.parentNode){ skeleton.parentNode.removeChild(skeleton); } }
 
-      // Build date window in PERTH (compare by YYYYMMDD integer keys to avoid tz drift)
       const now = new Date();
       const todayKey = perthDateOnlyKey(now);
       const endDate = new Date(now); endDate.setDate(now.getDate() + 7);
@@ -311,7 +303,7 @@
 
       function withinWindow(perthKey){
         const n = k2n(perthKey);
-        return n >= startN && n <= endN; // inclusive
+        return n >= startN && n <= endN;
       }
 
       function parseXMLFromXHR(xhr){
@@ -324,7 +316,6 @@
         return null;
       }
 
-      // --- Load ---
       try{
         const xhr = new XMLHttpRequest();
         xhr.open('GET', FANZO_URL, true);
