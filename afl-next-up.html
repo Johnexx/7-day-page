@@ -43,21 +43,11 @@
 
     .center-wrap {
       position:absolute; top:300px; bottom:200px; left:60px; right:60px; z-index:3;
-      display:grid; grid-template-rows: 1fr auto 1fr; align-items:center; justify-items:center; gap:40px;
+      display:grid; grid-template-rows: 1fr 1fr; align-items:center; justify-items:center; gap:40px;
     }
 
-    .team {
-      display:grid; place-items:center;
-      width:100%;
-      text-shadow:0 6px 16px rgba(0,0,0,.35);
-    }
-
-    .logo {
-      position: relative;
-      width: 700px; height: 700px;
-      display: grid; place-items: center;
-      overflow: visible;
-    }
+    .team { display:grid; place-items:center; width:100%; text-shadow:0 6px 16px rgba(0,0,0,.35); }
+    .logo { position: relative; width: 700px; height: 700px; display: grid; place-items: center; overflow: visible; }
     #homeLogo, #awayLogo {
       max-width: 700px; max-height: 700px;
       filter:
@@ -80,9 +70,17 @@
       100% { transform: translateX(0) scale(1); opacity:1; }
     }
 
+    /* VS dead-center */
     .vs {
-      font-family:'Anton', sans-serif; font-size:160px; letter-spacing:2px;
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      font-family:'Anton', sans-serif;
+      font-size:180px;
+      letter-spacing:2px;
       text-shadow:0 6px 16px rgba(0,0,0,.35);
+      z-index:4;
     }
 
     footer {
@@ -113,16 +111,12 @@
     </header>
 
     <div class="center-wrap">
-      <div class="team" id="homeTeam">
-        <div class="logo"><img id="homeLogo" alt="Home logo"></div>
-      </div>
-
-      <div class="vs">VS</div>
-
-      <div class="team" id="awayTeam">
-        <div class="logo"><img id="awayLogo" alt="Away logo"></div>
-      </div>
+      <div class="team"><div class="logo"><img id="homeLogo" alt="Home logo"></div></div>
+      <div class="team"><div class="logo"><img id="awayLogo" alt="Away logo"></div></div>
     </div>
+
+    <!-- VS in the exact center -->
+    <div class="vs">VS</div>
 
     <footer>
       <div class="cta">LIVE AND LOUD AT</div>
@@ -132,6 +126,7 @@
     <div class="fade-top"></div>
     <div class="fade-bottom"></div>
   </div>
+
 
   <script>
     const logoBase = '/afl-logos/';
