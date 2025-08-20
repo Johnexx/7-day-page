@@ -32,19 +32,13 @@
       font-family:'Anton', sans-serif; font-size:120px; letter-spacing:2px; line-height:1;
       text-transform:uppercase; text-shadow:0 6px 18px rgba(0,0,0,.35);
     }
-    header .sub {
+    header .sub, #gamedate {
       display:block;
-      font-size:40px;
-      font-family:Arial, sans-serif;
-      opacity:.9;
-      margin-top:10px;
-    }
-    #gamedate {
-      display:block;
-      font-size:40px;
-      font-family:Arial, sans-serif;
-      opacity:.9;
-      margin-top:6px;
+      font-family:'Anton', sans-serif;
+      font-size:44px;
+      letter-spacing:1px;
+      margin-top:12px;
+      text-transform:uppercase;
     }
 
     .center-wrap {
@@ -170,11 +164,12 @@
       if (s.includes(' ') && !s.includes('T')) s = s.replace(' ','T');
       return new Date(s);
     }
+
     function fmtMeta(game){
       const d = parseGameStart(game); if (!d) return '';
       return new Intl.DateTimeFormat('en-AU',{
-        weekday:'short', day:'2-digit', month:'short', hour:'numeric', minute:'2-digit', hour12:true
-      }).format(d);
+        weekday:'short', hour:'numeric', minute:'2-digit', hour12:true
+      }).format(d).replace(',', '');
     }
 
     async function fetchSquiggle(){
