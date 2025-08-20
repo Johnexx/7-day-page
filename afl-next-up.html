@@ -32,10 +32,23 @@
       font-family:'Anton', sans-serif; font-size:120px; letter-spacing:2px; line-height:1;
       text-transform:uppercase; text-shadow:0 6px 18px rgba(0,0,0,.35);
     }
-    header .sub { display:block; font-size:40px; font-family:Arial, sans-serif; opacity:.9; margin-top:10px; }
+    header .sub {
+      display:block;
+      font-size:40px;
+      font-family:Arial, sans-serif;
+      opacity:.9;
+      margin-top:10px;
+    }
+    #gamedate {
+      display:block;
+      font-size:40px;
+      font-family:Arial, sans-serif;
+      opacity:.9;
+      margin-top:6px;
+    }
 
     .center-wrap {
-      position:absolute; top:220px; bottom:200px; left:60px; right:60px; z-index:3;
+      position:absolute; top:300px; bottom:200px; left:60px; right:60px; z-index:3;
       display:grid; grid-template-rows: 1fr auto 1fr; align-items:center; justify-items:center; gap:40px;
     }
 
@@ -78,14 +91,6 @@
       text-shadow:0 6px 16px rgba(0,0,0,.35);
     }
 
-    .meta {
-      margin-top:20px;
-      font-size:44px;
-      font-weight:700;
-      text-shadow:0 6px 16px rgba(0,0,0,.35);
-      font-family: Arial, sans-serif;
-    }
-
     footer {
       position:absolute; bottom:36px; left:60px; right:60px; z-index:5;
       display:flex; align-items:center; justify-content:flex-end; gap:20px;
@@ -110,19 +115,18 @@
     <header>
       NEXT GAME
       <span class="sub" id="subtitle"></span>
+      <span id="gamedate"></span>
     </header>
 
     <div class="center-wrap">
       <div class="team" id="homeTeam">
         <div class="logo"><img id="homeLogo" alt="Home logo"></div>
-        <div class="meta" id="homeMeta"></div>
       </div>
 
       <div class="vs">VS</div>
 
       <div class="team" id="awayTeam">
         <div class="logo"><img id="awayLogo" alt="Away logo"></div>
-        <div class="meta" id="awayMeta"></div>
       </div>
     </div>
 
@@ -192,9 +196,7 @@
         document.getElementById('homeLogo').src = getLogo(g.hteam);
         document.getElementById('awayLogo').src = getLogo(g.ateam);
         document.getElementById('subtitle').textContent = `${g.hteam} vs ${g.ateam}`;
-        const when = fmtMeta(g);
-        document.getElementById('homeMeta').textContent = when;
-        document.getElementById('awayMeta').textContent = when;
+        document.getElementById('gamedate').textContent = fmtMeta(g);
       } catch(e){ console.error(e); document.getElementById('err').textContent = 'Error loading fixture'; }
     }
     init();
