@@ -6,6 +6,9 @@
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
   <meta http-equiv="refresh" content="300">
 
+  <!-- Handwritten Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&family=Permanent+Marker&display=swap" rel="stylesheet">
+
   <style>
     @font-face {
       font-family: 'Anton';
@@ -20,10 +23,10 @@
 
     body {
       margin: 0;
-      padding: 20px;
-      font-family: 'Anton', sans-serif;
-      background: #E8E7DC;
-      color: #1a3b8d;
+      padding: 30px;
+      font-family: 'Shadows Into Light', 'Permanent Marker', cursive, 'Anton', sans-serif;
+      background: #1b1b1b url('https://www.transparenttextures.com/patterns/asfalt-dark.png') repeat;
+      color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -32,8 +35,12 @@
     }
 
     h1 {
-      font-size: 4rem;
-      margin: 10px 0 20px 0;
+      font-size: 4.5rem;
+      margin: 10px 0 30px 0;
+      font-family: 'Permanent Marker', cursive;
+      color: #fff;
+      text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.7);
+      letter-spacing: 2px;
     }
 
     .specials {
@@ -44,41 +51,54 @@
       align-items: center;
       gap: 25px;
       flex-grow: 1;
-      overflow: hidden;
+      overflow-y: auto;
+      padding-bottom: 20px;
     }
 
     .item {
-      width: 100%;
-      background: #ffffff;
-      border-left: 8px solid #1a3b8d;
-      padding: 25px 30px;
-      border-radius: 10px;
-      box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.08);
+      width: 95%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 3px dashed rgba(255, 255, 255, 0.4);
+      padding: 20px 30px;
+      border-radius: 15px;
       text-align: center;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .item:hover {
+      transform: scale(1.03);
     }
 
     .item strong {
       display: block;
-      font-size: 2.2rem;
-      margin-bottom: 10px;
+      font-size: 2.6rem;
+      margin-bottom: 12px;
+      font-family: 'Permanent Marker', cursive;
+      color: #fff;
     }
 
     .item-description {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       margin-bottom: 12px;
-      color: #333;
+      color: #f8f8f8;
       white-space: pre-line;
+      line-height: 1.6;
     }
 
     .item-addons {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       margin-bottom: 12px;
-      color: #555;
+      color: #ccc;
+      font-style: italic;
     }
 
     .item-price {
-      font-size: 1.8rem;
-      color: #1a3b8d;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ffeb3b;
+      margin-top: 10px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
     }
 
     .sold-out {
@@ -86,8 +106,8 @@
     }
 
     .sold-label {
-      font-size: 1.1rem;
-      color: red;
+      font-size: 1.2rem;
+      color: #ff5252;
       margin-top: 5px;
       font-weight: bold;
     }
@@ -96,20 +116,32 @@
       margin-top: auto;
       text-align: center;
       padding-top: 10px;
-      font-family: 'Anton', sans-serif;
+      font-family: 'Shadows Into Light', cursive;
     }
 
     .footer .notice {
-      font-size: 1.1rem;
-      margin-bottom: 3px;
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     .footer .disclaimer {
-      font-size: 0.9rem;
-      color: rgba(26, 59, 141, 0.5);
-      max-width: 1000px;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.5);
+      max-width: 900px;
       margin: 0 auto;
       line-height: 1.4;
+    }
+
+    /* Make scrollbars hidden but still functional */
+    .specials::-webkit-scrollbar {
+      display: none;
+    }
+    .specials {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
 </head>
