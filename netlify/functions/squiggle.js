@@ -52,7 +52,7 @@ const currentRound = rounds.find((round) => {
     }
 
     //const url = `https://api.squiggle.com.au/?q=games;year=2025;round=${roundParam};format=xml`;
-     const url = `https://api.squiggle.com.au/?q=games;year=2025;round=${roundParam};format=xml`;
+     const url = `https://api.squiggle.com.au/?q=games;year=2025;round=24;format=xml`;
 
     const response = await fetch(url, {
       headers: {
