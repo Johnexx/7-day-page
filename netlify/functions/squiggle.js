@@ -51,7 +51,8 @@ const currentRound = rounds.find((round) => {
       roundParam = 1; // Fallback round, or you could return an error
     }
 
-    const url = `https://api.squiggle.com.au/?q=games;year=2025;round=${roundParam};format=xml`;
+    //const url = `https://api.squiggle.com.au/?q=games;year=2025;round=${roundParam};format=xml`;
+     const url = `https://api.squiggle.com.au/?q=games;year=2025;round=${roundParam};format=xml`;
 
     const response = await fetch(url, {
       headers: {
